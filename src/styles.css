@@ -103,6 +103,11 @@ button, summary { font: inherit; }
   cursor: pointer;
 }
 
+.auth-in.is-reserved {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .auth-in { background: #f5ece0; }
 .auth-in:hover { background: #f5e9e0; }
 .auth-out { background: #c1d8c3; }
