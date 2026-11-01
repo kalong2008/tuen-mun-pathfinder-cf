@@ -16,6 +16,8 @@ import { Route as NoticeRouteImport } from './routes/notice'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as VideosRouteImport } from './routes/videos'
+import { Route as AdminAttendanceRouteImport } from './routes/admin/attendance'
+import { Route as ApiAttendanceRouteImport } from './routes/api/attendance'
 import { Route as SignInIndexRouteImport } from './routes/sign-in.index'
 import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
 import { Route as SignUpIndexRouteImport } from './routes/sign-up.index'
@@ -58,6 +60,16 @@ const SignUpRoute = SignUpRouteImport.update({
 const VideosRoute = VideosRouteImport.update({
   id: '/videos',
   path: '/videos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAttendanceRoute = AdminAttendanceRouteImport.update({
+  id: '/admin/attendance',
+  path: '/admin/attendance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAttendanceRoute = ApiAttendanceRouteImport.update({
+  id: '/api/attendance',
+  path: '/api/attendance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignInIndexRoute = SignInIndexRouteImport.update({
@@ -109,6 +121,8 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
   '/videos': typeof VideosRoute
+  '/admin/attendance': typeof AdminAttendanceRoute
+  '/api/attendance': typeof ApiAttendanceRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
   '/sign-in/': typeof SignInIndexRoute
@@ -124,6 +138,8 @@ export interface FileRoutesByTo {
   '/adventurer-honors': typeof AdventurerHonorsRoute
   '/notice': typeof NoticeRoute
   '/videos': typeof VideosRoute
+  '/admin/attendance': typeof AdminAttendanceRoute
+  '/api/attendance': typeof ApiAttendanceRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
   '/sign-in': typeof SignInIndexRoute
@@ -142,6 +158,8 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
   '/videos': typeof VideosRoute
+  '/admin/attendance': typeof AdminAttendanceRoute
+  '/api/attendance': typeof ApiAttendanceRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
   '/sign-in/': typeof SignInIndexRoute
@@ -161,6 +179,8 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/videos'
+    | '/admin/attendance'
+    | '/api/attendance'
     | '/sign-in/$'
     | '/sign-up/$'
     | '/sign-in/'
@@ -176,6 +196,8 @@ export interface FileRouteTypes {
     | '/adventurer-honors'
     | '/notice'
     | '/videos'
+    | '/admin/attendance'
+    | '/api/attendance'
     | '/sign-in/$'
     | '/sign-up/$'
     | '/sign-in'
@@ -193,6 +215,8 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/videos'
+    | '/admin/attendance'
+    | '/api/attendance'
     | '/sign-in/$'
     | '/sign-up/$'
     | '/sign-in/'
@@ -211,6 +235,8 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRouteWithChildren
   SignUpRoute: typeof SignUpRouteWithChildren
   VideosRoute: typeof VideosRoute
+  AdminAttendanceRoute: typeof AdminAttendanceRoute
+  ApiAttendanceRoute: typeof ApiAttendanceRoute
   ApiBibleCachedRoute: typeof ApiBibleCachedRoute
   ApiSyncNoticeCalendarRoute: typeof ApiSyncNoticeCalendarRoute
   ApiVideosIdDownloadRoute: typeof ApiVideosIdDownloadRoute
@@ -266,6 +292,20 @@ declare module '@tanstack/react-router' {
       path: '/videos'
       fullPath: '/videos'
       preLoaderRoute: typeof VideosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/attendance': {
+      id: '/admin/attendance'
+      path: '/admin/attendance'
+      fullPath: '/admin/attendance'
+      preLoaderRoute: typeof AdminAttendanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/attendance': {
+      id: '/api/attendance'
+      path: '/api/attendance'
+      fullPath: '/api/attendance'
+      preLoaderRoute: typeof ApiAttendanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sign-in/': {
@@ -361,6 +401,8 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRouteWithChildren,
   SignUpRoute: SignUpRouteWithChildren,
   VideosRoute: VideosRoute,
+  AdminAttendanceRoute: AdminAttendanceRoute,
+  ApiAttendanceRoute: ApiAttendanceRoute,
   ApiBibleCachedRoute: ApiBibleCachedRoute,
   ApiSyncNoticeCalendarRoute: ApiSyncNoticeCalendarRoute,
   ApiVideosIdDownloadRoute: ApiVideosIdDownloadRoute,

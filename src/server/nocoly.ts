@@ -34,6 +34,16 @@ async function nocolyRequest(path: string, init?: RequestInit): Promise<NocolyPa
   return payload;
 }
 
+export async function fetchWorksheetRowPage(
+  worksheetId: string,
+  body: { pageSize: number; pageIndex: number; tableView?: boolean },
+): Promise<NocolyPayload & { rows?: unknown }> {
+  return nocolyRequest(`/app/worksheets/${worksheetId}/rows/list`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
 export async function listWorksheetRows(worksheetId: string): Promise<Record<string, unknown>[]> {
   const rows: Record<string, unknown>[] = [];
   let pageIndex = 1;

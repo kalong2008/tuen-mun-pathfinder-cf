@@ -1,0 +1,28 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@source "./**/*.{ts,tsx}";
+
+@layer base {
+  .attendance :where(h1, h2, p) {
+    margin: 0;
+  }
+
+  .attendance :where(button) {
+    background-color: transparent;
+    border-style: solid;
+    border-width: 0;
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .attendance :where(input) {
+    font: inherit;
+    color: inherit;
+  }
+
+  .attendance :where(table) {
+    border-collapse: collapse;
+  }
+}
