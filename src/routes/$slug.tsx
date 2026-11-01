@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { useAuth, useClerk } from "@clerk/tanstack-react-start";
 import PhotoAlbum, { type RenderPhotoProps } from "react-photo-album";
 import Lightbox from "yet-another-react-lightbox";
 import Counter from "yet-another-react-lightbox/plugins/counter";
@@ -12,10 +11,9 @@ import { hyperlinks } from "@schema";
 import { db, eq } from "void/db";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/counter.css";
-import { rememberAlbum } from "../components/album-link";
 import { Shell } from "../components/shell";
 import { albumManifestUrl, photoUrl } from "../photos";
-import { readIsSignedIn } from "../server/require-user";
+import { assertSignedIn, requireSignedIn } from "../server/require-user";
 
 type ManifestPhoto = {
   url?: string;
@@ -32,17 +30,16 @@ const getAlbum = createServerFn({ method: "GET" })
       .where(eq(hyperlinks.href, `/${slug}`))
       .limit(1);
     const title = link?.name ?? slug;
-    if (slug.startsWith("20") && !(await readIsSignedIn())) {
-      return { locked: true as const, title, photos: [] };
+    if (slug.startsWith("20")) {
+      await assertSignedIn(`/${slug}`);
     }
     const response = await fetch(albumManifestUrl(slug));
     if (!response.ok) {
-      return { locked: false as const, title, photos: [] };
+      return { title, photos: [] };
     }
     const manifest = (await response.json()) as { photos?: ManifestPhoto[] } | ManifestPhoto[];
     const list = Array.isArray(manifest) ? manifest : (manifest.photos ?? []);
     return {
-      locked: false as const,
       title,
       photos: list.flatMap((photo) => {
         if (!photo.url) return [];
@@ -57,6 +54,10 @@ const getAlbum = createServerFn({ method: "GET" })
   });
 
 export const Route = createFileRoute("/$slug")({
+  beforeLoad: ({ params }) => {
+    if (!params.slug.startsWith("20")) return;
+    return requireSignedIn(`/${params.slug}`);
+  },
   loader: ({ params }) => getAlbum({ data: params.slug }),
   component: AlbumPage,
 });
@@ -70,81 +71,8 @@ function AlbumPhoto({ wrapperStyle, renderDefaultPhoto }: RenderPhotoProps) {
 }
 
 function AlbumPage() {
-  const loaded = Route.useLoaderData();
-  const { slug } = Route.useParams();
-  const { isLoaded, isSignedIn, getToken } = useAuth();
-  const { openSignIn } = useClerk();
-  const [album, setAlbum] = useState(loaded);
+  const album = Route.useLoaderData();
   const [index, setIndex] = useState(-1);
-  const [unlockFailed, setUnlockFailed] = useState(false);
-  const opened = useRef(false);
-  const unlocking = useRef<string | null>(null);
-
-  useEffect(() => {
-    setAlbum(loaded);
-    setUnlockFailed(false);
-  }, [loaded]);
-
-  useEffect(() => {
-    if (!loaded.locked || !isLoaded) return;
-    if (!isSignedIn) {
-      if (opened.current) return;
-      opened.current = true;
-      rememberAlbum(`/${slug}`);
-      openSignIn();
-      return;
-    }
-    if (unlocking.current === slug) return;
-    unlocking.current = slug;
-    let cancelled = false;
-    (async () => {
-      const token = await getToken();
-      if (cancelled) return;
-      const next = await getAlbum({
-        data: slug,
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-      });
-      if (cancelled) return;
-      if (!next.locked) {
-        try {
-          sessionStorage.removeItem(`album-reload:${slug}`);
-        } catch {
-          // The album is already unlocked. Storage is only the reload guard.
-        }
-        setAlbum(next);
-        return;
-      }
-      const key = `album-reload:${slug}`;
-      try {
-        if (sessionStorage.getItem(key) !== "1") {
-          sessionStorage.setItem(key, "1");
-          window.location.reload();
-          return;
-        }
-      } catch {
-        // Storage can be unavailable. Show the locked state below.
-      }
-      setUnlockFailed(true);
-    })().catch(() => {
-      if (!cancelled) setUnlockFailed(true);
-    });
-    return () => {
-      cancelled = true;
-      unlocking.current = null;
-    };
-  }, [getToken, isLoaded, isSignedIn, loaded.locked, openSignIn, slug]);
-
-  if (album.locked) {
-    const waitingForSession = isLoaded && isSignedIn && !unlockFailed;
-    return (
-      <Shell>
-        <section className="page page-wide">
-          <h1 className="page-title">{album.title}</h1>
-          <p className="empty">{waitingForSession ? "載入相簿中…" : "請先登入才能查看這本相簿。"}</p>
-        </section>
-      </Shell>
-    );
-  }
 
   return (
     <Shell>
