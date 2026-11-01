@@ -851,6 +851,7 @@ button, summary { font: inherit; }
 }
 
 .auth-page { display: flex; justify-content: center; }
+.auth-page .cl-footerAction { display: none; }
 
 .verse-overlay {
   position: fixed;

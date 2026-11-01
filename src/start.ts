@@ -5,7 +5,7 @@ export const startInstance = createStart(() => ({
   requestMiddleware: [
     clerkMiddleware({
       signInUrl: "/sign-in",
-      signUpUrl: "/sign-up",
+      signUpUrl: "/",
     }),
   ],
 }));

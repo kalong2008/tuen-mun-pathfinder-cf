@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AdventurerHonorsRouteImport } from './routes/adventurer-honors'
-import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as NoticeRouteImport } from './routes/notice'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
@@ -39,11 +38,6 @@ const SlugRoute = SlugRouteImport.update({
 const AdventurerHonorsRoute = AdventurerHonorsRouteImport.update({
   id: '/adventurer-honors',
   path: '/adventurer-honors',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArchiveRoute = ArchiveRouteImport.update({
-  id: '/archive',
-  path: '/archive',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NoticeRoute = NoticeRouteImport.update({
@@ -111,7 +105,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/adventurer-honors': typeof AdventurerHonorsRoute
-  '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
@@ -129,7 +122,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/adventurer-honors': typeof AdventurerHonorsRoute
-  '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
   '/videos': typeof VideosRoute
   '/sign-in/$': typeof SignInSplatRoute
@@ -146,7 +138,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/adventurer-honors': typeof AdventurerHonorsRoute
-  '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
@@ -166,7 +157,6 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/adventurer-honors'
-    | '/archive'
     | '/notice'
     | '/sign-in'
     | '/sign-up'
@@ -184,7 +174,6 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/adventurer-honors'
-    | '/archive'
     | '/notice'
     | '/videos'
     | '/sign-in/$'
@@ -200,7 +189,6 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/adventurer-honors'
-    | '/archive'
     | '/notice'
     | '/sign-in'
     | '/sign-up'
@@ -219,7 +207,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   AdventurerHonorsRoute: typeof AdventurerHonorsRoute
-  ArchiveRoute: typeof ArchiveRoute
   NoticeRoute: typeof NoticeRoute
   SignInRoute: typeof SignInRouteWithChildren
   SignUpRoute: typeof SignUpRouteWithChildren
@@ -251,13 +238,6 @@ declare module '@tanstack/react-router' {
       path: '/adventurer-honors'
       fullPath: '/adventurer-honors'
       preLoaderRoute: typeof AdventurerHonorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/archive': {
-      id: '/archive'
-      path: '/archive'
-      fullPath: '/archive'
-      preLoaderRoute: typeof ArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notice': {
@@ -377,7 +357,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   AdventurerHonorsRoute: AdventurerHonorsRoute,
-  ArchiveRoute: ArchiveRoute,
   NoticeRoute: NoticeRoute,
   SignInRoute: SignInRouteWithChildren,
   SignUpRoute: SignUpRouteWithChildren,

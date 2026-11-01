@@ -8,9 +8,8 @@ export const Route = createFileRoute("/sign-in")({
 });
 
 function SignInLayout() {
-  const { redirect_url: returnPath } = Route.useSearch();
   return (
-    <AuthScreen returnPath={returnPath}>
+    <AuthScreen>
       <Outlet />
     </AuthScreen>
   );

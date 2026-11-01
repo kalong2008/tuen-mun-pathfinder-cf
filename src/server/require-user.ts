@@ -3,11 +3,6 @@ import { redirect } from "@tanstack/react-router";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
 import { safeReturnPath } from "../auth-redirect";
 
-type BrowserClerk = {
-  loaded?: boolean;
-  user?: unknown;
-};
-
 export async function readIsSignedIn() {
   const { isAuthenticated } = await auth();
   return isAuthenticated;
@@ -33,11 +28,5 @@ export const requireSignedIn = createIsomorphicFn()
     await assertSignedIn(safeReturnPath(returnPath));
   })
   .client(async (returnPath: string) => {
-    const clerk = (window as Window & { Clerk?: BrowserClerk }).Clerk;
-    if (clerk?.loaded && clerk.user) {
-      window.location.replace(returnPath);
-      await new Promise<void>(() => {});
-      return;
-    }
     await requireSignedInRequest({ data: returnPath });
   });

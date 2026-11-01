@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import PhotoAlbum, { type RenderPhotoProps } from "react-photo-album";
 import Lightbox from "yet-another-react-lightbox";
@@ -24,6 +24,7 @@ type ManifestPhoto = {
 const getAlbum = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
+    if (slug === "archive") throw notFound();
     const [link] = await db
       .select()
       .from(hyperlinks)
@@ -55,6 +56,7 @@ const getAlbum = createServerFn({ method: "GET" })
 
 export const Route = createFileRoute("/$slug")({
   beforeLoad: ({ params }) => {
+    if (params.slug === "archive") throw notFound();
     if (!params.slug.startsWith("20")) return;
     return requireSignedIn(`/${params.slug}`);
   },

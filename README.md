@@ -59,12 +59,11 @@ pnpm exec void secret put NOCOLY_SIGN
 | --- | --- |
 | `/` | Homepage, verse popup, and the club calendar. |
 | `/notice` | Activity notices grouped by type, with PDF links. |
-| `/archive` | Photo albums. Requires a signed-in Clerk user. |
-| `/archive/$slug` | One album. Photos load from the Google Cloud manifest for that slug. |
+| `/{slug}` | One album, for example `/2026-regular`. A slug starting with `20` requires sign-in. Photos load from the Google Cloud manifest. |
 | `/videos` | Past videos. `?v=<id>` selects an item. Playback and thumbnails come from Mux. |
 | `/videos` download | `/api/videos/:id/download` redirects to the Mux 720p MP4. |
 | `/adventurer-honors` | Adventurer honor requirements. Requires a signed-in user whose Clerk `publicMetadata.role` is `admin`. |
-| `/sign-in`, `/sign-up` | Clerk authentication. |
+| `/sign-in` | Clerk sign-in. `/sign-up` redirects home. Members cannot create an account. |
 
 Notice PDFs stay on Nocoly. The site streams them inline through `/api/notices/:id/file/pathfinder` and `/api/notices/:id/file/adventurer`.
 

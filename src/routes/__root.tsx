@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import type { ComponentProps, ComponentType, ReactNode } from "react";
 import { ClerkProvider } from "@clerk/tanstack-react-start";
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { hyperlinks, photoSections } from "@schema";
 import { asc, db } from "void/db";
@@ -48,16 +48,44 @@ function RootComponent() {
   );
 }
 
+type ClerkRouterProps = ComponentProps<typeof ClerkProvider> & {
+  routerPush: (to: string) => Promise<void> | void;
+  routerReplace: (to: string) => Promise<void> | void;
+};
+
+const ClerkWithRouter = ClerkProvider as ComponentType<ClerkRouterProps>;
+
+function isAuthPath(pathname: string) {
+  return pathname === "/sign-in" || pathname.startsWith("/sign-in/") || pathname === "/sign-up" || pathname.startsWith("/sign-up/");
+}
+
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+  const navigate = useNavigate();
+  const clerkNavigate = (to: string, replace: boolean) => {
+    const url = new URL(to, window.location.origin);
+    if (url.origin !== window.location.origin) {
+      if (replace) window.location.replace(url.href);
+      else window.location.assign(url.href);
+      return;
+    }
+    const href = `${url.pathname}${url.search}${url.hash}`;
+    if (isAuthPath(url.pathname)) return navigate({ href, replace });
+    return navigate({ href, replace, reloadDocument: true });
+  };
+
   return (
     <html lang="zh-Hant">
       <head>
         <HeadContent />
       </head>
       <body>
-        <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
+        <ClerkWithRouter
+          publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
+          routerPush={(to) => clerkNavigate(to, false)}
+          routerReplace={(to) => clerkNavigate(to, true)}
+        >
           {children}
-        </ClerkProvider>
+        </ClerkWithRouter>
         <Scripts />
       </body>
     </html>
