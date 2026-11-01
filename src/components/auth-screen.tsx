@@ -1,18 +1,39 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { SignIn, SignUp, useAuth } from "@clerk/tanstack-react-start";
-import { useRouter } from "@tanstack/react-router";
 import { Shell } from "./shell";
+
+const RETURN_RETRY_MS = 5000;
 
 export function AuthScreen({ returnPath, children }: { returnPath: string; children: ReactNode }) {
   const { isLoaded, isSignedIn } = useAuth();
-  const router = useRouter();
-  const signedIn = isLoaded && isSignedIn;
+  const signedIn = Boolean(isLoaded && isSignedIn);
+  const [held, setHeld] = useState(false);
 
   useEffect(() => {
     if (!signedIn) return;
-    void router.navigate({ href: returnPath, replace: true });
-  }, [returnPath, router, signedIn]);
+    const key = `auth-return:${returnPath}`;
+    try {
+      const previous = Number(sessionStorage.getItem(key) || 0);
+      if (Date.now() - previous < RETURN_RETRY_MS) {
+        setHeld(true);
+        return;
+      }
+      sessionStorage.setItem(key, String(Date.now()));
+    } catch {
+      // Storage can be unavailable. Still leave the sign-in page once.
+    }
+    window.location.replace(returnPath);
+  }, [returnPath, signedIn]);
 
+  if (signedIn && held) {
+    return (
+      <Shell>
+        <section className="page auth-page">
+          <a href={returnPath}>返回</a>
+        </section>
+      </Shell>
+    );
+  }
   if (signedIn) return null;
   return (
     <Shell>
