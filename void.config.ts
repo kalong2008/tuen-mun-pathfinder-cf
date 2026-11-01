@@ -16,6 +16,9 @@ export default defineConfig({
     name: "tuen-mun-pathfinder-cf",
     workers_dev: true,
     preview_urls: true,
-    routes: [],
+    routes: [
+      { pattern: "tuenmunpathfinder.com", custom_domain: true },
+      { pattern: "www.tuenmunpathfinder.com", custom_domain: true },
+    ],
   },
 });

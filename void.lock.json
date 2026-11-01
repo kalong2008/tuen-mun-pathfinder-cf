@@ -4,7 +4,16 @@
     "name": "tuen-mun-pathfinder-cf",
     "workers_dev": true,
     "preview_urls": true,
-    "routes": []
+    "routes": [
+      {
+        "pattern": "tuenmunpathfinder.com",
+        "custom_domain": true
+      },
+      {
+        "pattern": "www.tuenmunpathfinder.com",
+        "custom_domain": true
+      }
+    ]
   },
   "resolved": {
     "name": "tuen-mun-pathfinder-cf",
@@ -20,7 +29,16 @@
     ],
     "workers_dev": true,
     "preview_urls": true,
-    "routes": []
+    "routes": [
+      {
+        "pattern": "tuenmunpathfinder.com",
+        "custom_domain": true
+      },
+      {
+        "pattern": "www.tuenmunpathfinder.com",
+        "custom_domain": true
+      }
+    ]
   },
-  "text": "{\n  \"name\": \"tuen-mun-pathfinder-cf\",\n  \"account_id\": \"df0abd6c1c55a4986c9a02c314f4fd9f\",\n  \"compatibility_date\": \"2026-02-24\",\n  \"d1_databases\": [\n    {\n      \"binding\": \"DB\",\n      \"database_name\": \"tuen-mun-pathfinder-cf-db\",\n      \"database_id\": \"87cd2c28-415d-46cc-841a-c233887d726b\",\n      \"migrations_dir\": \"./db/migrations\"\n    }\n  ],\n  \"workers_dev\": true,\n  \"preview_urls\": true,\n  \"routes\": []\n}\n"
+  "text": "// void:published-traffic:v1:eyJ3b3JrZXJzX2RldiI6dHJ1ZSwicHJldmlld191cmxzIjp0cnVlLCJyb3V0ZXMiOlt7InBhdHRlcm4iOiJ0dWVubXVucGF0aGZpbmRlci5jb20iLCJjdXN0b21fZG9tYWluIjp0cnVlfSx7InBhdHRlcm4iOiJ3d3cudHVlbm11bnBhdGhmaW5kZXIuY29tIiwiY3VzdG9tX2RvbWFpbiI6dHJ1ZX1dfQ\n{\n  \"name\": \"tuen-mun-pathfinder-cf\",\n  \"account_id\": \"df0abd6c1c55a4986c9a02c314f4fd9f\",\n  \"compatibility_date\": \"2026-02-24\",\n  \"d1_databases\": [\n    {\n      \"binding\": \"DB\",\n      \"database_name\": \"tuen-mun-pathfinder-cf-db\",\n      \"database_id\": \"87cd2c28-415d-46cc-841a-c233887d726b\",\n      \"migrations_dir\": \"./db/migrations\"\n    }\n  ],\n  \"workers_dev\": true,\n  \"preview_urls\": true,\n  \"routes\": [\n    {\n      \"pattern\": \"tuenmunpathfinder.com\",\n      \"custom_domain\": true\n    },\n    {\n      \"pattern\": \"www.tuenmunpathfinder.com\",\n      \"custom_domain\": true\n    }\n  ]\n}\n"
 }
