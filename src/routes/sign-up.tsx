@@ -1,27 +1,17 @@
-import { SignUp } from "@clerk/tanstack-react-start";
-import { createFileRoute } from "@tanstack/react-router";
-import { safeReturnPath } from "../auth-redirect";
-import { Shell } from "../components/shell";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { authReturnSearch } from "../auth-redirect";
+import { AuthScreen } from "../components/auth-screen";
 
 export const Route = createFileRoute("/sign-up")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    redirect: safeReturnPath(search.redirect),
-  }),
-  component: SignUpPage,
+  validateSearch: authReturnSearch,
+  component: SignUpLayout,
 });
 
-function SignUpPage() {
-  const { redirect } = Route.useSearch();
+function SignUpLayout() {
+  const { redirect_url: returnPath } = Route.useSearch();
   return (
-    <Shell>
-      <section className="page auth-page">
-        <SignUp
-          routing="path"
-          path="/sign-up"
-          fallbackRedirectUrl={redirect}
-          signInUrl="/sign-in"
-        />
-      </section>
-    </Shell>
+    <AuthScreen returnPath={returnPath}>
+      <Outlet />
+    </AuthScreen>
   );
 }

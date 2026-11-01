@@ -17,7 +17,9 @@ import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as ArchiveSlugRouteImport } from './routes/archive_.$slug'
+import { Route as SignInIndexRouteImport } from './routes/sign-in.index'
 import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
+import { Route as SignUpIndexRouteImport } from './routes/sign-up.index'
 import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as ApiBibleCachedRouteImport } from './routes/api/bible/cached'
 import { Route as ApiVideosIdDownloadRouteImport } from './routes/api/videos/$id/download'
@@ -63,10 +65,20 @@ const ArchiveSlugRoute = ArchiveSlugRouteImport.update({
   path: '/archive/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignInIndexRoute = SignInIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SignInRoute,
+} as any)
 const SignInSplatRoute = SignInSplatRouteImport.update({
   id: '/$',
   path: '/$',
   getParentRoute: () => SignInRoute,
+} as any)
+const SignUpIndexRoute = SignUpIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SignUpRoute,
 } as any)
 const SignUpSplatRoute = SignUpSplatRouteImport.update({
   id: '/$',
@@ -100,6 +112,8 @@ export interface FileRoutesByFullPath {
   '/archive/$slug': typeof ArchiveSlugRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
+  '/sign-in/': typeof SignInIndexRoute
+  '/sign-up/': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
@@ -109,12 +123,12 @@ export interface FileRoutesByTo {
   '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
-  '/sign-in': typeof SignInRouteWithChildren
-  '/sign-up': typeof SignUpRouteWithChildren
   '/videos': typeof VideosRoute
   '/archive/$slug': typeof ArchiveSlugRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
+  '/sign-in': typeof SignInIndexRoute
+  '/sign-up': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
@@ -131,6 +145,8 @@ export interface FileRoutesById {
   '/archive_/$slug': typeof ArchiveSlugRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
+  '/sign-in/': typeof SignInIndexRoute
+  '/sign-up/': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
@@ -148,6 +164,8 @@ export interface FileRouteTypes {
     | '/archive/$slug'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/sign-in/'
+    | '/sign-up/'
     | '/api/bible/cached'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
@@ -157,12 +175,12 @@ export interface FileRouteTypes {
     | '/adventurer-honors'
     | '/archive'
     | '/notice'
-    | '/sign-in'
-    | '/sign-up'
     | '/videos'
     | '/archive/$slug'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/sign-in'
+    | '/sign-up'
     | '/api/bible/cached'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
@@ -178,6 +196,8 @@ export interface FileRouteTypes {
     | '/archive_/$slug'
     | '/sign-in/$'
     | '/sign-up/$'
+    | '/sign-in/'
+    | '/sign-up/'
     | '/api/bible/cached'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
@@ -255,12 +275,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArchiveSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sign-in/': {
+      id: '/sign-in/'
+      path: '/'
+      fullPath: '/sign-in/'
+      preLoaderRoute: typeof SignInIndexRouteImport
+      parentRoute: typeof SignInRoute
+    }
     '/sign-in/$': {
       id: '/sign-in/$'
       path: '/$'
       fullPath: '/sign-in/$'
       preLoaderRoute: typeof SignInSplatRouteImport
       parentRoute: typeof SignInRoute
+    }
+    '/sign-up/': {
+      id: '/sign-up/'
+      path: '/'
+      fullPath: '/sign-up/'
+      preLoaderRoute: typeof SignUpIndexRouteImport
+      parentRoute: typeof SignUpRoute
     }
     '/sign-up/$': {
       id: '/sign-up/$'
@@ -295,10 +329,12 @@ declare module '@tanstack/react-router' {
 
 interface SignInRouteChildren {
   SignInSplatRoute: typeof SignInSplatRoute
+  SignInIndexRoute: typeof SignInIndexRoute
 }
 
 const SignInRouteChildren: SignInRouteChildren = {
   SignInSplatRoute: SignInSplatRoute,
+  SignInIndexRoute: SignInIndexRoute,
 }
 
 const SignInRouteWithChildren =
@@ -306,10 +342,12 @@ const SignInRouteWithChildren =
 
 interface SignUpRouteChildren {
   SignUpSplatRoute: typeof SignUpSplatRoute
+  SignUpIndexRoute: typeof SignUpIndexRoute
 }
 
 const SignUpRouteChildren: SignUpRouteChildren = {
   SignUpSplatRoute: SignUpSplatRoute,
+  SignUpIndexRoute: SignUpIndexRoute,
 }
 
 const SignUpRouteWithChildren =

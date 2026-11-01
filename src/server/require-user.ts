@@ -8,7 +8,7 @@ export async function assertSignedIn(returnPath: string) {
   if (!isAuthenticated) {
     throw redirect({
       to: "/sign-in",
-      search: { redirect: safeReturnPath(returnPath) },
+      search: { redirect_url: safeReturnPath(returnPath) },
     });
   }
 }
