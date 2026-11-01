@@ -1,0 +1,877 @@
+{
+  "note": "HKMC honor chapter page URLs preserved for AI/reference. Not loaded by the app.",
+  "categoryPages": {
+    "community": "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/community/",
+    "arts-crafts": "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/",
+    "household": "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/",
+    "nature": "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/",
+    "recreation": "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/",
+    "spiritual": "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+  },
+  "honors": [
+    {
+      "id": "hka4001-community-helpers",
+      "code": "HKA4001",
+      "nameZh": "公務員",
+      "category": "community",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/community/"
+      ]
+    },
+    {
+      "id": "hka4002-cooperation",
+      "code": "HKA4002",
+      "nameZh": "合作",
+      "category": "community",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/community/"
+      ]
+    },
+    {
+      "id": "hka4003-fire-safety",
+      "code": "HKA4003",
+      "nameZh": "防火安全",
+      "category": "community",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/community/"
+      ]
+    },
+    {
+      "id": "hka4004-hands-of-service",
+      "code": "HKA4004",
+      "nameZh": "服務之手",
+      "category": "community",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/community/"
+      ]
+    },
+    {
+      "id": "hka4005-my-community",
+      "code": "HKA4005",
+      "nameZh": "社區朋友",
+      "category": "community",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/community/"
+      ]
+    },
+    {
+      "id": "hka4006-colors",
+      "code": "HKA4006",
+      "nameZh": "顏色",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "hka4007-crayons-and-markers",
+      "code": "HKA4007",
+      "nameZh": "蠟筆和箱頭筆",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "hka4008-finger-play",
+      "code": "HKA4008",
+      "nameZh": "手指遊戲",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "hka4009-gadgets-and-sand",
+      "code": "HKA4009",
+      "nameZh": "小工具和沙子",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "hka4010-jigsaw-puzzles",
+      "code": "HKA4010",
+      "nameZh": "拼圖",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "hka4011-music-i",
+      "code": "HKA4011",
+      "nameZh": "音樂 I",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "hka4012-shapes-and-sizes",
+      "code": "HKA4012",
+      "nameZh": "形狀和尺寸",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "hka4013-sponge-art",
+      "code": "HKA4013",
+      "nameZh": "海綿藝術",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "hka4014-stamping-fun-i",
+      "code": "HKA4014",
+      "nameZh": "圖章樂 I",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "hka4015-alphabet-i",
+      "code": "HKA4015",
+      "nameZh": "字母 I",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4016-alphabet-ii",
+      "code": "HKA4016",
+      "nameZh": "字母 II",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4019-health-specialist",
+      "code": "HKA4019",
+      "nameZh": "健康專家",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4020-healthy-foods",
+      "code": "HKA4020",
+      "nameZh": "健康食物",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4021-healthy-me",
+      "code": "HKA4021",
+      "nameZh": "健康的我",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4022-home-helper-i",
+      "code": "HKA4022",
+      "nameZh": "家庭幫手 I",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4023-know-your-body",
+      "code": "HKA4023",
+      "nameZh": "認識身體",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4024-manners-fun",
+      "code": "HKA4024",
+      "nameZh": "禮儀",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4025-my-family",
+      "code": "HKA4025",
+      "nameZh": "我的家庭",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4026-numbers",
+      "code": "HKA4026",
+      "nameZh": "數字",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4027-reading-i",
+      "code": "HKA4027",
+      "nameZh": "閱讀 I",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4028-reading-ii",
+      "code": "HKA4028",
+      "nameZh": "閱讀 II",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4029-reading-iii",
+      "code": "HKA4029",
+      "nameZh": "閱讀 III",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4030-reading-iv",
+      "code": "HKA4030",
+      "nameZh": "閱讀 IV",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4033-story-listening-i",
+      "code": "HKA4033",
+      "nameZh": "故事聆聽 I",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4034-story-listening-ii",
+      "code": "HKA4034",
+      "nameZh": "故事聆聽 II",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4035-animals",
+      "code": "HKA4035",
+      "nameZh": "動物",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4036-animal-homes",
+      "code": "HKA4036",
+      "nameZh": "動物之家",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4037-birds",
+      "code": "HKA4037",
+      "nameZh": "鳥類",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4038-bodies-of-water",
+      "code": "HKA4038",
+      "nameZh": "水",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4040-insects",
+      "code": "HKA4040",
+      "nameZh": "昆蟲",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4041-pets",
+      "code": "HKA4041",
+      "nameZh": "寵物",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4042-potatoes",
+      "code": "HKA4042",
+      "nameZh": "馬鈴薯",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4044-sand-art",
+      "code": "HKA4044",
+      "nameZh": "沙土藝術",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4046-scavenger-hunt",
+      "code": "HKA4046",
+      "nameZh": "尋寶遊戲",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4047-seasons",
+      "code": "HKA4047",
+      "nameZh": "季節",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4049-stars",
+      "code": "HKA4049",
+      "nameZh": "星星",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4051-weather-i",
+      "code": "HKA4051",
+      "nameZh": "天氣 I",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4052-weather-ii",
+      "code": "HKA4052",
+      "nameZh": "天氣 II",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4053-wooly-lamb",
+      "code": "HKA4053",
+      "nameZh": "綿羊",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4054-zoo-animals",
+      "code": "HKA4054",
+      "nameZh": "動物園動物",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "hka4055-cyclist-i",
+      "code": "HKA4055",
+      "nameZh": "單車 I",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "hka4056-left-and-right",
+      "code": "HKA4056",
+      "nameZh": "左和右",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "hka4058-playing-with-friends",
+      "code": "HKA4058",
+      "nameZh": "與朋友玩耍",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "hka4060-swimmer-i",
+      "code": "HKA4060",
+      "nameZh": "游泳 I",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "hka4061-toys",
+      "code": "HKA4061",
+      "nameZh": "玩具",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "hka4062-trains-and-trucks",
+      "code": "HKA4062",
+      "nameZh": "火車和卡車",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "hka4063-trikes-and-bikes",
+      "code": "HKA4063",
+      "nameZh": "三輪車和單車",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "hka4064-acts-of-kindness",
+      "code": "HKA4064",
+      "nameZh": "良善",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "hka4065-bible-friends-i",
+      "code": "HKA4065",
+      "nameZh": "聖經人物 I",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4066-bible-friends-ii",
+      "code": "HKA4066",
+      "nameZh": "聖經人物 II",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4067-bible-iii",
+      "code": "HKA4067",
+      "nameZh": "聖經 III",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4068-bible-iv",
+      "code": "HKA4068",
+      "nameZh": "聖經 IV",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4071-creation",
+      "code": "HKA4071",
+      "nameZh": "創造",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4072-delightful-sabbath",
+      "code": "HKA4072",
+      "nameZh": "愉快安息日",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4073-gods-world",
+      "code": "HKA4073",
+      "nameZh": "上帝的世界",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4076-jesus-star",
+      "code": "HKA4076",
+      "nameZh": "耶穌之星",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4077-listening",
+      "code": "HKA4077",
+      "nameZh": "聆聽",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4078-little-boy-jesus",
+      "code": "HKA4078",
+      "nameZh": "小孩耶穌",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4079-my-friend-jesus",
+      "code": "HKA4079",
+      "nameZh": "我的朋友耶穌",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "hka4080-parables-of-jesus",
+      "code": "HKA4080",
+      "nameZh": "耶穌的比喻",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "you4510-artist",
+      "code": "YOU4510",
+      "nameZh": "藝術家",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "you4535-bible-i",
+      "code": "YOU4535",
+      "nameZh": "聖經 I",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "you4540-bible-ii",
+      "code": "YOU4540",
+      "nameZh": "聖經 II",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "you4560-building-blocks",
+      "code": "YOU4560",
+      "nameZh": "建築",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "you4565-butterflies",
+      "code": "YOU4565",
+      "nameZh": "蝴蝶",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "you4570-buttons",
+      "code": "YOU4570",
+      "nameZh": "鈕扣",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "you4585-caring-friend",
+      "code": "YOU4585",
+      "nameZh": "關懷",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "you4615-country-fun",
+      "code": "YOU4615",
+      "nameZh": "認識國家",
+      "category": "community",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/community/"
+      ]
+    },
+    {
+      "id": "you4620-courtesy",
+      "code": "YOU4620",
+      "nameZh": "禮貌",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "you4625-cyclist-ii",
+      "code": "YOU4625",
+      "nameZh": "單車 II",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "you4635-early-adventist",
+      "code": "YOU4635",
+      "nameZh": "早期復臨先鋒",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "you4650-first-aid-helper",
+      "code": "YOU4650",
+      "nameZh": "急救",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "you4655-fish",
+      "code": "YOU4655",
+      "nameZh": "魚類",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "you4660-fitness-fun",
+      "code": "YOU4660",
+      "nameZh": "健體樂",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "you4665-flowers",
+      "code": "YOU4665",
+      "nameZh": "花卉",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "you4670-friend-of-animals",
+      "code": "YOU4670",
+      "nameZh": "動物之友",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "you4680-friend-of-nature",
+      "code": "YOU4680",
+      "nameZh": "自然之友",
+      "category": "nature",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/nature/"
+      ]
+    },
+    {
+      "id": "you4705-guide",
+      "code": "YOU4705",
+      "nameZh": "領袖",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "you4740-home-helper-ii",
+      "code": "YOU4740",
+      "nameZh": "家務小幫手 II",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "you4760-hygiene",
+      "code": "YOU4760",
+      "nameZh": "衛生",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "you4795-media-critic",
+      "code": "YOU4795",
+      "nameZh": "媒體",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "you4800-music-ii",
+      "code": "YOU4800",
+      "nameZh": "音樂 II",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "you4810-my-picture-book",
+      "code": "YOU4810",
+      "nameZh": "相冊",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "you4860-road-safety",
+      "code": "YOU4860",
+      "nameZh": "道路安全",
+      "category": "community",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/community/"
+      ]
+    },
+    {
+      "id": "you4865-safety-specialist",
+      "code": "YOU4865",
+      "nameZh": "安全專家",
+      "category": "household",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/household/"
+      ]
+    },
+    {
+      "id": "you4905-spotter",
+      "code": "YOU4905",
+      "nameZh": "觀察",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "you4910-stamping-fun-ii",
+      "code": "YOU4910",
+      "nameZh": "圖章樂 II",
+      "category": "arts-crafts",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/artscrafts/"
+      ]
+    },
+    {
+      "id": "you4920-swimmer-ii",
+      "code": "YOU4920",
+      "nameZh": "游泳 II",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "you4925-swimmer-iii",
+      "code": "YOU4925",
+      "nameZh": "游泳 III",
+      "category": "recreation",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/recreation/"
+      ]
+    },
+    {
+      "id": "you4935-temperance",
+      "code": "YOU4935",
+      "nameZh": "節制",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    },
+    {
+      "id": "you4985-wise-steward",
+      "code": "YOU4985",
+      "nameZh": "管家",
+      "category": "spiritual",
+      "sourceUrls": [
+        "https://youth.hkmcadventist.org/web/clubs/adventurer-2/honor/spiritual/"
+      ]
+    }
+  ]
+}

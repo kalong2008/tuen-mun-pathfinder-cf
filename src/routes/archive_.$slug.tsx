@@ -13,6 +13,7 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/counter.css";
 import { Shell } from "../components/shell";
 import { albumManifestUrl, photoUrl } from "../photos";
+import { assertSignedIn, requireSignedIn } from "../server/require-user";
 
 type ManifestPhoto = {
   url?: string;
@@ -23,6 +24,9 @@ type ManifestPhoto = {
 const getAlbum = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
+    if (slug.startsWith("20")) {
+      await assertSignedIn(`/archive/${slug}`);
+    }
     const [link] = await db
       .select()
       .from(hyperlinks)
@@ -49,6 +53,10 @@ const getAlbum = createServerFn({ method: "GET" })
   });
 
 export const Route = createFileRoute("/archive_/$slug")({
+  beforeLoad: ({ params }) => {
+    if (!params.slug.startsWith("20")) return;
+    return requireSignedIn(`/archive/${params.slug}`);
+  },
   loader: ({ params }) => getAlbum({ data: params.slug }),
   component: AlbumPage,
 });

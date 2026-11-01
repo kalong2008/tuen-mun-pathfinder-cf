@@ -1,0 +1,22 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@source "./**/*.{ts,tsx}";
+
+.honors :where(button) {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.honors :where(h1, h2, h3, h4, p) {
+  margin: 0;
+}
+
+.honors :where(ul, ol) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

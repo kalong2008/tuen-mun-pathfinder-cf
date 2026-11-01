@@ -10,16 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdventurerHonorsRouteImport } from './routes/adventurer-honors'
 import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as NoticeRouteImport } from './routes/notice'
+import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as ArchiveSlugRouteImport } from './routes/archive_.$slug'
+import { Route as ApiBibleCachedRouteImport } from './routes/api/bible/cached'
 import { Route as ApiVideosIdDownloadRouteImport } from './routes/api/videos/$id/download'
 import { Route as ApiNoticesIdFileSlotRouteImport } from './routes/api/notices/$id/file/$slot'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdventurerHonorsRoute = AdventurerHonorsRouteImport.update({
+  id: '/adventurer-honors',
+  path: '/adventurer-honors',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArchiveRoute = ArchiveRouteImport.update({
@@ -32,6 +41,16 @@ const NoticeRoute = NoticeRouteImport.update({
   path: '/notice',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VideosRoute = VideosRouteImport.update({
   id: '/videos',
   path: '/videos',
@@ -40,6 +59,11 @@ const VideosRoute = VideosRouteImport.update({
 const ArchiveSlugRoute = ArchiveSlugRouteImport.update({
   id: '/archive_/$slug',
   path: '/archive/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBibleCachedRoute = ApiBibleCachedRouteImport.update({
+  id: '/api/bible/cached',
+  path: '/api/bible/cached',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiVideosIdDownloadRoute = ApiVideosIdDownloadRouteImport.update({
@@ -55,29 +79,41 @@ const ApiNoticesIdFileSlotRoute = ApiNoticesIdFileSlotRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
   '/videos': typeof VideosRoute
   '/archive/$slug': typeof ArchiveSlugRoute
+  '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
   '/videos': typeof VideosRoute
   '/archive/$slug': typeof ArchiveSlugRoute
+  '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
   '/videos': typeof VideosRoute
   '/archive_/$slug': typeof ArchiveSlugRoute
+  '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
@@ -85,38 +121,54 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/adventurer-honors'
     | '/archive'
     | '/notice'
+    | '/sign-in'
+    | '/sign-up'
     | '/videos'
     | '/archive/$slug'
+    | '/api/bible/cached'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/adventurer-honors'
     | '/archive'
     | '/notice'
+    | '/sign-in'
+    | '/sign-up'
     | '/videos'
     | '/archive/$slug'
+    | '/api/bible/cached'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
   id:
     | '__root__'
     | '/'
+    | '/adventurer-honors'
     | '/archive'
     | '/notice'
+    | '/sign-in'
+    | '/sign-up'
     | '/videos'
     | '/archive_/$slug'
+    | '/api/bible/cached'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdventurerHonorsRoute: typeof AdventurerHonorsRoute
   ArchiveRoute: typeof ArchiveRoute
   NoticeRoute: typeof NoticeRoute
+  SignInRoute: typeof SignInRoute
+  SignUpRoute: typeof SignUpRoute
   VideosRoute: typeof VideosRoute
   ArchiveSlugRoute: typeof ArchiveSlugRoute
+  ApiBibleCachedRoute: typeof ApiBibleCachedRoute
   ApiVideosIdDownloadRoute: typeof ApiVideosIdDownloadRoute
   ApiNoticesIdFileSlotRoute: typeof ApiNoticesIdFileSlotRoute
 }
@@ -128,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/adventurer-honors': {
+      id: '/adventurer-honors'
+      path: '/adventurer-honors'
+      fullPath: '/adventurer-honors'
+      preLoaderRoute: typeof AdventurerHonorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/archive': {
@@ -144,6 +203,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NoticeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/videos': {
       id: '/videos'
       path: '/videos'
@@ -156,6 +229,13 @@ declare module '@tanstack/react-router' {
       path: '/archive/$slug'
       fullPath: '/archive/$slug'
       preLoaderRoute: typeof ArchiveSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/bible/cached': {
+      id: '/api/bible/cached'
+      path: '/api/bible/cached'
+      fullPath: '/api/bible/cached'
+      preLoaderRoute: typeof ApiBibleCachedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/videos/$id/download': {
@@ -177,10 +257,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdventurerHonorsRoute: AdventurerHonorsRoute,
   ArchiveRoute: ArchiveRoute,
   NoticeRoute: NoticeRoute,
+  SignInRoute: SignInRoute,
+  SignUpRoute: SignUpRoute,
   VideosRoute: VideosRoute,
   ArchiveSlugRoute: ArchiveSlugRoute,
+  ApiBibleCachedRoute: ApiBibleCachedRoute,
   ApiVideosIdDownloadRoute: ApiVideosIdDownloadRoute,
   ApiNoticesIdFileSlotRoute: ApiNoticesIdFileSlotRoute,
 }
@@ -189,10 +273,11 @@ export const routeTree = rootRouteImport
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

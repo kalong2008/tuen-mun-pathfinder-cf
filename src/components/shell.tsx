@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { getRouteApi, Link } from "@tanstack/react-router";
+import { AuthButtons } from "./auth-buttons";
 
 const rootRoute = getRouteApi("__root__");
 
 const KNOWN_PAGES = {
+  "/adventurer-honors": "/adventurer-honors",
   "/notice": "/notice",
   "/videos": "/videos",
 } as const;
@@ -44,16 +46,19 @@ export function Shell({ children }: { children: ReactNode }) {
             <img src="/pathfinder-adventurer.png" alt="" width={120} height={32} />
             <span className="sr">屯門前鋒會</span>
           </Link>
-          <button
-            type="button"
-            className="menu-toggle"
-            aria-expanded={menuOpen}
-            aria-controls="site-nav"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <span className="sr">{menuOpen ? "關閉選單" : "開啟選單"}</span>
-            {menuOpen ? <CloseIcon /> : <MenuIcon />}
-          </button>
+          <div className="bar-end">
+            <AuthButtons />
+            <button
+              type="button"
+              className="menu-toggle"
+              aria-expanded={menuOpen}
+              aria-controls="site-nav"
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              <span className="sr">{menuOpen ? "關閉選單" : "開啟選單"}</span>
+              {menuOpen ? <CloseIcon /> : <MenuIcon />}
+            </button>
+          </div>
           <nav id="site-nav" className={menuOpen ? "site-nav is-open" : "site-nav"} aria-label="主要">
             {sections.map((section) => {
               const columns = section.years
@@ -105,6 +110,9 @@ export function Shell({ children }: { children: ReactNode }) {
                 {link.name}
               </Link>
             ))}
+            <div className="auth-desktop">
+              <AuthButtons />
+            </div>
           </nav>
         </div>
       </header>

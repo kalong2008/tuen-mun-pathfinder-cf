@@ -4,8 +4,10 @@ import { hyperlinks } from "@schema";
 import { asc, db } from "void/db";
 import { Shell } from "../components/shell";
 import { coverFor } from "../photos";
+import { assertSignedIn, requireSignedIn } from "../server/require-user";
 
 const getArchive = createServerFn({ method: "GET" }).handler(async () => {
+  await assertSignedIn("/archive");
   const links = await db
     .select()
     .from(hyperlinks)
@@ -16,6 +18,7 @@ const getArchive = createServerFn({ method: "GET" }).handler(async () => {
 });
 
 export const Route = createFileRoute("/archive")({
+  beforeLoad: () => requireSignedIn("/archive"),
   loader: () => getArchive(),
   component: ArchivePage,
 });

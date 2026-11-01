@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { calendarEvents, notices, siteSettings } from "@schema";
 import { asc, db } from "void/db";
 import { ClubCalendar } from "../components/club-calendar";
+import { VersePopup } from "../components/verse-popup";
 import { noticeFiles } from "../notice-files";
 import { Shell } from "../components/shell";
 import { photoUrl } from "../photos";
@@ -48,6 +49,7 @@ function HomePage() {
 
   return (
     <Shell>
+      <VersePopup />
       <section className="banner">
         {image("homepage.banner") ? (
           <img src={image("homepage.banner") ?? ""} alt="" width={4000} height={1610} />

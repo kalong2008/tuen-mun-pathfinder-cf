@@ -7,6 +7,7 @@ export default defineConfig({
   },
   worker: {
     compatibility_date: "2026-02-24",
+    compatibility_flags: ["nodejs_compat"],
   },
   cloudflare: {
     name: "tuen-mun-pathfinder-cf",
