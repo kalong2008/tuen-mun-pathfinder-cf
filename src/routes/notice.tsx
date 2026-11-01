@@ -16,7 +16,44 @@ export const Route = createFileRoute("/notice")({
 
 function NoticePage() {
   const rows = Route.useLoaderData().filter((notice) => noticeFiles(notice).length > 0);
-  const today = localToday();
+  const today = hongKongToday();
+  const current = rows.filter((notice) => !isExpired(notice, today));
+  const expired = rows.filter((notice) => isExpired(notice, today));
+
+  return (
+    <Shell>
+      <section className="page">
+        <h1 className="page-title">活動通告</h1>
+        {current.length === 0 ? (
+          <p className="empty">
+            {rows.length === 0
+              ? "還沒有通告。新通告公布之後會按活動種類列在這裡。"
+              : "暫時沒有未過期的通告。"}
+          </p>
+        ) : (
+          <NoticeGrid rows={current} today={today} />
+        )}
+        {expired.length > 0 ? (
+          <details className="notice-archive">
+            <summary>
+              <span>過期通告</span>
+              <ArchiveChevron />
+            </summary>
+            <NoticeGrid rows={expired} today={today} />
+          </details>
+        ) : null}
+      </section>
+    </Shell>
+  );
+}
+
+function NoticeGrid({
+  rows,
+  today,
+}: {
+  rows: Array<ReturnType<typeof Route.useLoaderData>[number]>;
+  today: string;
+}) {
   const groups = new Map<string, typeof rows>();
   for (const notice of rows) {
     const current = groups.get(notice.activityType) ?? [];
@@ -25,66 +62,79 @@ function NoticePage() {
   }
 
   return (
-    <Shell>
-      <section className="page">
-        <h1 className="page-title">活動通告</h1>
-        {rows.length === 0 ? (
-          <p className="empty">還沒有通告。新通告公布之後會按活動種類列在這裡。</p>
-        ) : (
-          <div className="notice-grid">
-            {[...groups.entries()].map(([activityType, items]) => {
-              const allPast = items.every((notice) => notice.date < today);
-              return (
-                <article key={activityType} className={allPast ? "notice-card is-past" : "notice-card"}>
-                  <div className={`notice-head ${headerTone(items, allPast)}`}>
-                    <span className={`notice-icon ${iconTone(items, allPast)}`}>{activityIcon(activityType)}</span>
-                    <h2>
-                      {activityType}活動
-                      {allPast ? <small>（過去的活動）</small> : null}
-                    </h2>
-                  </div>
-                  <div className="notice-body">
-                    {items.map((notice) => {
-                      const past = notice.date < today;
-                      return (
-                        <div key={notice.id} className={past && !allPast ? "notice-item is-past" : "notice-item"}>
-                          <h3 className="notice-title">
-                            <CalendarIcon />
-                            {notice.title}
-                          </h3>
-                          <div className="notice-files">
-                            {noticeFiles(notice).map((file) => (
-                              <div key={file.url} className="notice-file">
-                                <a href={file.url} target="_blank" rel="noreferrer">
-                                  <FileIcon />
-                                  <span>通告下載</span>
-                                </a>
-                                {file.target ? (
-                                  <span className={`badge ${past ? "badge-gray" : badgeTone(file.target)}`}>{file.target}</span>
-                                ) : null}
-                              </div>
-                            ))}
-                            {notice.endDate && notice.endDate !== notice.date ? (
-                              <p className="notice-range">{formatNoticeRange(notice.date, notice.endDate)}</p>
-                            ) : null}
-                          </div>
+    <div className="notice-grid">
+      {[...groups.entries()].map(([activityType, items]) => {
+        const allPast = items.every((notice) => isExpired(notice, today));
+        return (
+          <article key={activityType} className={allPast ? "notice-card is-past" : "notice-card"}>
+            <div className={`notice-head ${headerTone(items, allPast)}`}>
+              <span className={`notice-icon ${iconTone(items, allPast)}`}>{activityIcon(activityType)}</span>
+              <h2>
+                {activityType}活動
+                {allPast ? <small>（過去的活動）</small> : null}
+              </h2>
+            </div>
+            <div className="notice-body">
+              {items.map((notice) => {
+                const past = isExpired(notice, today);
+                return (
+                  <div key={notice.id} className={past && !allPast ? "notice-item is-past" : "notice-item"}>
+                    <h3 className="notice-title">
+                      <CalendarIcon />
+                      {notice.title}
+                    </h3>
+                    <div className="notice-files">
+                      {noticeFiles(notice).map((file) => (
+                        <div key={file.url} className="notice-file">
+                          <a href={file.url} target="_blank" rel="noreferrer">
+                            <FileIcon />
+                            <span>通告下載</span>
+                          </a>
+                          {file.target ? (
+                            <span className={`badge ${past ? "badge-gray" : badgeTone(file.target)}`}>{file.target}</span>
+                          ) : null}
                         </div>
-                      );
-                    })}
+                      ))}
+                      {notice.endDate && notice.endDate !== notice.date ? (
+                        <p className="notice-range">{formatNoticeRange(notice.date, notice.endDate)}</p>
+                      ) : null}
+                    </div>
                   </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-      </section>
-    </Shell>
+                );
+              })}
+            </div>
+          </article>
+        );
+      })}
+    </div>
   );
 }
 
-function localToday() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+function ArchiveChevron() {
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true" className="chevron">
+      <path fill="currentColor" d="M5.2 7.4a1 1 0 0 1 1.4 0L10 10.8l3.4-3.4a1 1 0 1 1 1.4 1.4l-4.1 4.1a1 1 0 0 1-1.4 0L5.2 8.8a1 1 0 0 1 0-1.4Z" />
+    </svg>
+  );
+}
+
+function hongKongToday() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Hong_Kong",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+function noticeLastDay(notice: { date: string; endDate: string }) {
+  const start = notice.date.slice(0, 10);
+  const end = notice.endDate.slice(0, 10);
+  return end > start ? end : start;
+}
+
+function isExpired(notice: { date: string; endDate: string }, today: string) {
+  return noticeLastDay(notice) < today;
 }
 
 function headerTone(items: Array<{ target: string[] }>, allPast: boolean) {
