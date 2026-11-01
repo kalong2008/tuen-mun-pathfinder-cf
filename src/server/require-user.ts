@@ -8,9 +8,13 @@ type BrowserClerk = {
   user?: unknown;
 };
 
-export async function assertSignedIn(returnPath: string) {
+export async function readIsSignedIn() {
   const { isAuthenticated } = await auth();
-  if (!isAuthenticated) {
+  return isAuthenticated;
+}
+
+export async function assertSignedIn(returnPath: string) {
+  if (!(await readIsSignedIn())) {
     throw redirect({
       to: "/sign-in",
       search: { redirect_url: safeReturnPath(returnPath) },

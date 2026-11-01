@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { useAuth, useClerk } from "@clerk/tanstack-react-start";
 import PhotoAlbum, { type RenderPhotoProps } from "react-photo-album";
 import Lightbox from "yet-another-react-lightbox";
 import Counter from "yet-another-react-lightbox/plugins/counter";
@@ -13,7 +14,7 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/counter.css";
 import { Shell } from "../components/shell";
 import { albumManifestUrl, photoUrl } from "../photos";
-import { assertSignedIn, requireSignedIn } from "../server/require-user";
+import { readIsSignedIn } from "../server/require-user";
 
 type ManifestPhoto = {
   url?: string;
@@ -24,22 +25,24 @@ type ManifestPhoto = {
 const getAlbum = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
-    if (slug.startsWith("20")) {
-      await assertSignedIn(`/${slug}`);
-    }
     const [link] = await db
       .select()
       .from(hyperlinks)
       .where(eq(hyperlinks.href, `/${slug}`))
       .limit(1);
+    const title = link?.name ?? slug;
+    if (slug.startsWith("20") && !(await readIsSignedIn())) {
+      return { locked: true as const, title, photos: [] };
+    }
     const response = await fetch(albumManifestUrl(slug));
     if (!response.ok) {
-      return { title: link?.name ?? slug, photos: [] };
+      return { locked: false as const, title, photos: [] };
     }
     const manifest = (await response.json()) as { photos?: ManifestPhoto[] } | ManifestPhoto[];
     const list = Array.isArray(manifest) ? manifest : (manifest.photos ?? []);
     return {
-      title: link?.name ?? slug,
+      locked: false as const,
+      title,
       photos: list.flatMap((photo) => {
         if (!photo.url) return [];
         return [{
@@ -53,10 +56,6 @@ const getAlbum = createServerFn({ method: "GET" })
   });
 
 export const Route = createFileRoute("/$slug")({
-  beforeLoad: ({ params }) => {
-    if (!params.slug.startsWith("20")) return;
-    return requireSignedIn(`/${params.slug}`);
-  },
   loader: ({ params }) => getAlbum({ data: params.slug }),
   component: AlbumPage,
 });
@@ -71,7 +70,40 @@ function AlbumPhoto({ wrapperStyle, renderDefaultPhoto }: RenderPhotoProps) {
 
 function AlbumPage() {
   const album = Route.useLoaderData();
+  const { isLoaded, isSignedIn } = useAuth();
+  const { openSignIn } = useClerk();
   const [index, setIndex] = useState(-1);
+  const opened = useRef(false);
+
+  useEffect(() => {
+    if (!album.locked || !isLoaded) return;
+    if (isSignedIn) {
+      const key = "album-unlock";
+      try {
+        const previous = Number(sessionStorage.getItem(key) || 0);
+        if (Date.now() - previous < 5000) return;
+        sessionStorage.setItem(key, String(Date.now()));
+      } catch {
+        // Storage can be unavailable. Still reload once.
+      }
+      window.location.reload();
+      return;
+    }
+    if (opened.current) return;
+    opened.current = true;
+    openSignIn();
+  }, [album.locked, isLoaded, isSignedIn, openSignIn]);
+
+  if (album.locked) {
+    return (
+      <Shell>
+        <section className="page page-wide">
+          <h1 className="page-title">{album.title}</h1>
+          <p className="empty">請先登入才能查看這本相簿。</p>
+        </section>
+      </Shell>
+    );
+  }
 
   return (
     <Shell>

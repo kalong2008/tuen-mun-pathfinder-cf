@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { hyperlinks } from "@schema";
 import { asc, db } from "void/db";
+import { AlbumLink } from "../components/album-link";
 import { Shell } from "../components/shell";
 import { coverFor } from "../photos";
 import { assertSignedIn, requireSignedIn } from "../server/require-user";
@@ -46,10 +47,9 @@ function ArchivePage() {
               <h2>{year}</h2>
               <div className="album-grid">
                 {(years.get(year) ?? []).map((link) => (
-                  <Link
+                  <AlbumLink
                     key={link.id}
-                    to="/$slug"
-                    params={{ slug: link.href.replace(/^\//, "") }}
+                    href={link.href}
                     className="album-card"
                   >
                     {link.cover ? (
@@ -58,7 +58,7 @@ function ArchivePage() {
                       <span className="album-fallback" />
                     )}
                     <span>{link.name}</span>
-                  </Link>
+                  </AlbumLink>
                 ))}
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { getRouteApi, Link } from "@tanstack/react-router";
+import { AlbumLink, ProtectedVisit } from "./album-link";
 import { AuthButtons } from "./auth-buttons";
 
 const rootRoute = getRouteApi("__root__");
@@ -39,6 +40,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="site">
+      <ProtectedVisit />
       <a className="skip" href="#content">跳到內容</a>
       <header className={hidden ? "bar is-hidden" : "bar"}>
         <div className="bar-inner">
@@ -84,15 +86,14 @@ export function Shell({ children }: { children: ReactNode }) {
                       <div key={column.year}>
                         {columns.length > 1 ? <p className="year-label">{column.year}年</p> : null}
                         {column.links.map((link) => (
-                          <Link
+                          <AlbumLink
                             key={link.id}
-                            to="/$slug"
-                            params={{ slug: link.href.replace(/^\//, "") }}
+                            href={link.href}
                             className="year-link"
                             onClick={() => setMenuOpen(false)}
                           >
                             {link.name}
-                          </Link>
+                          </AlbumLink>
                         ))}
                       </div>
                     ))}
