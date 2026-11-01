@@ -10,13 +10,15 @@ This app uses TanStack Start for routing and rendering. Void provides Cloudflare
 
 ## Learned User Preferences
 
-- Keep the public UI on the original club site's layout and behavior. Follow that site when pages differ, including header menus, notice PDFs, and past videos.
+- Keep the public UI on the original club site's layout and behavior. Follow that site when pages differ, including header menus, notice PDFs, and past videos. On the calendar, 查看通告詳情 opens the notice PDF only for activities that are not 集會, and each notice shows its 前鋒會 or 幼鋒會 badge even when there is only one file.
 - Keep the database on Cloudflare. The user rejected Neon and external PostgreSQL.
+- Deploy by pushing to `main`. Leave Cloudflare Workers Builds disabled so they do not run a second Wrangler deploy.
 
 ## Learned Workspace Facts
 
-- This repo is the Void, Cloudflare, and TanStack Start rewrite of the Next.js app at `/Users/kalongchan/programmer/tuen-mun-pathfinder`.
+- This repo is the Void, Cloudflare, and TanStack Start rewrite of the Next.js app at `/Users/kalongchan/programmer/tuen-mun-pathfinder`. `tuenmunpathfinder.com` still serves that Next.js site.
 - The database is Cloudflare D1 (SQLite via Void). Do not set Postgres in `void.config.ts`, and do not add Neon, a Neon `DATABASE_URL`, or Hyperdrive.
-- Void allows only one root `.env` file. Do not create `.env.example` or `.env.local`.
-- Notices and calendar entries come from Nocoly and are stored in D1. Notice PDFs stay on Nocoly and are served through `/api/notices/:id/file/:slot` (`pathfinder` and `adventurer`). Album metadata and past-video records are in D1; photo files are on Google Cloud; past-video playback is on Mux.
-- Deploy with `void deploy`. Void provisions D1, and the GitHub workflow does not use a `DATABASE_URL` secret.
+- Void allows only one root `.env` file. Do not create `.env.example` or `.env.local`. `env.ts` is the schema; `.env` is local-only and is not uploaded on deploy.
+- Notices and calendar entries come from Nocoly and are stored in D1. Notice PDFs stay on Nocoly and are served through `/api/notices/:id/file/:slot` (`pathfinder` and `adventurer`). Album metadata and past-video records are in D1; photo files are on Google Cloud; past-video playback uses Mux playback IDs in D1. Mux API tokens are not used by the Worker.
+- Pushing to `main` runs `.github/workflows/void-deploy.yml` (`void deploy`), which provisions D1 and applies migrations. The workflow does not use a `DATABASE_URL` secret. Nocoly keys and `CLERK_SECRET_KEY` are Worker secrets (`void secret put`). `VITE_CLERK_PUBLISHABLE_KEY` is a GitHub Actions variable because production builds ignore `.env`. Local `.env` keeps the Clerk development keys.
+- Clerk sign-in follows the old site. Photo albums and `/adventurer-honors` require sign-in; honors content requires a Clerk user whose `publicMetadata.role` is `admin`. The home page, notices, and videos stay public. The home page shows a daily Bible verse stored in D1.
