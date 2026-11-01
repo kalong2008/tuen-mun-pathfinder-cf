@@ -22,6 +22,7 @@ import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
 import { Route as SignUpIndexRouteImport } from './routes/sign-up.index'
 import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as ApiBibleCachedRouteImport } from './routes/api/bible/cached'
+import { Route as ApiSyncNoticeCalendarRouteImport } from './routes/api/sync/notice-calendar'
 import { Route as ApiVideosIdDownloadRouteImport } from './routes/api/videos/$id/download'
 import { Route as ApiNoticesIdFileSlotRouteImport } from './routes/api/notices/$id/file/$slot'
 
@@ -90,6 +91,11 @@ const ApiBibleCachedRoute = ApiBibleCachedRouteImport.update({
   path: '/api/bible/cached',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSyncNoticeCalendarRoute = ApiSyncNoticeCalendarRouteImport.update({
+  id: '/api/sync/notice-calendar',
+  path: '/api/sync/notice-calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiVideosIdDownloadRoute = ApiVideosIdDownloadRouteImport.update({
   id: '/api/videos/$id/download',
   path: '/api/videos/$id/download',
@@ -115,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/sign-in/': typeof SignInIndexRoute
   '/sign-up/': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
+  '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInIndexRoute
   '/sign-up': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
+  '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/sign-in/': typeof SignInIndexRoute
   '/sign-up/': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
+  '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/sign-in/'
     | '/sign-up/'
     | '/api/bible/cached'
+    | '/api/sync/notice-calendar'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
   fileRoutesByTo: FileRoutesByTo
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/api/bible/cached'
+    | '/api/sync/notice-calendar'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
   id:
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/sign-in/'
     | '/sign-up/'
     | '/api/bible/cached'
+    | '/api/sync/notice-calendar'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
   fileRoutesById: FileRoutesById
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   SignUpRoute: typeof SignUpRouteWithChildren
   VideosRoute: typeof VideosRoute
   ApiBibleCachedRoute: typeof ApiBibleCachedRoute
+  ApiSyncNoticeCalendarRoute: typeof ApiSyncNoticeCalendarRoute
   ApiVideosIdDownloadRoute: typeof ApiVideosIdDownloadRoute
   ApiNoticesIdFileSlotRoute: typeof ApiNoticesIdFileSlotRoute
 }
@@ -310,6 +323,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiBibleCachedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/sync/notice-calendar': {
+      id: '/api/sync/notice-calendar'
+      path: '/api/sync/notice-calendar'
+      fullPath: '/api/sync/notice-calendar'
+      preLoaderRoute: typeof ApiSyncNoticeCalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/videos/$id/download': {
       id: '/api/videos/$id/download'
       path: '/api/videos/$id/download'
@@ -363,6 +383,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignUpRoute: SignUpRouteWithChildren,
   VideosRoute: VideosRoute,
   ApiBibleCachedRoute: ApiBibleCachedRoute,
+  ApiSyncNoticeCalendarRoute: ApiSyncNoticeCalendarRoute,
   ApiVideosIdDownloadRoute: ApiVideosIdDownloadRoute,
   ApiNoticesIdFileSlotRoute: ApiNoticesIdFileSlotRoute,
 }
