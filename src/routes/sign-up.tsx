@@ -15,7 +15,12 @@ function SignUpPage() {
   return (
     <Shell>
       <section className="page auth-page">
-        <SignUp fallbackRedirectUrl={redirect} signInUrl="/sign-in" />
+        <SignUp
+          routing="path"
+          path="/sign-up"
+          fallbackRedirectUrl={redirect}
+          signInUrl="/sign-in"
+        />
       </section>
     </Shell>
   );

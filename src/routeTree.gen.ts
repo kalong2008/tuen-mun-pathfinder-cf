@@ -17,6 +17,8 @@ import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as ArchiveSlugRouteImport } from './routes/archive_.$slug'
+import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
+import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as ApiBibleCachedRouteImport } from './routes/api/bible/cached'
 import { Route as ApiVideosIdDownloadRouteImport } from './routes/api/videos/$id/download'
 import { Route as ApiNoticesIdFileSlotRouteImport } from './routes/api/notices/$id/file/$slot'
@@ -61,6 +63,16 @@ const ArchiveSlugRoute = ArchiveSlugRouteImport.update({
   path: '/archive/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignInSplatRoute = SignInSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => SignInRoute,
+} as any)
+const SignUpSplatRoute = SignUpSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => SignUpRoute,
+} as any)
 const ApiBibleCachedRoute = ApiBibleCachedRouteImport.update({
   id: '/api/bible/cached',
   path: '/api/bible/cached',
@@ -82,10 +94,12 @@ export interface FileRoutesByFullPath {
   '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
+  '/sign-in': typeof SignInRouteWithChildren
+  '/sign-up': typeof SignUpRouteWithChildren
   '/videos': typeof VideosRoute
   '/archive/$slug': typeof ArchiveSlugRoute
+  '/sign-in/$': typeof SignInSplatRoute
+  '/sign-up/$': typeof SignUpSplatRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
@@ -95,10 +109,12 @@ export interface FileRoutesByTo {
   '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
+  '/sign-in': typeof SignInRouteWithChildren
+  '/sign-up': typeof SignUpRouteWithChildren
   '/videos': typeof VideosRoute
   '/archive/$slug': typeof ArchiveSlugRoute
+  '/sign-in/$': typeof SignInSplatRoute
+  '/sign-up/$': typeof SignUpSplatRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
@@ -109,10 +125,12 @@ export interface FileRoutesById {
   '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
+  '/sign-in': typeof SignInRouteWithChildren
+  '/sign-up': typeof SignUpRouteWithChildren
   '/videos': typeof VideosRoute
   '/archive_/$slug': typeof ArchiveSlugRoute
+  '/sign-in/$': typeof SignInSplatRoute
+  '/sign-up/$': typeof SignUpSplatRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
@@ -128,6 +146,8 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/videos'
     | '/archive/$slug'
+    | '/sign-in/$'
+    | '/sign-up/$'
     | '/api/bible/cached'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
@@ -141,6 +161,8 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/videos'
     | '/archive/$slug'
+    | '/sign-in/$'
+    | '/sign-up/$'
     | '/api/bible/cached'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
@@ -154,6 +176,8 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/videos'
     | '/archive_/$slug'
+    | '/sign-in/$'
+    | '/sign-up/$'
     | '/api/bible/cached'
     | '/api/videos/$id/download'
     | '/api/notices/$id/file/$slot'
@@ -164,8 +188,8 @@ export interface RootRouteChildren {
   AdventurerHonorsRoute: typeof AdventurerHonorsRoute
   ArchiveRoute: typeof ArchiveRoute
   NoticeRoute: typeof NoticeRoute
-  SignInRoute: typeof SignInRoute
-  SignUpRoute: typeof SignUpRoute
+  SignInRoute: typeof SignInRouteWithChildren
+  SignUpRoute: typeof SignUpRouteWithChildren
   VideosRoute: typeof VideosRoute
   ArchiveSlugRoute: typeof ArchiveSlugRoute
   ApiBibleCachedRoute: typeof ApiBibleCachedRoute
@@ -231,6 +255,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArchiveSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sign-in/$': {
+      id: '/sign-in/$'
+      path: '/$'
+      fullPath: '/sign-in/$'
+      preLoaderRoute: typeof SignInSplatRouteImport
+      parentRoute: typeof SignInRoute
+    }
+    '/sign-up/$': {
+      id: '/sign-up/$'
+      path: '/$'
+      fullPath: '/sign-up/$'
+      preLoaderRoute: typeof SignUpSplatRouteImport
+      parentRoute: typeof SignUpRoute
+    }
     '/api/bible/cached': {
       id: '/api/bible/cached'
       path: '/api/bible/cached'
@@ -255,13 +293,35 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface SignInRouteChildren {
+  SignInSplatRoute: typeof SignInSplatRoute
+}
+
+const SignInRouteChildren: SignInRouteChildren = {
+  SignInSplatRoute: SignInSplatRoute,
+}
+
+const SignInRouteWithChildren =
+  SignInRoute._addFileChildren(SignInRouteChildren)
+
+interface SignUpRouteChildren {
+  SignUpSplatRoute: typeof SignUpSplatRoute
+}
+
+const SignUpRouteChildren: SignUpRouteChildren = {
+  SignUpSplatRoute: SignUpSplatRoute,
+}
+
+const SignUpRouteWithChildren =
+  SignUpRoute._addFileChildren(SignUpRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdventurerHonorsRoute: AdventurerHonorsRoute,
   ArchiveRoute: ArchiveRoute,
   NoticeRoute: NoticeRoute,
-  SignInRoute: SignInRoute,
-  SignUpRoute: SignUpRoute,
+  SignInRoute: SignInRouteWithChildren,
+  SignUpRoute: SignUpRouteWithChildren,
   VideosRoute: VideosRoute,
   ArchiveSlugRoute: ArchiveSlugRoute,
   ApiBibleCachedRoute: ApiBibleCachedRoute,
