@@ -48,7 +48,7 @@ function ArchivePage() {
                 {(years.get(year) ?? []).map((link) => (
                   <Link
                     key={link.id}
-                    to="/archive/$slug"
+                    to="/$slug"
                     params={{ slug: link.href.replace(/^\//, "") }}
                     className="album-card"
                   >

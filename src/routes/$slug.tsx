@@ -25,7 +25,7 @@ const getAlbum = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     if (slug.startsWith("20")) {
-      await assertSignedIn(`/archive/${slug}`);
+      await assertSignedIn(`/${slug}`);
     }
     const [link] = await db
       .select()
@@ -52,10 +52,10 @@ const getAlbum = createServerFn({ method: "GET" })
     };
   });
 
-export const Route = createFileRoute("/archive_/$slug")({
+export const Route = createFileRoute("/$slug")({
   beforeLoad: ({ params }) => {
     if (!params.slug.startsWith("20")) return;
-    return requireSignedIn(`/archive/${params.slug}`);
+    return requireSignedIn(`/${params.slug}`);
   },
   loader: ({ params }) => getAlbum({ data: params.slug }),
   component: AlbumPage,

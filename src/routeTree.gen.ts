@@ -10,13 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AdventurerHonorsRouteImport } from './routes/adventurer-honors'
 import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as NoticeRouteImport } from './routes/notice'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as VideosRouteImport } from './routes/videos'
-import { Route as ArchiveSlugRouteImport } from './routes/archive_.$slug'
 import { Route as SignInIndexRouteImport } from './routes/sign-in.index'
 import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
 import { Route as SignUpIndexRouteImport } from './routes/sign-up.index'
@@ -28,6 +28,11 @@ import { Route as ApiNoticesIdFileSlotRouteImport } from './routes/api/notices/$
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SlugRoute = SlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdventurerHonorsRoute = AdventurerHonorsRouteImport.update({
@@ -58,11 +63,6 @@ const SignUpRoute = SignUpRouteImport.update({
 const VideosRoute = VideosRouteImport.update({
   id: '/videos',
   path: '/videos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArchiveSlugRoute = ArchiveSlugRouteImport.update({
-  id: '/archive_/$slug',
-  path: '/archive/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignInIndexRoute = SignInIndexRouteImport.update({
@@ -103,13 +103,13 @@ const ApiNoticesIdFileSlotRoute = ApiNoticesIdFileSlotRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
   '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
   '/videos': typeof VideosRoute
-  '/archive/$slug': typeof ArchiveSlugRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
   '/sign-in/': typeof SignInIndexRoute
@@ -120,11 +120,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
   '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
   '/videos': typeof VideosRoute
-  '/archive/$slug': typeof ArchiveSlugRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
   '/sign-in': typeof SignInIndexRoute
@@ -136,13 +136,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
   '/adventurer-honors': typeof AdventurerHonorsRoute
   '/archive': typeof ArchiveRoute
   '/notice': typeof NoticeRoute
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
   '/videos': typeof VideosRoute
-  '/archive_/$slug': typeof ArchiveSlugRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
   '/sign-in/': typeof SignInIndexRoute
@@ -155,13 +155,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$slug'
     | '/adventurer-honors'
     | '/archive'
     | '/notice'
     | '/sign-in'
     | '/sign-up'
     | '/videos'
-    | '/archive/$slug'
     | '/sign-in/$'
     | '/sign-up/$'
     | '/sign-in/'
@@ -172,11 +172,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$slug'
     | '/adventurer-honors'
     | '/archive'
     | '/notice'
     | '/videos'
-    | '/archive/$slug'
     | '/sign-in/$'
     | '/sign-up/$'
     | '/sign-in'
@@ -187,13 +187,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$slug'
     | '/adventurer-honors'
     | '/archive'
     | '/notice'
     | '/sign-in'
     | '/sign-up'
     | '/videos'
-    | '/archive_/$slug'
     | '/sign-in/$'
     | '/sign-up/$'
     | '/sign-in/'
@@ -205,13 +205,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SlugRoute: typeof SlugRoute
   AdventurerHonorsRoute: typeof AdventurerHonorsRoute
   ArchiveRoute: typeof ArchiveRoute
   NoticeRoute: typeof NoticeRoute
   SignInRoute: typeof SignInRouteWithChildren
   SignUpRoute: typeof SignUpRouteWithChildren
   VideosRoute: typeof VideosRoute
-  ArchiveSlugRoute: typeof ArchiveSlugRoute
   ApiBibleCachedRoute: typeof ApiBibleCachedRoute
   ApiVideosIdDownloadRoute: typeof ApiVideosIdDownloadRoute
   ApiNoticesIdFileSlotRoute: typeof ApiNoticesIdFileSlotRoute
@@ -224,6 +224,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$slug': {
+      id: '/$slug'
+      path: '/$slug'
+      fullPath: '/$slug'
+      preLoaderRoute: typeof SlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/adventurer-honors': {
@@ -266,13 +273,6 @@ declare module '@tanstack/react-router' {
       path: '/videos'
       fullPath: '/videos'
       preLoaderRoute: typeof VideosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/archive_/$slug': {
-      id: '/archive_/$slug'
-      path: '/archive/$slug'
-      fullPath: '/archive/$slug'
-      preLoaderRoute: typeof ArchiveSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sign-in/': {
@@ -355,13 +355,13 @@ const SignUpRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SlugRoute: SlugRoute,
   AdventurerHonorsRoute: AdventurerHonorsRoute,
   ArchiveRoute: ArchiveRoute,
   NoticeRoute: NoticeRoute,
   SignInRoute: SignInRouteWithChildren,
   SignUpRoute: SignUpRouteWithChildren,
   VideosRoute: VideosRoute,
-  ArchiveSlugRoute: ArchiveSlugRoute,
   ApiBibleCachedRoute: ApiBibleCachedRoute,
   ApiVideosIdDownloadRoute: ApiVideosIdDownloadRoute,
   ApiNoticesIdFileSlotRoute: ApiNoticesIdFileSlotRoute,

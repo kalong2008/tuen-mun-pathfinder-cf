@@ -86,7 +86,7 @@ export function Shell({ children }: { children: ReactNode }) {
                         {column.links.map((link) => (
                           <Link
                             key={link.id}
-                            to="/archive/$slug"
+                            to="/$slug"
                             params={{ slug: link.href.replace(/^\//, "") }}
                             className="year-link"
                             onClick={() => setMenuOpen(false)}
