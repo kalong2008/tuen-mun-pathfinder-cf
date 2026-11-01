@@ -8,6 +8,7 @@ const KNOWN_PAGES = {
   "/adventurer-honors": "/adventurer-honors",
   "/notice": "/notice",
   "/videos": "/videos",
+  "/contact": "/contact",
 } as const;
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -110,6 +111,11 @@ export function Shell({ children }: { children: ReactNode }) {
                 {link.name}
               </Link>
             ))}
+            {links.some((link) => link.href === "/contact") ? null : (
+              <Link to="/contact" className="nav-text" onClick={() => setMenuOpen(false)}>
+                聯絡我們
+              </Link>
+            )}
             <div className="auth-desktop">
               <AuthButtons />
             </div>
