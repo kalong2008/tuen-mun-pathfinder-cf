@@ -153,6 +153,15 @@ function parseNotice(row: Record<string, unknown>): ParsedNotice | null {
   };
 }
 
+export function calendarSourceRows(rows: Record<string, unknown>[]): Record<string, unknown>[] {
+  return rows.filter((row) => {
+    const hasType = optionLabels(row[NOTICE_FIELDS.activityType]).length > 0;
+    const hasPdf =
+      hasAttachment(row[NOTICE_FIELDS.pathfinderPdf]) || hasAttachment(row[NOTICE_FIELDS.adventurerPdf]);
+    return hasType || hasPdf;
+  });
+}
+
 export function toSyncRows(
   meetingRows: Record<string, unknown>[],
   noticeRows: Record<string, unknown>[],

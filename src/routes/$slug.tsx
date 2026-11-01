@@ -21,16 +21,29 @@ type ManifestPhoto = {
   height?: number;
 };
 
+async function findAlbumLink(slug: string) {
+  if (slug === "archive") throw notFound();
+  const [link] = await db
+    .select()
+    .from(hyperlinks)
+    .where(eq(hyperlinks.href, `/${slug}`))
+    .limit(1);
+  if (!link) throw notFound();
+  return link;
+}
+
+const getAlbumLink = createServerFn({ method: "GET" })
+  .validator((slug: string) => slug)
+  .handler(async ({ data: slug }) => {
+    const link = await findAlbumLink(slug);
+    return { name: link.name };
+  });
+
 const getAlbum = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
-    if (slug === "archive") throw notFound();
-    const [link] = await db
-      .select()
-      .from(hyperlinks)
-      .where(eq(hyperlinks.href, `/${slug}`))
-      .limit(1);
-    const title = link?.name ?? slug;
+    const link = await findAlbumLink(slug);
+    const title = link.name;
     if (slug.startsWith("20")) {
       await assertSignedIn(`/${slug}`);
     }
@@ -48,20 +61,21 @@ const getAlbum = createServerFn({ method: "GET" })
           src: photoUrl(photo.url),
           width: photo.width ?? 3,
           height: photo.height ?? 2,
-          alt: link?.name ?? slug,
+          alt: link.name,
         }];
       }),
     };
   });
 
 export const Route = createFileRoute("/$slug")({
-  beforeLoad: ({ params }) => {
-    if (params.slug === "archive") throw notFound();
+  beforeLoad: async ({ params }) => {
+    await getAlbumLink({ data: params.slug });
     if (!params.slug.startsWith("20")) return;
-    return requireSignedIn(`/${params.slug}`);
+    await requireSignedIn(`/${params.slug}`);
   },
   loader: ({ params }) => getAlbum({ data: params.slug }),
   component: AlbumPage,
+  notFoundComponent: AlbumNotFound,
 });
 
 function AlbumPhoto({ wrapperStyle, renderDefaultPhoto }: RenderPhotoProps) {
@@ -69,6 +83,17 @@ function AlbumPhoto({ wrapperStyle, renderDefaultPhoto }: RenderPhotoProps) {
     <div className="album-photo" style={{ ...wrapperStyle, borderRadius: "10px", overflow: "hidden" }}>
       {renderDefaultPhoto({ wrapped: true })}
     </div>
+  );
+}
+
+function AlbumNotFound() {
+  return (
+    <Shell>
+      <section className="page">
+        <h1 className="page-title">找不到頁面</h1>
+        <p className="empty">這個網址沒有對應的頁面。</p>
+      </section>
+    </Shell>
   );
 }
 

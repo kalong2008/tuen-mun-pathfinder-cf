@@ -7,7 +7,8 @@ async function manualSyncResponse(): Promise<Response> {
     if (outcome.limited) {
       return Response.json({ ok: false, error: "Daily sync limit reached." }, { status: 429 });
     }
-    return Response.json({ ok: true, notices: outcome.notices, events: outcome.events });
+    const { limited: _limited, ...result } = outcome;
+    return Response.json({ ok: true, ...result });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Sync failed.";
     return Response.json({ ok: false, error: message }, { status: 502 });

@@ -1,33 +1,91 @@
-import { calendarEvents, notices } from "@schema";
+import { albumHighlights, calendarEvents, hyperlinks, notices, photoSections, siteSettings, videos } from "@schema";
 import { db } from "void/db";
-import { MEETINGS_WORKSHEET_ID, NOTICES_WORKSHEET_ID, toSyncRows, type CalendarSyncRow, type NoticeSyncRow } from "./notice-calendar";
+import { calendarSourceRows, MEETINGS_WORKSHEET_ID, NOTICES_WORKSHEET_ID, toSyncRows } from "./notice-calendar";
 import { listWorksheetRows } from "./nocoly";
+import {
+  albumLinks,
+  highlightRows,
+  HOMEPAGE_WORKSHEET_ID,
+  homepageSettings,
+  OTHER_PAGES_WORKSHEET_ID,
+  PHOTO_SECTIONS_WORKSHEET_ID,
+  photoSections as parsePhotoSections,
+  videoRows,
+} from "./site-content";
 
 const INSERT_CHUNK = 8;
+const BATCH_SIZE = 20;
 
-export async function syncNoticeCalendar(): Promise<{ notices: number; events: number }> {
-  const [meetingRows, noticeRows] = await Promise.all([
+export type SiteSyncResult = {
+  notices: number;
+  events: number;
+  albums: number;
+  pages: number;
+  sections: number;
+  videos: number;
+  highlights: number;
+  images: number;
+};
+
+export async function syncNoticeCalendar(): Promise<SiteSyncResult> {
+  const [meetingRows, activityRows, imageRows, sectionRows, pageRows] = await Promise.all([
     listWorksheetRows(MEETINGS_WORKSHEET_ID),
     listWorksheetRows(NOTICES_WORKSHEET_ID),
+    listWorksheetRows(HOMEPAGE_WORKSHEET_ID),
+    listWorksheetRows(PHOTO_SECTIONS_WORKSHEET_ID),
+    listWorksheetRows(OTHER_PAGES_WORKSHEET_ID),
   ]);
-  const next = toSyncRows(meetingRows, noticeRows);
-  if (next.notices.length === 0 && next.events.length === 0) {
+  const calendar = toSyncRows(meetingRows, calendarSourceRows(activityRows));
+  const sections = parsePhotoSections(sectionRows);
+  const { links, pageCount } = albumLinks(activityRows, pageRows);
+  const images = homepageSettings(imageRows);
+  const videoList = videoRows(activityRows);
+  const highlights = highlightRows(activityRows, sections);
+  if (activityRows.length === 0 || links.length === 0 || sections.length === 0 || images.length === 0) {
+    throw new Error("Nocoly returned an incomplete site snapshot. Kept the existing database.");
+  }
+  if (calendar.notices.length === 0 && calendar.events.length === 0) {
     throw new Error("Nocoly returned no calendar or notice rows. Kept the existing database.");
   }
 
-  await replaceNoticeCalendar(next.notices, next.events);
-  return { notices: next.notices.length, events: next.events.length };
-}
-
-async function replaceNoticeCalendar(noticeRows: NoticeSyncRow[], eventRows: CalendarSyncRow[]) {
-  const statements = [
+  await runStatements([
     db.delete(calendarEvents),
     db.delete(notices),
-    ...chunks(noticeRows, INSERT_CHUNK).map((rows) => db.insert(notices).values(rows)),
-    ...chunks(eventRows, INSERT_CHUNK).map((rows) => db.insert(calendarEvents).values(rows)),
-  ];
-  const [first, ...rest] = statements;
-  await db.batch([first, ...rest]);
+    db.delete(hyperlinks),
+    db.delete(photoSections),
+    db.delete(videos),
+    db.delete(albumHighlights),
+    ...chunks(calendar.notices, INSERT_CHUNK).map((rows) => db.insert(notices).values(rows)),
+    ...chunks(calendar.events, INSERT_CHUNK).map((rows) => db.insert(calendarEvents).values(rows)),
+    ...chunks(links, INSERT_CHUNK).map((rows) => db.insert(hyperlinks).values(rows)),
+    ...chunks(sections, INSERT_CHUNK).map((rows) => db.insert(photoSections).values(rows)),
+    ...chunks(videoList, INSERT_CHUNK).map((rows) => db.insert(videos).values(rows)),
+    ...chunks(highlights, INSERT_CHUNK).map((rows) => db.insert(albumHighlights).values(rows)),
+    ...images.map((image) => db.insert(siteSettings).values(image).onConflictDoUpdate({
+      target: siteSettings.key,
+      set: { value: image.value },
+    })),
+  ]);
+
+  return {
+    notices: calendar.notices.length,
+    events: calendar.events.length,
+    albums: links.length - pageCount,
+    pages: pageCount,
+    sections: sections.length,
+    videos: videoList.length,
+    highlights: highlights.length,
+    images: images.length,
+  };
+}
+
+async function runStatements(statements: Parameters<typeof db.batch>[0] extends ReadonlyArray<infer T> ? T[] : never) {
+  for (let index = 0; index < statements.length; index += BATCH_SIZE) {
+    const group = statements.slice(index, index + BATCH_SIZE);
+    const [first, ...rest] = group;
+    if (!first) continue;
+    await db.batch([first, ...rest]);
+  }
 }
 
 function chunks<T>(items: T[], size: number): T[][] {
