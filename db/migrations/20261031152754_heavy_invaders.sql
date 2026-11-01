@@ -1,0 +1,1 @@
+ALTER TABLE `notices` ADD `end_date` text DEFAULT '' NOT NULL;

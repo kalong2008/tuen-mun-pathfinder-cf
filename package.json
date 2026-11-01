@@ -1,0 +1,35 @@
+{
+  "name": "tuen-mun-pathfinder-cf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vp dev",
+    "build": "vp build",
+    "preview": "vp preview",
+    "postinstall": "void prepare"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.1.2",
+    "typescript": "^7.0.2",
+    "vite": "npm:@voidzero-dev/vite-plus-core@^1.3.0",
+    "vite-plus": "^1.3.0",
+    "void": "^1.3.0"
+  },
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tanstack/react-router": "^1.170.46",
+    "@tanstack/react-start": "^1.169.4",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-photo-album": "2.4.1",
+    "yet-another-react-lightbox": "3.22.0"
+  }
+}

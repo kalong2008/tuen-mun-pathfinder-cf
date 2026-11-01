@@ -1,0 +1,124 @@
+import { sql } from "void/db";
+import { index, integer, real, sqliteTable, text, uniqueIndex } from "void/schema-d1";
+
+export const siteSettings = sqliteTable("site_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+});
+
+export const hyperlinks = sqliteTable(
+  "hyperlinks",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    yearGroup: text("year_group").notNull(),
+    name: text("name").notNull(),
+    href: text("href").notNull(),
+    sortOrder: integer("sort_order").notNull().default(0),
+  },
+  (table) => [index("idx_hyperlinks_year_group").on(table.yearGroup)],
+);
+
+export const photoSections = sqliteTable(
+  "photo_sections",
+  {
+    id: text("id").primaryKey(),
+    label: text("label").notNull(),
+    years: text("years", { mode: "json" }).$type<number[]>().notNull(),
+    sortOrder: integer("sort_order").notNull().default(0),
+  },
+  (table) => [index("idx_photo_sections_sort").on(table.sortOrder)],
+);
+
+export const albumHighlights = sqliteTable(
+  "album_highlights",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    scope: text("scope").notNull(),
+    year: integer("year").notNull(),
+    slug: text("slug").notNull(),
+    sortOrder: integer("sort_order").notNull().default(0),
+    createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+  },
+  (table) => [
+    uniqueIndex("album_highlights_scope_slug").on(table.scope, table.year, table.slug),
+    index("idx_album_highlights_scope").on(table.scope, table.sortOrder),
+  ],
+);
+
+export const videos = sqliteTable(
+  "videos",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    year: integer("year").notNull(),
+    playbackId: text("playback_id").notNull(),
+    thumbnailTime: real("thumbnail_time"),
+    sortOrder: integer("sort_order").notNull().default(0),
+    createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+  },
+  (table) => [
+    index("idx_videos_year").on(table.year),
+    index("idx_videos_sort").on(table.year, table.sortOrder, table.createdAt),
+  ],
+);
+
+export const calendarEvents = sqliteTable(
+  "calendar_events",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    date: text("date").notNull(),
+    title: text("title").notNull(),
+    time: text("time").notNull().default(""),
+    location: text("location").notNull().default(""),
+    isCamp: integer("is_camp", { mode: "boolean" }).notNull().default(false),
+    campKey: text("camp_key"),
+    marking: text("marking", { mode: "json" }).$type<Record<string, string>>().notNull().default({}),
+  },
+  (table) => [
+    index("idx_calendar_events_date").on(table.date),
+    index("idx_calendar_events_camp_key").on(table.campKey),
+  ],
+);
+
+export const notices = sqliteTable(
+  "notices",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    date: text("date").notNull(),
+    endDate: text("end_date").notNull().default(""),
+    activityType: text("activity_type").notNull(),
+    pdfUrls: text("pdf_urls", { mode: "json" }).$type<string[]>().notNull().default([]),
+    target: text("target", { mode: "json" }).$type<string[]>().notNull().default([]),
+  },
+  (table) => [
+    index("idx_notices_date").on(table.date),
+    index("idx_notices_activity_type").on(table.activityType),
+  ],
+);
+
+export const verseOfDay = sqliteTable("verseOfDay", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  date: text("date").notNull(),
+  citation: text("citation").notNull(),
+  version: text("version").notNull(),
+  passage: text("passage").notNull(),
+  image: text("image"),
+  width: integer("width"),
+  height: integer("height"),
+});
+
+export const pushSubscriptions = sqliteTable("push_subscriptions", {
+  subscription: text("subscription").primaryKey(),
+});
+
+export const expoPushTokens = sqliteTable(
+  "expo_push_tokens",
+  {
+    token: text("token").primaryKey(),
+    platform: text("platform"),
+    createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+    updatedAt: text("updated_at").notNull().default(sql`(datetime('now'))`),
+  },
+  (table) => [index("idx_expo_push_tokens_updated_at").on(table.updatedAt)],
+);

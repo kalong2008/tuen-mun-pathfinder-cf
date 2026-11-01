@@ -1,0 +1,585 @@
+[
+  {
+    "id": "5fdfb4e1-4c0e-40a8-8568-1a41e2c743c1",
+    "title": "2026年11月步操訓練",
+    "date": "2026-11-08",
+    "endDate": "2026-11-08",
+    "startTime": "12:00:00",
+    "location": "大埔三育中學",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "訓練",
+    "target": [
+      "前鋒會"
+    ],
+    "participants": [
+      "前鋒會"
+    ]
+  },
+  {
+    "id": "a0b165e9-8d44-489b-be8d-8b4ec96fc6a3",
+    "title": "2025年07月暑期烹飪班",
+    "date": "2025-07-23",
+    "endDate": "2025-07-23",
+    "startTime": "14:00:00",
+    "location": "山景綜合青少年服務中心",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "烹飪",
+    "target": [
+      "幼鋒會"
+    ],
+    "participants": [
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "532fbea2-cd8c-4131-afa0-d20ef2ddf790",
+    "title": "2026年12月露營",
+    "date": "2026-12-26",
+    "endDate": "2026-12-28",
+    "startTime": "09:30:00",
+    "location": "大埔三育中學",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "露營",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "a0c84f17-6d33-4c66-ba46-ca255cb02f33",
+    "title": "2025年02月遠足活動",
+    "date": "2025-02-02",
+    "endDate": "2025-02-02",
+    "startTime": "10:00:00",
+    "location": "港島徑第一、二段",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "遠足",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "5ac6cc18-11ea-47c7-9ad3-160da8bf3060",
+    "title": "2026年12月報佳音",
+    "date": "2026-12-24",
+    "endDate": "2026-12-24",
+    "startTime": "09:00:00",
+    "location": "",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "聖誕報佳音",
+    "target": [],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "2b505e78-50a3-4d92-b832-3a30ca8dfd64",
+    "title": "2026年11月行山",
+    "date": "2026-11-21",
+    "endDate": "2026-11-21",
+    "startTime": "14:30:00",
+    "location": "青衣自然徑",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "遠足",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "34f5221b-5de9-4f6c-9fde-19332638dccc",
+    "title": "2026年08月升級營",
+    "date": "2026-08-21",
+    "endDate": "2026-08-23",
+    "startTime": "09:00:00",
+    "location": "西貢赤徑",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "其他",
+    "target": [],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "80f1e0c5-734d-4fff-ae65-59c46cdf35fc",
+    "title": "2026年05月夜行",
+    "date": "2026-05-16",
+    "endDate": "2026-05-16",
+    "startTime": "20:00:00",
+    "location": "屯門徑",
+    "gatherLocation": "杯渡輕鐵站",
+    "dismissLocation": "景峰輕鐵站",
+    "activityType": "遠足",
+    "target": [
+      "前鋒會"
+    ],
+    "participants": [
+      "前鋒會"
+    ]
+  },
+  {
+    "id": "f146e0c1-973e-4d49-8e2a-ef9fcfcd42f5",
+    "title": "2026年04月長者探訪",
+    "date": "2026-04-25",
+    "endDate": "2026-04-25",
+    "startTime": "09:00:00",
+    "location": "瑞康護老中心",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "其他",
+    "target": [],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "5e59ea76-24e6-4be4-aa4f-d197af48f3f6",
+    "title": "2026年04月聯合步操訓練",
+    "date": "2026-04-19",
+    "endDate": "2026-04-19",
+    "startTime": "12:00:00",
+    "location": "大埔三育中學",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "訓練",
+    "target": [
+      "前鋒會"
+    ],
+    "participants": [
+      "前鋒會"
+    ]
+  },
+  {
+    "id": "17a06aac-4c85-4e2f-a60a-1354c368ebb2",
+    "title": "2026年03月露營",
+    "date": "2026-03-20",
+    "endDate": "2026-03-22",
+    "startTime": "18:00:00",
+    "location": "九龍飛鵝山基維爾營地",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "露營",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "ca688b8b-0274-4d3e-9ea2-ee3d3a2f7cec",
+    "title": "2026年01月長者探訪",
+    "date": "2026-01-24",
+    "endDate": "2026-01-24",
+    "startTime": "09:00:00",
+    "location": "恆安老人中心",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "其他",
+    "target": [],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "6ef05f1f-c4bf-49ef-bc29-3f0e5108f0ec",
+    "title": "2025年12月聖誕報佳音",
+    "date": "2025-12-21",
+    "endDate": "2025-12-21",
+    "startTime": "17:30:00",
+    "location": "屯門區",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "聖誕報佳音",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "e60b30dd-d271-47a2-a9e1-e71f297fdc1f",
+    "title": "2025年12月宿營",
+    "date": "2025-12-26",
+    "endDate": "2025-12-29",
+    "startTime": "15:00:00",
+    "location": "西貢北潭涌渡假村",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "宿營",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "b9948c41-b0ad-466c-8081-c29c3fa027af",
+    "title": "2025年12月美食節義賣",
+    "date": "2025-12-07",
+    "endDate": "2025-12-07",
+    "startTime": "09:00:00",
+    "location": "清水灣三育書院",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "美食節義賣",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "ee77223c-a7af-4899-bd46-d1ad94e18f60",
+    "title": "2025年12月日營",
+    "date": "2025-12-13",
+    "endDate": "2025-12-13",
+    "startTime": "14:30:00",
+    "location": "北潭涌渡假營",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "日營",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "7a358a49-e9f6-4ea4-8650-d5103b669d54",
+    "title": "2025年08月升級禮",
+    "date": "2025-08-31",
+    "endDate": "2025-08-31",
+    "startTime": "14:30:00",
+    "location": "尖沙咀山林道 26-28 號聖經講座",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "升級禮",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "d51b7b0d-bccb-40be-bbb2-8964db2aa8f5",
+    "title": "2025年11月露營",
+    "date": "2025-11-01",
+    "endDate": "2025-11-02",
+    "startTime": "14:00:00",
+    "location": "馬鞍山鞍山探索館",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "露營",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "bddf8bcc-3892-4e0f-a155-94553acddb82",
+    "title": "2025年09月前鋒會日",
+    "date": "2025-09-20",
+    "endDate": "2025-09-20",
+    "startTime": "09:00:00",
+    "location": "香港三育書院",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "其他",
+    "target": [],
+    "participants": [
+      "前鋒會"
+    ]
+  },
+  {
+    "id": "3255cc95-a22f-4e9b-a3d8-cf7bb828dae2",
+    "title": "2025年07月宿營",
+    "date": "2025-07-05",
+    "endDate": "2025-07-06",
+    "startTime": "14:30:00",
+    "location": "賽馬會摩星嶺青年旅舍",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "宿營",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "6964e313-e40c-4da7-89b5-7c99aadb4da8",
+    "title": "2025年07月聯合步操訓練",
+    "date": "2025-07-20",
+    "endDate": "2025-07-20",
+    "startTime": "12:00:00",
+    "location": "大埔三育中學",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "訓練",
+    "target": [
+      "前鋒會"
+    ],
+    "participants": [
+      "前鋒會"
+    ]
+  },
+  {
+    "id": "df21df6d-a2b0-48b2-94cc-e68d650d2121",
+    "title": "2025年05月樹屋田莊",
+    "date": "2025-05-18",
+    "endDate": "2025-05-18",
+    "startTime": "09:00:00",
+    "location": "樹屋田莊",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "日營",
+    "target": [
+      "幼鋒會"
+    ],
+    "participants": [
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "deadf6fd-7acd-4f94-b7fd-fc84a0b8b9a9",
+    "title": "2025年04月參觀合味道博物館",
+    "date": "2025-04-12",
+    "endDate": "2025-04-12",
+    "startTime": "14:30:00",
+    "location": "合味道紀念館",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "參觀",
+    "target": [
+      "幼鋒會"
+    ],
+    "participants": [
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "df013d54-718a-4421-8209-82afc160d05c",
+    "title": "2025年04月聯合步操訓練",
+    "date": "2025-04-27",
+    "endDate": "2025-04-27",
+    "startTime": "12:00:00",
+    "location": "大埔三育中學",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "訓練",
+    "target": [
+      "前鋒會"
+    ],
+    "participants": [
+      "前鋒會"
+    ]
+  },
+  {
+    "id": "6e20ef4c-7e74-4e91-a497-019e68a4e74b",
+    "title": "2025年04月露營",
+    "date": "2025-04-04",
+    "endDate": "2025-04-06",
+    "startTime": "14:00:00",
+    "location": "白沙澳青年旅舍",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "露營",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "b7952101-274c-4de6-8b7b-2cccf7d7b5ad",
+    "title": "2026年09月迪士尼",
+    "date": "2026-09-05",
+    "endDate": "2026-09-05",
+    "startTime": "14:00:00",
+    "location": "香港迪士尼",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "參觀",
+    "target": [],
+    "participants": [
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "f1409557-8fc3-48a3-a2dc-0d843d423b8c",
+    "title": "2026年10月夜行",
+    "date": "2026-10-17",
+    "endDate": "2026-10-17",
+    "startTime": "15:00:00",
+    "location": "前鋒會：山頂；幼鋒會：大館及山頂",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "遠足",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "4e818c65-cb16-443a-9178-652bf85305c3",
+    "title": "2026年09月宿營",
+    "date": "2026-09-26",
+    "endDate": "2026-09-27",
+    "startTime": "14:00:00",
+    "location": "賽馬會西貢戶外訓練營（待定）",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "宿營",
+    "target": [
+      "幼鋒會"
+    ],
+    "participants": [
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "f70c060f-6f6f-4d5c-ab58-9290c6b759ab",
+    "title": "2026年08月升級禮",
+    "date": "2026-08-30",
+    "endDate": "2026-08-30",
+    "startTime": "14:30:00",
+    "location": "荃灣港安醫院 1 樓禮堂",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "升級禮",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "0fa394ef-cda5-46ca-a7e2-fe9677c01cb0",
+    "title": "2026年06月宿營",
+    "date": "2026-06-27",
+    "endDate": "2026-06-28",
+    "startTime": "14:00:00",
+    "location": "西貢戶外康樂中心",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "宿營",
+    "target": [
+      "幼鋒會"
+    ],
+    "participants": [
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "b760d39f-03ab-4d26-929a-4a29dcd2ca58",
+    "title": "2026年05月樹屋田莊",
+    "date": "2026-05-31",
+    "endDate": "2026-05-31",
+    "startTime": "08:45:00",
+    "location": "樹屋田莊",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "日營",
+    "target": [
+      "幼鋒會"
+    ],
+    "participants": [
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "32cd6319-d447-468a-afd3-cbe8450eb845",
+    "title": "2026年05月露營",
+    "date": "2026-05-23",
+    "endDate": "2026-05-24",
+    "startTime": "14:00:00",
+    "location": "長洲西園",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "露營",
+    "target": [
+      "前鋒會",
+      "幼鋒會"
+    ],
+    "participants": [
+      "前鋒會",
+      "幼鋒會"
+    ]
+  },
+  {
+    "id": "8d45fd4c-d584-4328-b6ff-c42bc98f32a6",
+    "title": "2026年04月遠足",
+    "date": "2026-04-06",
+    "endDate": "2026-04-06",
+    "startTime": "11:00:00",
+    "location": "魔鬼山",
+    "gatherLocation": "山景綜合青少年服務中心",
+    "dismissLocation": "山景綜合青少年服務中心",
+    "activityType": "遠足",
+    "target": [
+      "幼鋒會"
+    ],
+    "participants": [
+      "幼鋒會"
+    ]
+  }
+]
