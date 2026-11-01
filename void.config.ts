@@ -8,6 +8,9 @@ export default defineConfig({
   worker: {
     compatibility_date: "2026-02-24",
     compatibility_flags: ["nodejs_compat"],
+    vars: {
+      VITE_CLERK_PUBLISHABLE_KEY: "pk_live_Y2xlcmsudHVlbm11bnBhdGhmaW5kZXIuY29tJA",
+    },
   },
   cloudflare: {
     name: "tuen-mun-pathfinder-cf",
