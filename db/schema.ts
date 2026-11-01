@@ -107,18 +107,3 @@ export const verseOfDay = sqliteTable("verseOfDay", {
   width: integer("width"),
   height: integer("height"),
 });
-
-export const pushSubscriptions = sqliteTable("push_subscriptions", {
-  subscription: text("subscription").primaryKey(),
-});
-
-export const expoPushTokens = sqliteTable(
-  "expo_push_tokens",
-  {
-    token: text("token").primaryKey(),
-    platform: text("platform"),
-    createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
-    updatedAt: text("updated_at").notNull().default(sql`(datetime('now'))`),
-  },
-  (table) => [index("idx_expo_push_tokens_updated_at").on(table.updatedAt)],
-);
