@@ -2,23 +2,34 @@ import { useEffect, type MouseEvent, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { useAuth, useClerk } from "@clerk/tanstack-react-start";
 
-let pendingPath: string | null = null;
+const PENDING_ALBUM = "album-after-login";
 
 export function isProtectedAlbum(href: string) {
   return href.replace(/^\//, "").startsWith("20");
+}
+
+export function rememberAlbum(href: string) {
+  const path = href.startsWith("/") ? href : `/${href}`;
+  try {
+    sessionStorage.setItem(PENDING_ALBUM, path);
+  } catch {
+    // Storage can be unavailable. The album page still opens its own login popup.
+  }
 }
 
 export function ProtectedVisit() {
   const { isLoaded, isSignedIn } = useAuth();
 
   useEffect(() => {
-    if (!isLoaded || !isSignedIn || !pendingPath) return;
-    const target = pendingPath;
-    pendingPath = null;
-    if (window.location.pathname === target) {
-      window.location.reload();
+    if (!isLoaded || !isSignedIn) return;
+    let target: string | null = null;
+    try {
+      target = sessionStorage.getItem(PENDING_ALBUM);
+      if (target) sessionStorage.removeItem(PENDING_ALBUM);
+    } catch {
       return;
     }
+    if (!target || window.location.pathname === target) return;
     window.location.assign(target);
   }, [isLoaded, isSignedIn]);
 
@@ -44,7 +55,7 @@ export function AlbumLink({
     onClick?.();
     if (!isProtectedAlbum(href) || !isLoaded || isSignedIn) return;
     event.preventDefault();
-    pendingPath = href.startsWith("/") ? href : `/${slug}`;
+    rememberAlbum(href);
     openSignIn();
   }
 

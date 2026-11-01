@@ -12,6 +12,7 @@ import { hyperlinks } from "@schema";
 import { db, eq } from "void/db";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/counter.css";
+import { rememberAlbum } from "../components/album-link";
 import { Shell } from "../components/shell";
 import { albumManifestUrl, photoUrl } from "../photos";
 import { readIsSignedIn } from "../server/require-user";
@@ -69,37 +70,77 @@ function AlbumPhoto({ wrapperStyle, renderDefaultPhoto }: RenderPhotoProps) {
 }
 
 function AlbumPage() {
-  const album = Route.useLoaderData();
-  const { isLoaded, isSignedIn } = useAuth();
+  const loaded = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
   const { openSignIn } = useClerk();
+  const [album, setAlbum] = useState(loaded);
   const [index, setIndex] = useState(-1);
+  const [unlockFailed, setUnlockFailed] = useState(false);
   const opened = useRef(false);
+  const unlocking = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!album.locked || !isLoaded) return;
-    if (isSignedIn) {
-      const key = "album-unlock";
-      try {
-        const previous = Number(sessionStorage.getItem(key) || 0);
-        if (Date.now() - previous < 5000) return;
-        sessionStorage.setItem(key, String(Date.now()));
-      } catch {
-        // Storage can be unavailable. Still reload once.
-      }
-      window.location.reload();
+    setAlbum(loaded);
+    setUnlockFailed(false);
+  }, [loaded]);
+
+  useEffect(() => {
+    if (!loaded.locked || !isLoaded) return;
+    if (!isSignedIn) {
+      if (opened.current) return;
+      opened.current = true;
+      rememberAlbum(`/${slug}`);
+      openSignIn();
       return;
     }
-    if (opened.current) return;
-    opened.current = true;
-    openSignIn();
-  }, [album.locked, isLoaded, isSignedIn, openSignIn]);
+    if (unlocking.current === slug) return;
+    unlocking.current = slug;
+    let cancelled = false;
+    (async () => {
+      const token = await getToken();
+      if (cancelled) return;
+      const next = await getAlbum({
+        data: slug,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+      if (cancelled) return;
+      if (!next.locked) {
+        try {
+          sessionStorage.removeItem(`album-reload:${slug}`);
+        } catch {
+          // The album is already unlocked. Storage is only the reload guard.
+        }
+        setAlbum(next);
+        return;
+      }
+      const key = `album-reload:${slug}`;
+      try {
+        if (sessionStorage.getItem(key) !== "1") {
+          sessionStorage.setItem(key, "1");
+          window.location.reload();
+          return;
+        }
+      } catch {
+        // Storage can be unavailable. Show the locked state below.
+      }
+      setUnlockFailed(true);
+    })().catch(() => {
+      if (!cancelled) setUnlockFailed(true);
+    });
+    return () => {
+      cancelled = true;
+      unlocking.current = null;
+    };
+  }, [getToken, isLoaded, isSignedIn, loaded.locked, openSignIn, slug]);
 
   if (album.locked) {
+    const waitingForSession = isLoaded && isSignedIn && !unlockFailed;
     return (
       <Shell>
         <section className="page page-wide">
           <h1 className="page-title">{album.title}</h1>
-          <p className="empty">請先登入才能查看這本相簿。</p>
+          <p className="empty">{waitingForSession ? "載入相簿中…" : "請先登入才能查看這本相簿。"}</p>
         </section>
       </Shell>
     );
