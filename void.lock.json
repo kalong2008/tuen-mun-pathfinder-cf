@@ -1,12 +1,15 @@
 {
   "version": 1,
   "source": {
-    "name": "tuen-mun-pathfinder-cf"
+    "name": "tuen-mun-pathfinder-cf",
+    "workers_dev": true,
+    "preview_urls": true,
+    "routes": []
   },
   "resolved": {
+    "name": "tuen-mun-pathfinder-cf",
     "account_id": "df0abd6c1c55a4986c9a02c314f4fd9f",
     "compatibility_date": "2026-02-24",
-    "name": "tuen-mun-pathfinder-cf",
     "d1_databases": [
       {
         "binding": "DB",
@@ -14,7 +17,10 @@
         "database_id": "87cd2c28-415d-46cc-841a-c233887d726b",
         "migrations_dir": "./db/migrations"
       }
-    ]
+    ],
+    "workers_dev": true,
+    "preview_urls": true,
+    "routes": []
   },
-  "text": "{\n  \"account_id\": \"df0abd6c1c55a4986c9a02c314f4fd9f\",\n  \"compatibility_date\": \"2026-02-24\",\n  \"name\": \"tuen-mun-pathfinder-cf\",\n  \"d1_databases\": [\n    {\n      \"binding\": \"DB\",\n      \"database_name\": \"tuen-mun-pathfinder-cf-db\",\n      \"database_id\": \"87cd2c28-415d-46cc-841a-c233887d726b\",\n      \"migrations_dir\": \"./db/migrations\"\n    }\n  ]\n}\n"
+  "text": "{\n  \"name\": \"tuen-mun-pathfinder-cf\",\n  \"account_id\": \"df0abd6c1c55a4986c9a02c314f4fd9f\",\n  \"compatibility_date\": \"2026-02-24\",\n  \"d1_databases\": [\n    {\n      \"binding\": \"DB\",\n      \"database_name\": \"tuen-mun-pathfinder-cf-db\",\n      \"database_id\": \"87cd2c28-415d-46cc-841a-c233887d726b\",\n      \"migrations_dir\": \"./db/migrations\"\n    }\n  ],\n  \"workers_dev\": true,\n  \"preview_urls\": true,\n  \"routes\": []\n}\n"
 }

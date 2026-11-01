@@ -11,5 +11,8 @@ export default defineConfig({
   },
   cloudflare: {
     name: "tuen-mun-pathfinder-cf",
+    workers_dev: true,
+    preview_urls: true,
+    routes: [],
   },
 });
