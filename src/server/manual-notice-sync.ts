@@ -3,7 +3,7 @@ import { db, eq, sql } from "void/db";
 import { syncNoticeCalendar, type SiteSyncResult } from "./sync-notice-calendar";
 
 const MANUAL_SYNC_KEY = "sync.noticeCalendar.manualDate";
-const DAILY_LIMIT = 20;
+const DAILY_LIMIT = 200;
 
 export async function runManualNoticeSync(): Promise<{ limited: true } | ({ limited: false } & SiteSyncResult)> {
   const today = hongKongDate();
