@@ -10,6 +10,7 @@ export default defineConfig({
     compatibility_flags: ["nodejs_compat"],
     vars: {
       VITE_CLERK_PUBLISHABLE_KEY: "pk_live_Y2xlcmsudHVlbm11bnBhdGhmaW5kZXIuY29tJA",
+      CANVA_CLIENT_ID: "OC-AaGapFL2L-Yh",
     },
   },
   cloudflare: {

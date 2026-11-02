@@ -25,7 +25,14 @@ import { Route as SignUpIndexRouteImport } from './routes/sign-up.index'
 import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as ApiBibleCachedRouteImport } from './routes/api/bible/cached'
 import { Route as ApiSyncNoticeCalendarRouteImport } from './routes/api/sync/notice-calendar'
+import { Route as ApiAdventurerHonorsIdBadgeRouteImport } from './routes/api/adventurer-honors/$id/badge'
+import { Route as ApiAdventurerHonorsHandbooksSlotRouteImport } from './routes/api/adventurer-honors/handbooks/$slot'
+import { Route as ApiCanvaOauthCallbackRouteImport } from './routes/api/canva/oauth/callback'
+import { Route as ApiCanvaOauthStartRouteImport } from './routes/api/canva/oauth/start'
 import { Route as ApiVideosIdDownloadRouteImport } from './routes/api/videos/$id/download'
+import { Route as ApiAdventurerHonorsIdCanvaPdfRouteImport } from './routes/api/adventurer-honors/$id/canva/pdf'
+import { Route as ApiAdventurerHonorsIdCanvaViewRouteImport } from './routes/api/adventurer-honors/$id/canva/view'
+import { Route as ApiAdventurerHonorsIdFileSlotRouteImport } from './routes/api/adventurer-honors/$id/file/$slot'
 import { Route as ApiNoticesIdFileSlotRouteImport } from './routes/api/notices/$id/file/$slot'
 
 const IndexRoute = IndexRouteImport.update({
@@ -108,11 +115,51 @@ const ApiSyncNoticeCalendarRoute = ApiSyncNoticeCalendarRouteImport.update({
   path: '/api/sync/notice-calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdventurerHonorsIdBadgeRoute =
+  ApiAdventurerHonorsIdBadgeRouteImport.update({
+    id: '/api/adventurer-honors/$id/badge',
+    path: '/api/adventurer-honors/$id/badge',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdventurerHonorsHandbooksSlotRoute =
+  ApiAdventurerHonorsHandbooksSlotRouteImport.update({
+    id: '/api/adventurer-honors/handbooks/$slot',
+    path: '/api/adventurer-honors/handbooks/$slot',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiCanvaOauthCallbackRoute = ApiCanvaOauthCallbackRouteImport.update({
+  id: '/api/canva/oauth/callback',
+  path: '/api/canva/oauth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCanvaOauthStartRoute = ApiCanvaOauthStartRouteImport.update({
+  id: '/api/canva/oauth/start',
+  path: '/api/canva/oauth/start',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiVideosIdDownloadRoute = ApiVideosIdDownloadRouteImport.update({
   id: '/api/videos/$id/download',
   path: '/api/videos/$id/download',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdventurerHonorsIdCanvaPdfRoute =
+  ApiAdventurerHonorsIdCanvaPdfRouteImport.update({
+    id: '/api/adventurer-honors/$id/canva/pdf',
+    path: '/api/adventurer-honors/$id/canva/pdf',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdventurerHonorsIdCanvaViewRoute =
+  ApiAdventurerHonorsIdCanvaViewRouteImport.update({
+    id: '/api/adventurer-honors/$id/canva/view',
+    path: '/api/adventurer-honors/$id/canva/view',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdventurerHonorsIdFileSlotRoute =
+  ApiAdventurerHonorsIdFileSlotRouteImport.update({
+    id: '/api/adventurer-honors/$id/file/$slot',
+    path: '/api/adventurer-honors/$id/file/$slot',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiNoticesIdFileSlotRoute = ApiNoticesIdFileSlotRouteImport.update({
   id: '/api/notices/$id/file/$slot',
   path: '/api/notices/$id/file/$slot',
@@ -136,7 +183,14 @@ export interface FileRoutesByFullPath {
   '/sign-up/': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
+  '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
+  '/api/adventurer-honors/handbooks/$slot': typeof ApiAdventurerHonorsHandbooksSlotRoute
+  '/api/canva/oauth/callback': typeof ApiCanvaOauthCallbackRoute
+  '/api/canva/oauth/start': typeof ApiCanvaOauthStartRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
+  '/api/adventurer-honors/$id/canva/pdf': typeof ApiAdventurerHonorsIdCanvaPdfRoute
+  '/api/adventurer-honors/$id/canva/view': typeof ApiAdventurerHonorsIdCanvaViewRoute
+  '/api/adventurer-honors/$id/file/$slot': typeof ApiAdventurerHonorsIdFileSlotRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
 export interface FileRoutesByTo {
@@ -154,7 +208,14 @@ export interface FileRoutesByTo {
   '/sign-up': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
+  '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
+  '/api/adventurer-honors/handbooks/$slot': typeof ApiAdventurerHonorsHandbooksSlotRoute
+  '/api/canva/oauth/callback': typeof ApiCanvaOauthCallbackRoute
+  '/api/canva/oauth/start': typeof ApiCanvaOauthStartRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
+  '/api/adventurer-honors/$id/canva/pdf': typeof ApiAdventurerHonorsIdCanvaPdfRoute
+  '/api/adventurer-honors/$id/canva/view': typeof ApiAdventurerHonorsIdCanvaViewRoute
+  '/api/adventurer-honors/$id/file/$slot': typeof ApiAdventurerHonorsIdFileSlotRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
 export interface FileRoutesById {
@@ -175,7 +236,14 @@ export interface FileRoutesById {
   '/sign-up/': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
+  '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
+  '/api/adventurer-honors/handbooks/$slot': typeof ApiAdventurerHonorsHandbooksSlotRoute
+  '/api/canva/oauth/callback': typeof ApiCanvaOauthCallbackRoute
+  '/api/canva/oauth/start': typeof ApiCanvaOauthStartRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
+  '/api/adventurer-honors/$id/canva/pdf': typeof ApiAdventurerHonorsIdCanvaPdfRoute
+  '/api/adventurer-honors/$id/canva/view': typeof ApiAdventurerHonorsIdCanvaViewRoute
+  '/api/adventurer-honors/$id/file/$slot': typeof ApiAdventurerHonorsIdFileSlotRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
 export interface FileRouteTypes {
@@ -197,7 +265,14 @@ export interface FileRouteTypes {
     | '/sign-up/'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
+    | '/api/adventurer-honors/$id/badge'
+    | '/api/adventurer-honors/handbooks/$slot'
+    | '/api/canva/oauth/callback'
+    | '/api/canva/oauth/start'
     | '/api/videos/$id/download'
+    | '/api/adventurer-honors/$id/canva/pdf'
+    | '/api/adventurer-honors/$id/canva/view'
+    | '/api/adventurer-honors/$id/file/$slot'
     | '/api/notices/$id/file/$slot'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -215,7 +290,14 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
+    | '/api/adventurer-honors/$id/badge'
+    | '/api/adventurer-honors/handbooks/$slot'
+    | '/api/canva/oauth/callback'
+    | '/api/canva/oauth/start'
     | '/api/videos/$id/download'
+    | '/api/adventurer-honors/$id/canva/pdf'
+    | '/api/adventurer-honors/$id/canva/view'
+    | '/api/adventurer-honors/$id/file/$slot'
     | '/api/notices/$id/file/$slot'
   id:
     | '__root__'
@@ -235,7 +317,14 @@ export interface FileRouteTypes {
     | '/sign-up/'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
+    | '/api/adventurer-honors/$id/badge'
+    | '/api/adventurer-honors/handbooks/$slot'
+    | '/api/canva/oauth/callback'
+    | '/api/canva/oauth/start'
     | '/api/videos/$id/download'
+    | '/api/adventurer-honors/$id/canva/pdf'
+    | '/api/adventurer-honors/$id/canva/view'
+    | '/api/adventurer-honors/$id/file/$slot'
     | '/api/notices/$id/file/$slot'
   fileRoutesById: FileRoutesById
 }
@@ -252,7 +341,14 @@ export interface RootRouteChildren {
   ApiAttendanceRoute: typeof ApiAttendanceRoute
   ApiBibleCachedRoute: typeof ApiBibleCachedRoute
   ApiSyncNoticeCalendarRoute: typeof ApiSyncNoticeCalendarRoute
+  ApiAdventurerHonorsIdBadgeRoute: typeof ApiAdventurerHonorsIdBadgeRoute
+  ApiAdventurerHonorsHandbooksSlotRoute: typeof ApiAdventurerHonorsHandbooksSlotRoute
+  ApiCanvaOauthCallbackRoute: typeof ApiCanvaOauthCallbackRoute
+  ApiCanvaOauthStartRoute: typeof ApiCanvaOauthStartRoute
   ApiVideosIdDownloadRoute: typeof ApiVideosIdDownloadRoute
+  ApiAdventurerHonorsIdCanvaPdfRoute: typeof ApiAdventurerHonorsIdCanvaPdfRoute
+  ApiAdventurerHonorsIdCanvaViewRoute: typeof ApiAdventurerHonorsIdCanvaViewRoute
+  ApiAdventurerHonorsIdFileSlotRoute: typeof ApiAdventurerHonorsIdFileSlotRoute
   ApiNoticesIdFileSlotRoute: typeof ApiNoticesIdFileSlotRoute
 }
 
@@ -370,11 +466,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSyncNoticeCalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/adventurer-honors/$id/badge': {
+      id: '/api/adventurer-honors/$id/badge'
+      path: '/api/adventurer-honors/$id/badge'
+      fullPath: '/api/adventurer-honors/$id/badge'
+      preLoaderRoute: typeof ApiAdventurerHonorsIdBadgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/adventurer-honors/handbooks/$slot': {
+      id: '/api/adventurer-honors/handbooks/$slot'
+      path: '/api/adventurer-honors/handbooks/$slot'
+      fullPath: '/api/adventurer-honors/handbooks/$slot'
+      preLoaderRoute: typeof ApiAdventurerHonorsHandbooksSlotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/canva/oauth/callback': {
+      id: '/api/canva/oauth/callback'
+      path: '/api/canva/oauth/callback'
+      fullPath: '/api/canva/oauth/callback'
+      preLoaderRoute: typeof ApiCanvaOauthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/canva/oauth/start': {
+      id: '/api/canva/oauth/start'
+      path: '/api/canva/oauth/start'
+      fullPath: '/api/canva/oauth/start'
+      preLoaderRoute: typeof ApiCanvaOauthStartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/videos/$id/download': {
       id: '/api/videos/$id/download'
       path: '/api/videos/$id/download'
       fullPath: '/api/videos/$id/download'
       preLoaderRoute: typeof ApiVideosIdDownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/adventurer-honors/$id/canva/pdf': {
+      id: '/api/adventurer-honors/$id/canva/pdf'
+      path: '/api/adventurer-honors/$id/canva/pdf'
+      fullPath: '/api/adventurer-honors/$id/canva/pdf'
+      preLoaderRoute: typeof ApiAdventurerHonorsIdCanvaPdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/adventurer-honors/$id/canva/view': {
+      id: '/api/adventurer-honors/$id/canva/view'
+      path: '/api/adventurer-honors/$id/canva/view'
+      fullPath: '/api/adventurer-honors/$id/canva/view'
+      preLoaderRoute: typeof ApiAdventurerHonorsIdCanvaViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/adventurer-honors/$id/file/$slot': {
+      id: '/api/adventurer-honors/$id/file/$slot'
+      path: '/api/adventurer-honors/$id/file/$slot'
+      fullPath: '/api/adventurer-honors/$id/file/$slot'
+      preLoaderRoute: typeof ApiAdventurerHonorsIdFileSlotRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/notices/$id/file/$slot': {
@@ -426,7 +571,14 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAttendanceRoute: ApiAttendanceRoute,
   ApiBibleCachedRoute: ApiBibleCachedRoute,
   ApiSyncNoticeCalendarRoute: ApiSyncNoticeCalendarRoute,
+  ApiAdventurerHonorsIdBadgeRoute: ApiAdventurerHonorsIdBadgeRoute,
+  ApiAdventurerHonorsHandbooksSlotRoute: ApiAdventurerHonorsHandbooksSlotRoute,
+  ApiCanvaOauthCallbackRoute: ApiCanvaOauthCallbackRoute,
+  ApiCanvaOauthStartRoute: ApiCanvaOauthStartRoute,
   ApiVideosIdDownloadRoute: ApiVideosIdDownloadRoute,
+  ApiAdventurerHonorsIdCanvaPdfRoute: ApiAdventurerHonorsIdCanvaPdfRoute,
+  ApiAdventurerHonorsIdCanvaViewRoute: ApiAdventurerHonorsIdCanvaViewRoute,
+  ApiAdventurerHonorsIdFileSlotRoute: ApiAdventurerHonorsIdFileSlotRoute,
   ApiNoticesIdFileSlotRoute: ApiNoticesIdFileSlotRoute,
 }
 export const routeTree = rootRouteImport

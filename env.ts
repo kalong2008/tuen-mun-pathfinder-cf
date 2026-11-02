@@ -3,6 +3,7 @@ import { defineEnv, email, string } from "void/env";
 export default defineEnv({
   CLERK_SECRET_KEY: string(),
   VITE_CLERK_PUBLISHABLE_KEY: string(),
+  CANVA_CLIENT_ID: string(),
   NOCOLY_APP_KEY: string(),
   NOCOLY_SIGN: string(),
   RESEND_API_KEY: string(),
