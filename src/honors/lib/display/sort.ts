@@ -1,4 +1,4 @@
-import { honorCategories, type AdventurerHonor, type HonorCategory } from "../data/types";
+import { honorCategories, type HonorCategory, type HonorPageRecord } from "../data/types";
 
 const ROMAN_NUMERAL_SUFFIX = /\s+(I{1,3}|IV|V|VI|VII|VIII|IX|X)\s*$/i;
 
@@ -20,7 +20,7 @@ interface HonorSeriesInfo {
   level: number | null;
 }
 
-function parseHonorSeries(honor: AdventurerHonor): HonorSeriesInfo {
+function parseHonorSeries(honor: HonorPageRecord): HonorSeriesInfo {
   const names = [honor.nameEn, honor.nameZh].filter(Boolean) as string[];
 
   for (const name of names) {
@@ -36,8 +36,8 @@ function parseHonorSeries(honor: AdventurerHonor): HonorSeriesInfo {
   return { base: honor.id, level: null };
 }
 
-function sortCategoryHonors(honors: AdventurerHonor[]): AdventurerHonor[] {
-  const groups: { honors: AdventurerHonor[]; firstIndex: number }[] = [];
+function sortCategoryHonors(honors: HonorPageRecord[]): HonorPageRecord[] {
+  const groups: { honors: HonorPageRecord[]; firstIndex: number }[] = [];
   const groupIndexByKey = new Map<string, number>();
 
   honors.forEach((honor, index) => {
@@ -68,7 +68,7 @@ function sortCategoryHonors(honors: AdventurerHonor[]): AdventurerHonor[] {
 
 export type HonorSortField = "default" | "nameZh" | "nameEn" | "code";
 
-export function sortHonorsByField(honors: AdventurerHonor[], field: HonorSortField): AdventurerHonor[] {
+export function sortHonorsByField(honors: HonorPageRecord[], field: HonorSortField): HonorPageRecord[] {
   if (field === "default") {
     return honors;
   }
@@ -93,8 +93,8 @@ export function sortHonorsByField(honors: AdventurerHonor[], field: HonorSortFie
   return sorted;
 }
 
-export function sortAdventurerHonors(honors: AdventurerHonor[]): AdventurerHonor[] {
-  const honorsByCategory = new Map<HonorCategory, AdventurerHonor[]>();
+export function sortAdventurerHonors(honors: HonorPageRecord[]): HonorPageRecord[] {
+  const honorsByCategory = new Map<HonorCategory, HonorPageRecord[]>();
 
   for (const honor of honors) {
     const categoryHonors = honorsByCategory.get(honor.category) ?? [];

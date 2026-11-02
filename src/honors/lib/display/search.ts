@@ -4,7 +4,7 @@ import {
   ANSWER_SOURCE_TRANSLATED,
   getAnswerSourceLabel,
 } from "../data/answer-source";
-import type { AdventurerHonor, HonorCategory, HonorStatus } from "../data/types";
+import type { HonorCategory, HonorPageRecord, HonorStatus } from "../data/types";
 
 export { ANSWER_SOURCE_DRAFTED, ANSWER_SOURCE_PENDING, ANSWER_SOURCE_TRANSLATED, getAnswerSourceLabel };
 
@@ -24,18 +24,7 @@ function normalize(value: string) {
   return value.trim().toLocaleLowerCase();
 }
 
-function getSearchText(honor: AdventurerHonor) {
-  return [
-    honor.code,
-    honor.nameZh,
-    honor.nameEn ?? "",
-    ...honor.aliases,
-    honor.requirementsMarkdown,
-    ...honor.answers.map((answer) => answer.text),
-  ].join(" ");
-}
-
-export function filterHonors(honors: AdventurerHonor[], filters: HonorFilters) {
+export function filterHonors(honors: HonorPageRecord[], filters: HonorFilters) {
   const query = normalize(filters.query);
 
   return honors.filter((honor) => {
@@ -43,13 +32,13 @@ export function filterHonors(honors: AdventurerHonor[], filters: HonorFilters) {
       filters.categories.length === 0 || filters.categories.includes(honor.category);
     const matchesReviewStatus =
       filters.reviewStatuses.length === 0 || filters.reviewStatuses.includes(honor.status);
-    const matchesQuery = query.length === 0 || normalize(getSearchText(honor)).includes(query);
+    const matchesQuery = query.length === 0 || normalize(honor.searchText).includes(query);
 
     return matchesCategory && matchesReviewStatus && matchesQuery;
   });
 }
 
-export function getHonorStats(honors: AdventurerHonor[]): HonorStats {
+export function getHonorStats(honors: HonorPageRecord[]): HonorStats {
   const initialCounts: Record<HonorStatus, number> = {
     "non-review": 0,
     reviewed: 0,

@@ -7,6 +7,6 @@ export const cron = "0 22 * * *";
 export default defineScheduled(async () => {
   const result = await syncNoticeCalendar();
   console.log(
-    `Synced ${result.notices} notices, ${result.events} calendar rows, ${result.albums} albums, ${result.pages} other pages, ${result.sections} photo sections, ${result.videos} videos, ${result.highlights} highlights, ${result.images} homepage images, ${result.honors} honors, and ${result.badges} badges.`,
+    `Synced ${result.notices} notices, ${result.events} calendar rows, ${result.albums} albums, ${result.pages} other pages, ${result.sections} photo sections, ${result.videos} videos, ${result.highlights} highlights, ${result.images} homepage images, ${result.honors} honors, and ${result.badges} badges, with ${result.badgesRemaining} badges remaining.`,
   );
 });

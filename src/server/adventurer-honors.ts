@@ -6,6 +6,14 @@ import { storage } from "void/storage";
 export const HONORS_WORKSHEET_ID = "6ae7d211cf693fce891c5256";
 export const HONORS_VIEW_ID = "6ae7d211cf693fce891c525a";
 
+export const HANDBOOK_WORKSHEET_ID = "6ae7d454021d1ae0606e61be";
+export const HANDBOOK_ROW_ID = "941d4f78-008c-4393-8b82-98bd4f61218a";
+
+export const HANDBOOK_FIELDS = {
+  zh: "6ae7d454021d1ae0606e61c1",
+  en: "6ae7d473fe0c0b51fb8fb685",
+} as const;
+
 const FIELDS = {
   code: "6ae7d3de8b55cec057237e39",
   nameZh: "6ae7d3de8b55cec057237e3a",
@@ -26,7 +34,16 @@ const FIELDS = {
   pdfEn: "6ae7d44efe0c0b51fb8fb67b",
 } as const;
 
+export const HONOR_FILE_FIELDS = {
+  docx: FIELDS.docx,
+  zh: FIELDS.pdfZh,
+  en: FIELDS.pdfEn,
+} as const;
+
+export const HONOR_BADGE_FIELD = FIELDS.badge;
+
 const BADGE_PREFIX = "adventurer-honors/";
+const BADGE_UPLOAD_BATCH = 24;
 
 export type HonorSyncRow = {
   id: string;
@@ -197,32 +214,60 @@ async function mapPool<T>(items: T[], limit: number, worker: (item: T) => Promis
   await Promise.all(runners);
 }
 
-export async function uploadChangedHonorBadges(badges: BadgeUpload[]): Promise<number> {
+export async function uploadChangedHonorBadges(
+  honors: HonorSyncRow[],
+  badges: BadgeUpload[],
+): Promise<{ uploaded: number; remaining: number }> {
   const current = await db
     .select({ code: adventurerHonors.code, badgeSource: adventurerHonors.badgeSource })
     .from(adventurerHonors);
   const previous = new Map(current.map((row) => [row.code, row.badgeSource]));
-  const changed = badges.filter((badge) => previous.get(badge.code) !== badge.source);
+  const pending = badges.filter((badge) => previous.get(badge.code) !== badge.source);
+  const batch = pending.slice(0, BADGE_UPLOAD_BATCH);
   const headers = new Headers();
   headers.set("HAP-Appkey", env.NOCOLY_APP_KEY);
   headers.set("HAP-Sign", env.NOCOLY_SIGN);
+  const uploaded = new Set<string>();
 
-  await mapPool(changed, 4, async (badge) => {
-    let response: Response;
-    try {
-      response = await fetch(badge.url, { headers, cache: "no-store" });
-    } catch {
-      throw new Error(`Failed to download honor badge ${badge.code}.`);
-    }
-    if (!response.ok) {
-      throw new Error(`Failed to download honor badge ${badge.code}.`);
-    }
-    await storage.put(badge.key, await response.arrayBuffer(), {
-      httpMetadata: { contentType: badge.contentType },
+  try {
+    await mapPool(batch, 4, async (badge) => {
+      let response: Response;
+      try {
+        response = await fetch(badge.url, { headers, cache: "no-store" });
+      } catch (error) {
+        if (isSubrequestLimit(error)) throw error;
+        throw new Error(`Failed to download honor badge ${badge.code}.`);
+      }
+      if (!response.ok) {
+        throw new Error(`Failed to download honor badge ${badge.code}.`);
+      }
+      await storage.put(badge.key, await response.arrayBuffer(), {
+        httpMetadata: { contentType: badge.contentType },
+      });
+      uploaded.add(badge.code);
     });
-  });
+  } catch (error) {
+    if (!isSubrequestLimit(error)) throw error;
+  }
 
-  return changed.length;
+  const badgeByCode = new Map(badges.map((badge) => [badge.code, badge]));
+  for (const honor of honors) {
+    const badge = badgeByCode.get(honor.code);
+    if (!badge) {
+      honor.badgeKey = "";
+      honor.badgeSource = "";
+      continue;
+    }
+    const stored = previous.get(honor.code) ?? "";
+    honor.badgeSource = stored === badge.source || uploaded.has(honor.code) ? badge.source : stored;
+  }
+
+  return { uploaded: uploaded.size, remaining: pending.length - uploaded.size };
+}
+
+function isSubrequestLimit(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.toLowerCase().includes("subrequest");
 }
 
 export async function removeStaleHonorBadges(keys: Set<string>) {

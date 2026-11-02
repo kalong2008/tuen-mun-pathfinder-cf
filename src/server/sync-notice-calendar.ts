@@ -34,6 +34,7 @@ export type SiteSyncResult = {
   images: number;
   honors: number;
   badges: number;
+  badgesRemaining: number;
 };
 
 export async function syncNoticeCalendar(): Promise<SiteSyncResult> {
@@ -62,7 +63,7 @@ export async function syncNoticeCalendar(): Promise<SiteSyncResult> {
     throw new Error("Nocoly returned no adventurer honors. Kept the existing database.");
   }
 
-  const badges = await uploadChangedHonorBadges(honors.badges);
+  const badges = await uploadChangedHonorBadges(honors.honors, honors.badges);
 
   await runStatements([
     db.delete(calendarEvents),
@@ -85,7 +86,9 @@ export async function syncNoticeCalendar(): Promise<SiteSyncResult> {
     })),
   ]);
 
-  await removeStaleHonorBadges(new Set(honors.badges.map((badge) => badge.key)));
+  if (badges.remaining === 0) {
+    await removeStaleHonorBadges(new Set(honors.badges.map((badge) => badge.key)));
+  }
 
   return {
     notices: calendar.notices.length,
@@ -97,7 +100,8 @@ export async function syncNoticeCalendar(): Promise<SiteSyncResult> {
     highlights: highlights.length,
     images: images.length,
     honors: honors.honors.length,
-    badges,
+    badges: badges.uploaded,
+    badgesRemaining: badges.remaining,
   };
 }
 

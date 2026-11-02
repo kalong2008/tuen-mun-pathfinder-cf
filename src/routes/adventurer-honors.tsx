@@ -1,21 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { AdventurerHonorsClient } from "../honors/components/AdventurerHonorsClient";
-import { loadAdventurerHonors } from "../honors/lib/data/loader";
 import { sortAdventurerHonors } from "../honors/lib/display/sort";
 import { Shell } from "../components/shell";
+import { loadHonorHandbooks, loadPublishedHonors } from "../server/load-adventurer-honors";
 import { assertSignedIn, requireSignedIn } from "../server/require-user";
 import { isCurrentUserAdmin } from "../server/require-admin";
 
 const getHonorsPage = createServerFn({ method: "GET" }).handler(async () => {
   await assertSignedIn("/adventurer-honors");
   if (!(await isCurrentUserAdmin())) {
-    return { denied: true as const, honors: [] };
+    return { denied: true as const, honors: [], handbooks: { zh: false, en: false } };
   }
 
+  const [honors, handbooks] = await Promise.all([loadPublishedHonors(), loadHonorHandbooks()]);
   return {
     denied: false as const,
-    honors: sortAdventurerHonors(loadAdventurerHonors()),
+    honors: sortAdventurerHonors(honors),
+    handbooks,
   };
 });
 
@@ -44,7 +46,7 @@ function AdventurerHonorsPage() {
           </p>
         </section>
       ) : (
-        <AdventurerHonorsClient honors={data.honors} />
+        <AdventurerHonorsClient honors={data.honors} handbooks={data.handbooks} />
       )}
     </Shell>
   );

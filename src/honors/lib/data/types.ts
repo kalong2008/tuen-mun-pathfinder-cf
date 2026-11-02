@@ -33,6 +33,35 @@ export interface HonorAnswer {
   text: string;
 }
 
+export interface HonorPageAnswer {
+  requirementIndex: number;
+  html: string;
+}
+
+export interface HonorHandbooks {
+  zh: boolean;
+  en: boolean;
+}
+
+export interface HonorPageRecord {
+  id: string;
+  code: string;
+  nameZh: string;
+  nameEn?: string;
+  category: HonorCategory;
+  status: HonorStatus;
+  answerSource: HonorAnswerSourceKind;
+  answerSourceNote?: string;
+  requirementsHtml: string;
+  answerPrefaceHtml: string;
+  answers: HonorPageAnswer[];
+  searchText: string;
+  badgeUrl?: string;
+  docxUrl?: string;
+  pdfZhUrl?: string;
+  pdfEnUrl?: string;
+}
+
 export interface AdventurerHonor {
   id: string;
   code: string;

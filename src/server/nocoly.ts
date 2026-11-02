@@ -44,6 +44,16 @@ export async function fetchWorksheetRowPage(
   });
 }
 
+export async function getWorksheetRow(
+  worksheetId: string,
+  rowId: string,
+): Promise<Record<string, unknown> | null> {
+  const payload = await nocolyRequest(`/app/worksheets/${worksheetId}/rows/${rowId}`);
+  const data = payload.data;
+  if (!data || typeof data !== "object" || Array.isArray(data)) return null;
+  return data as Record<string, unknown>;
+}
+
 export async function listWorksheetRows(
   worksheetId: string,
   options?: { viewId?: string },

@@ -25,7 +25,10 @@ import { Route as SignUpIndexRouteImport } from './routes/sign-up.index'
 import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as ApiBibleCachedRouteImport } from './routes/api/bible/cached'
 import { Route as ApiSyncNoticeCalendarRouteImport } from './routes/api/sync/notice-calendar'
+import { Route as ApiAdventurerHonorsIdBadgeRouteImport } from './routes/api/adventurer-honors/$id/badge'
+import { Route as ApiAdventurerHonorsHandbooksSlotRouteImport } from './routes/api/adventurer-honors/handbooks/$slot'
 import { Route as ApiVideosIdDownloadRouteImport } from './routes/api/videos/$id/download'
+import { Route as ApiAdventurerHonorsIdFileSlotRouteImport } from './routes/api/adventurer-honors/$id/file/$slot'
 import { Route as ApiNoticesIdFileSlotRouteImport } from './routes/api/notices/$id/file/$slot'
 
 const IndexRoute = IndexRouteImport.update({
@@ -108,11 +111,29 @@ const ApiSyncNoticeCalendarRoute = ApiSyncNoticeCalendarRouteImport.update({
   path: '/api/sync/notice-calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdventurerHonorsIdBadgeRoute =
+  ApiAdventurerHonorsIdBadgeRouteImport.update({
+    id: '/api/adventurer-honors/$id/badge',
+    path: '/api/adventurer-honors/$id/badge',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdventurerHonorsHandbooksSlotRoute =
+  ApiAdventurerHonorsHandbooksSlotRouteImport.update({
+    id: '/api/adventurer-honors/handbooks/$slot',
+    path: '/api/adventurer-honors/handbooks/$slot',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiVideosIdDownloadRoute = ApiVideosIdDownloadRouteImport.update({
   id: '/api/videos/$id/download',
   path: '/api/videos/$id/download',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdventurerHonorsIdFileSlotRoute =
+  ApiAdventurerHonorsIdFileSlotRouteImport.update({
+    id: '/api/adventurer-honors/$id/file/$slot',
+    path: '/api/adventurer-honors/$id/file/$slot',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiNoticesIdFileSlotRoute = ApiNoticesIdFileSlotRouteImport.update({
   id: '/api/notices/$id/file/$slot',
   path: '/api/notices/$id/file/$slot',
@@ -136,7 +157,10 @@ export interface FileRoutesByFullPath {
   '/sign-up/': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
+  '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
+  '/api/adventurer-honors/handbooks/$slot': typeof ApiAdventurerHonorsHandbooksSlotRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
+  '/api/adventurer-honors/$id/file/$slot': typeof ApiAdventurerHonorsIdFileSlotRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
 export interface FileRoutesByTo {
@@ -154,7 +178,10 @@ export interface FileRoutesByTo {
   '/sign-up': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
+  '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
+  '/api/adventurer-honors/handbooks/$slot': typeof ApiAdventurerHonorsHandbooksSlotRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
+  '/api/adventurer-honors/$id/file/$slot': typeof ApiAdventurerHonorsIdFileSlotRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
 export interface FileRoutesById {
@@ -175,7 +202,10 @@ export interface FileRoutesById {
   '/sign-up/': typeof SignUpIndexRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
+  '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
+  '/api/adventurer-honors/handbooks/$slot': typeof ApiAdventurerHonorsHandbooksSlotRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
+  '/api/adventurer-honors/$id/file/$slot': typeof ApiAdventurerHonorsIdFileSlotRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
 }
 export interface FileRouteTypes {
@@ -197,7 +227,10 @@ export interface FileRouteTypes {
     | '/sign-up/'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
+    | '/api/adventurer-honors/$id/badge'
+    | '/api/adventurer-honors/handbooks/$slot'
     | '/api/videos/$id/download'
+    | '/api/adventurer-honors/$id/file/$slot'
     | '/api/notices/$id/file/$slot'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -215,7 +248,10 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
+    | '/api/adventurer-honors/$id/badge'
+    | '/api/adventurer-honors/handbooks/$slot'
     | '/api/videos/$id/download'
+    | '/api/adventurer-honors/$id/file/$slot'
     | '/api/notices/$id/file/$slot'
   id:
     | '__root__'
@@ -235,7 +271,10 @@ export interface FileRouteTypes {
     | '/sign-up/'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
+    | '/api/adventurer-honors/$id/badge'
+    | '/api/adventurer-honors/handbooks/$slot'
     | '/api/videos/$id/download'
+    | '/api/adventurer-honors/$id/file/$slot'
     | '/api/notices/$id/file/$slot'
   fileRoutesById: FileRoutesById
 }
@@ -252,7 +291,10 @@ export interface RootRouteChildren {
   ApiAttendanceRoute: typeof ApiAttendanceRoute
   ApiBibleCachedRoute: typeof ApiBibleCachedRoute
   ApiSyncNoticeCalendarRoute: typeof ApiSyncNoticeCalendarRoute
+  ApiAdventurerHonorsIdBadgeRoute: typeof ApiAdventurerHonorsIdBadgeRoute
+  ApiAdventurerHonorsHandbooksSlotRoute: typeof ApiAdventurerHonorsHandbooksSlotRoute
   ApiVideosIdDownloadRoute: typeof ApiVideosIdDownloadRoute
+  ApiAdventurerHonorsIdFileSlotRoute: typeof ApiAdventurerHonorsIdFileSlotRoute
   ApiNoticesIdFileSlotRoute: typeof ApiNoticesIdFileSlotRoute
 }
 
@@ -370,11 +412,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSyncNoticeCalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/adventurer-honors/$id/badge': {
+      id: '/api/adventurer-honors/$id/badge'
+      path: '/api/adventurer-honors/$id/badge'
+      fullPath: '/api/adventurer-honors/$id/badge'
+      preLoaderRoute: typeof ApiAdventurerHonorsIdBadgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/adventurer-honors/handbooks/$slot': {
+      id: '/api/adventurer-honors/handbooks/$slot'
+      path: '/api/adventurer-honors/handbooks/$slot'
+      fullPath: '/api/adventurer-honors/handbooks/$slot'
+      preLoaderRoute: typeof ApiAdventurerHonorsHandbooksSlotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/videos/$id/download': {
       id: '/api/videos/$id/download'
       path: '/api/videos/$id/download'
       fullPath: '/api/videos/$id/download'
       preLoaderRoute: typeof ApiVideosIdDownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/adventurer-honors/$id/file/$slot': {
+      id: '/api/adventurer-honors/$id/file/$slot'
+      path: '/api/adventurer-honors/$id/file/$slot'
+      fullPath: '/api/adventurer-honors/$id/file/$slot'
+      preLoaderRoute: typeof ApiAdventurerHonorsIdFileSlotRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/notices/$id/file/$slot': {
@@ -426,7 +489,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAttendanceRoute: ApiAttendanceRoute,
   ApiBibleCachedRoute: ApiBibleCachedRoute,
   ApiSyncNoticeCalendarRoute: ApiSyncNoticeCalendarRoute,
+  ApiAdventurerHonorsIdBadgeRoute: ApiAdventurerHonorsIdBadgeRoute,
+  ApiAdventurerHonorsHandbooksSlotRoute: ApiAdventurerHonorsHandbooksSlotRoute,
   ApiVideosIdDownloadRoute: ApiVideosIdDownloadRoute,
+  ApiAdventurerHonorsIdFileSlotRoute: ApiAdventurerHonorsIdFileSlotRoute,
   ApiNoticesIdFileSlotRoute: ApiNoticesIdFileSlotRoute,
 }
 export const routeTree = rootRouteImport

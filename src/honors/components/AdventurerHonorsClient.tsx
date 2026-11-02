@@ -6,18 +6,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { getHonorCategoryColors } from "../lib/display/category-colors";
 import { getHonorReviewStatusColors } from "../lib/display/review-status-colors";
-import { getHonorDownloadUrl } from "../lib/assets/downloads";
-import { honorHandbooks } from "../lib/assets/handbooks";
-import { getHonorPdfLinks } from "../lib/assets/pdf-pages";
-import { HonorMarkdown } from "./HonorMarkdown";
-import { getHonorImageUrl } from "../lib/assets/images";
+import { honorMarkdownClassName } from "../lib/markdown/honor-markdown";
 import { filterHonors, getAnswerSourceLabel, getHonorStats } from "../lib/display/search";
 import { sortHonorsByField, type HonorSortField } from "../lib/display/sort";
 import {
   honorCategories,
   honorReviewStatuses,
-  type AdventurerHonor,
   type HonorCategory,
+  type HonorHandbooks,
+  type HonorPageRecord,
   type HonorStatus,
 } from "../lib/data/types";
 
@@ -46,7 +43,12 @@ function HonorCategoryTag({ category }: { category: HonorCategory }) {
   );
 }
 
-function HonorReviewTag({ honor }: { honor: AdventurerHonor }) {
+function HonorHtml({ html }: { html: string }) {
+  if (!html.trim()) return null;
+  return <div className={honorMarkdownClassName} dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+function HonorReviewTag({ honor }: { honor: HonorPageRecord }) {
   const colors = getHonorReviewStatusColors(honor.status);
   const label = honor.status === "reviewed" ? "已核對" : "待核對";
 
@@ -64,10 +66,10 @@ function HonorBadge({
   honor,
   size = "card",
 }: {
-  honor: AdventurerHonor;
+  honor: HonorPageRecord;
   size?: "card" | "modal";
 }) {
-  const imageUrl = getHonorImageUrl(honor.code, honor.aliases);
+  const imageUrl = honor.badgeUrl;
   if (!imageUrl) {
     return null;
   }
@@ -85,13 +87,15 @@ function HonorBadge({
   );
 }
 
-function HonorDetails({ honor }: { honor: AdventurerHonor }) {
+function HonorDetails({ honor }: { honor: HonorPageRecord }) {
+  const hasAnswers = honor.answerPrefaceHtml.trim().length > 0 || honor.answers.length > 0;
+
   return (
     <div className="space-y-6">
       <section>
         <h3 className="mb-3 text-lg font-semibold text-gray-900">中文要求</h3>
-        {honor.requirementsMarkdown ? (
-          <HonorMarkdown markdown={honor.requirementsMarkdown} />
+        {honor.requirementsHtml ? (
+          <HonorHtml html={honor.requirementsHtml} />
         ) : (
           <p className="text-gray-500">暫未有中文要求。</p>
         )}
@@ -99,19 +103,24 @@ function HonorDetails({ honor }: { honor: AdventurerHonor }) {
 
       <section>
         <h3 className="mb-3 text-lg font-semibold text-gray-900">答案整理</h3>
-        {honor.answers.length === 0 ? (
-          <p className="text-gray-500">暫未有答案整理。</p>
+        {hasAnswers ? (
+          <div className="space-y-3">
+            <HonorHtml html={honor.answerPrefaceHtml} />
+            {honor.answers.length > 0 ? (
+              <ul className="space-y-3">
+                {honor.answers.map((answer) => (
+                  <li key={answer.requirementIndex} className="rounded-xl bg-gray-50 p-4">
+                    <p className="mb-2 text-sm font-medium text-gray-500">
+                      要求 {answer.requirementIndex + 1}
+                    </p>
+                    <HonorHtml html={answer.html} />
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
         ) : (
-          <ul className="space-y-3">
-            {honor.answers.map((answer) => (
-              <li key={answer.requirementIndex} className="rounded-xl bg-gray-50 p-4">
-                <p className="mb-2 text-sm font-medium text-gray-500">
-                  要求 {answer.requirementIndex + 1}
-                </p>
-                <HonorMarkdown markdown={answer.text} />
-              </li>
-            ))}
-          </ul>
+          <p className="text-gray-500">暫未有答案整理。</p>
         )}
       </section>
 
@@ -124,14 +133,12 @@ function HonorModal({
   honor,
   onClose,
 }: {
-  honor: AdventurerHonor;
+  honor: HonorPageRecord;
   onClose: () => void;
 }) {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const downloadUrl = honor.hasDocxDownload
-    ? getHonorDownloadUrl(honor.code, honor.aliases)
-    : undefined;
-  const pdfLinks = getHonorPdfLinks(honor.code, honor.aliases);
+  const downloadUrl = honor.docxUrl;
+  const pdfLinks = { zh: honor.pdfZhUrl, en: honor.pdfEnUrl };
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -245,7 +252,7 @@ function HonorModal({
                 )}
                 {pdfLinks.zh && (
                   <a
-                    href={pdfLinks.zh.path}
+                    href={pdfLinks.zh}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
@@ -256,7 +263,7 @@ function HonorModal({
                 )}
                 {pdfLinks.en && (
                   <a
-                    href={pdfLinks.en.path}
+                    href={pdfLinks.en}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
@@ -619,7 +626,18 @@ function HonorFiltersPanel({
   );
 }
 
-export function AdventurerHonorsClient({ honors }: { honors: AdventurerHonor[] }) {
+const handbookLinks = [
+  { slot: "zh", label: "中文榮譽證手冊（HKMC 2023）" },
+  { slot: "en", label: "英文榮譽證手冊（GC 2020）" },
+] as const;
+
+export function AdventurerHonorsClient({
+  honors,
+  handbooks,
+}: {
+  honors: HonorPageRecord[];
+  handbooks: HonorHandbooks;
+}) {
   const [query, setQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<HonorCategory[]>([]);
   const [selectedReviewStatuses, setSelectedReviewStatuses] = useState<HonorStatus[]>([]);
@@ -697,29 +715,27 @@ export function AdventurerHonorsClient({ honors }: { honors: AdventurerHonor[] }
           </p>
 
           <div className="mt-6 space-y-5 border-t border-gray-100 pt-6">
-            <section>
-              <h2 className="text-sm font-semibold text-gray-900">榮譽證手冊</h2>
-              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
-                <a
-                  href={honorHandbooks.zh.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
-                >
-                  <Download className="h-4 w-4" aria-hidden="true" />
-                  {honorHandbooks.zh.label}
-                </a>
-                <a
-                  href={honorHandbooks.en.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
-                >
-                  <Download className="h-4 w-4" aria-hidden="true" />
-                  {honorHandbooks.en.label}
-                </a>
-              </div>
-            </section>
+            {handbooks.zh || handbooks.en ? (
+              <section>
+                <h2 className="text-sm font-semibold text-gray-900">榮譽證手冊</h2>
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+                  {handbookLinks.map((handbook) =>
+                    handbooks[handbook.slot] ? (
+                      <a
+                        key={handbook.slot}
+                        href={`/api/adventurer-honors/handbooks/${handbook.slot}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
+                      >
+                        <Download className="h-4 w-4" aria-hidden="true" />
+                        {handbook.label}
+                      </a>
+                    ) : null,
+                  )}
+                </div>
+              </section>
+            ) : null}
 
             <section>
               <h2 className="text-sm font-semibold text-gray-900">HKMC 榮譽證分類來源</h2>
@@ -765,7 +781,11 @@ export function AdventurerHonorsClient({ honors }: { honors: AdventurerHonor[] }
 
           <div>
             <HonorSortSelect sortField={sortField} onChange={setSortField} />
-            {filteredHonors.length === 0 ? (
+            {honors.length === 0 ? (
+              <div className="rounded-2xl bg-white p-8 text-center text-gray-600 shadow-sm">
+                <p>尚未同步榮譽證。</p>
+              </div>
+            ) : filteredHonors.length === 0 ? (
               <div className="rounded-2xl bg-white p-8 text-center text-gray-600 shadow-sm">
                 <p className="mb-4">找不到相關榮譽證。</p>
                 <button

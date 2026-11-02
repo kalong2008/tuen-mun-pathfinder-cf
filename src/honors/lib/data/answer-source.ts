@@ -1,4 +1,4 @@
-import type { AdventurerHonor, HonorAnswerSourceKind } from "./types";
+import type { HonorAnswerSourceKind } from "./types";
 
 export type { HonorAnswerSourceKind } from "./types";
 export { answerSourceKinds } from "./types";
@@ -90,8 +90,13 @@ export function formatAnswerSourceNote(note?: string): string {
   return trimmed.startsWith("（") ? trimmed : `（${trimmed}）`;
 }
 
-export function getAnswerSourceLabel(honor: AdventurerHonor): string {
-  if (honor.answers.length === 0) {
+export function getAnswerSourceLabel(honor: {
+  answers: readonly unknown[];
+  answerSource: HonorAnswerSourceKind;
+  answerSourceNote?: string;
+  answerPrefaceHtml?: string;
+}): string {
+  if (honor.answers.length === 0 && !honor.answerPrefaceHtml?.trim()) {
     return ANSWER_SOURCE_PENDING;
   }
 
