@@ -160,8 +160,19 @@ function closeYearMenuOnPointer(event: MouseEvent<HTMLElement>) {
 
 function holdYearMenu(id: string, menu: HTMLDetailsElement, timers: Map<string, number>) {
   if (!window.matchMedia("(min-width: 1024px)").matches) return;
+  for (const otherId of [...timers.keys()]) {
+    if (otherId === id) continue;
+    window.clearTimeout(timers.get(otherId));
+    timers.delete(otherId);
+  }
   const pending = timers.get(id);
-  if (pending !== undefined) window.clearTimeout(pending);
+  if (pending !== undefined) {
+    window.clearTimeout(pending);
+    timers.delete(id);
+  }
+  for (const other of document.querySelectorAll("details.year-menu")) {
+    if (other !== menu && other instanceof HTMLDetailsElement) other.open = false;
+  }
   menu.open = true;
 }
 
