@@ -12,13 +12,21 @@ import { db, eq } from "void/db";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/counter.css";
 import { Shell } from "../components/shell";
-import { albumManifestUrl, photoUrl } from "../photos";
+import { albumManifestUrl, photoDisplayUrl, photoUrl } from "../photos";
 import { assertSignedIn, requireSignedIn } from "../server/require-user";
 
 type ManifestPhoto = {
   url?: string;
   width?: number;
   height?: number;
+};
+
+type AlbumImage = {
+  src: string;
+  original: string;
+  width: number;
+  height: number;
+  alt: string;
 };
 
 async function findAlbumLink(slug: string) {
@@ -57,8 +65,10 @@ const getAlbum = createServerFn({ method: "GET" })
       title,
       photos: list.flatMap((photo) => {
         if (!photo.url) return [];
+        const original = photoUrl(photo.url);
         return [{
-          src: photoUrl(photo.url),
+          src: photoDisplayUrl(original, 1200),
+          original,
           width: photo.width ?? 3,
           height: photo.height ?? 2,
           alt: link.name,
@@ -81,10 +91,22 @@ export const Route = createFileRoute("/$slug")({
   notFoundComponent: AlbumNotFound,
 });
 
-function AlbumPhoto({ wrapperStyle, renderDefaultPhoto }: RenderPhotoProps) {
+function AlbumPhoto({ photo, imageProps, wrapperStyle }: RenderPhotoProps<AlbumImage>) {
+  const { style: _style, alt, ...rest } = imageProps;
   return (
     <div className="album-photo" style={{ ...wrapperStyle, borderRadius: "10px", overflow: "hidden" }}>
-      {renderDefaultPhoto({ wrapped: true })}
+      <img
+        {...rest}
+        alt={alt}
+        style={{ display: "block", width: "100%", height: "100%" }}
+        referrerPolicy="no-referrer"
+        onError={(event) => {
+          const image = event.currentTarget;
+          if (image.dataset.fallback === "1") return;
+          image.dataset.fallback = "1";
+          image.src = photo.original;
+        }}
+      />
     </div>
   );
 }
@@ -121,7 +143,7 @@ function AlbumPage() {
               onClick={({ index: photoIndex }) => setIndex(photoIndex)}
             />
             <Lightbox
-              slides={album.photos}
+              slides={album.photos.map(({ original, width, height, alt }) => ({ src: original, width, height, alt }))}
               open={index >= 0}
               index={index}
               close={() => setIndex(-1)}

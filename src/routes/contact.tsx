@@ -31,6 +31,7 @@ type TurnstileApi = {
     options: {
       sitekey: string;
       action: string;
+      theme: "light";
       callback: (token: string) => void;
     },
   ) => TurnstileWidgetId;
@@ -77,6 +78,7 @@ function ContactPage() {
       turnstileWidgetId.current = api.render(turnstileContainer.current, {
         sitekey: TURNSTILE_SITEKEY,
         action: "contact",
+        theme: "light",
         callback: setTurnstileToken,
       });
     }

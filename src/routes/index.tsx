@@ -6,7 +6,7 @@ import { ClubCalendar } from "../components/club-calendar";
 import { VersePopup } from "../components/verse-popup";
 import { noticeFiles } from "../notice-files";
 import { Shell } from "../components/shell";
-import { photoUrl } from "../photos";
+import { photoDisplayUrl, photoUrl } from "../photos";
 
 const WHATSAPP = "https://wa.me/85265721493?text=我想查詢有關幼鋒會及前鋒會的資料。";
 
@@ -52,7 +52,7 @@ function HomePage() {
       <VersePopup />
       <section className="banner">
         {image("homepage.banner") ? (
-          <img src={image("homepage.banner") ?? ""} alt="" width={4000} height={1610} />
+          <ClubImage src={image("homepage.banner") ?? ""} alt="" width={4000} height={1610} displayWidth={2400} />
         ) : (
           <div className="banner-fallback" />
         )}
@@ -71,7 +71,7 @@ function HomePage() {
               <p>幼鋒會每星期提供專為這個年齡段的需求而設計的活動，同時每個月會有不同的主題，讓小朋友可以學習到不同的知識。</p>
             </div>
             {image("homepage.adventurer") ? (
-              <img src={image("homepage.adventurer") ?? ""} alt="幼鋒會活動" width={4000} height={2667} />
+              <ClubImage src={image("homepage.adventurer") ?? ""} alt="幼鋒會活動" width={4000} height={2667} displayWidth={1200} />
             ) : null}
           </div>
           <div className="cards cards-navy">
@@ -99,7 +99,7 @@ function HomePage() {
           <h2 className="tone-green">前鋒會</h2>
           <div className="split flip">
             {image("homepage.pathfinder") ? (
-              <img src={image("homepage.pathfinder") ?? ""} alt="前鋒會活動" width={4000} height={2667} />
+              <ClubImage src={image("homepage.pathfinder") ?? ""} alt="前鋒會活動" width={4000} height={2667} displayWidth={1200} />
             ) : null}
             <div className="split-copy">
               <p>「前鋒會」不僅意味著行軍、露營和自然研究等探索，這個為10至15歲青少年成立的團體，更致力於達成雙重目標：開闊他們的世界視野，並幫助他們建立與上帝的關係。</p>
@@ -141,6 +141,36 @@ function HomePage() {
         </div>
       </section>
     </Shell>
+  );
+}
+
+function ClubImage({
+  src,
+  alt,
+  width,
+  height,
+  displayWidth,
+}: {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  displayWidth: number;
+}) {
+  return (
+    <img
+      src={photoDisplayUrl(src, displayWidth)}
+      alt={alt}
+      width={width}
+      height={height}
+      referrerPolicy="no-referrer"
+      onError={(event) => {
+        const image = event.currentTarget;
+        if (image.dataset.fallback === "1") return;
+        image.dataset.fallback = "1";
+        image.src = src;
+      }}
+    />
   );
 }
 
