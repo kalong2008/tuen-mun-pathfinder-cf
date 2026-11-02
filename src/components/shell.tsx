@@ -127,14 +127,14 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className="site-footer-inner">
           <Link to="/" className="footer-brand">
             <img src="/pathfinder-adventurer.png" alt="" width={90} height={24} />
-            <span>屯門前鋒會 幼鋒會 | 基督復臨安息日會屯門教會</span>
+            <span className="footer-name">
+              <span>屯門前鋒會 幼鋒會 |</span>
+              <span>基督復臨安息日會屯門教會</span>
+            </span>
           </Link>
           <div className="social">
             <a href="https://www.instagram.com/tuenmunpathfinder/" aria-label="Instagram">
               <InstagramIcon />
-            </a>
-            <a href="https://www.youtube.com/channel/UCpbnT5M0a7rdYhDUIGA37LQ" aria-label="YouTube">
-              <YouTubeIcon />
             </a>
           </div>
         </div>
@@ -192,10 +192,3 @@ function InstagramIcon() {
   );
 }
 
-function YouTubeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="icon">
-      <path fill="currentColor" d="M23 12.2s0-3.2-.4-4.6a3 3 0 0 0-2.1-2.1C18.9 5 12 5 12 5s-6.9 0-8.5.5a3 3 0 0 0-2.1 2.1C1 9 1 12.2 1 12.2s0 3.2.4 4.6a3 3 0 0 0 2.1 2.1C5.1 19.4 12 19.4 12 19.4s6.9 0 8.5-.5a3 3 0 0 0 2.1-2.1c.4-1.4.4-4.6.4-4.6ZM9.8 15.5v-6.6l6.2 3.3Z" />
-    </svg>
-  );
-}
