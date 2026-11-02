@@ -129,6 +129,48 @@ function HonorDetails({ honor }: { honor: HonorPageRecord }) {
   );
 }
 
+function HonorDownloadLinks({ honor }: { honor: HonorPageRecord }) {
+  const downloadUrl = honor.docxUrl;
+  const pdfLinks = { zh: honor.pdfZhUrl, en: honor.pdfEnUrl };
+  const linkClassName =
+    "inline-flex items-center gap-2 whitespace-nowrap py-1 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline";
+
+  return (
+    <>
+      {honor.canvaViewUrl && (
+        <a href={honor.canvaViewUrl} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+          <Presentation className="h-4 w-4 shrink-0" aria-hidden="true" />
+          閱讀簡報
+        </a>
+      )}
+      {honor.canvaPdfUrl && (
+        <a href={honor.canvaPdfUrl} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+          <FaFilePdf className="h-4 w-4 shrink-0" aria-hidden="true" />
+          下載簡報 PDF
+        </a>
+      )}
+      {downloadUrl && (
+        <a href={downloadUrl} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+          <FaFileWord className="h-4 w-4 shrink-0" aria-hidden="true" />
+          中文 Word（HKMC 2023）
+        </a>
+      )}
+      {pdfLinks.zh && (
+        <a href={pdfLinks.zh} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+          <FaFilePdf className="h-4 w-4 shrink-0" aria-hidden="true" />
+          中文 PDF（HKMC 2023）
+        </a>
+      )}
+      {pdfLinks.en && (
+        <a href={pdfLinks.en} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+          <FaFilePdf className="h-4 w-4 shrink-0" aria-hidden="true" />
+          英文 PDF（GC 2020）
+        </a>
+      )}
+    </>
+  );
+}
+
 function HonorModal({
   honor,
   onClose,
@@ -137,9 +179,9 @@ function HonorModal({
   onClose: () => void;
 }) {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const downloadUrl = honor.docxUrl;
-  const pdfLinks = { zh: honor.pdfZhUrl, en: honor.pdfEnUrl };
-  const hasDownloads = Boolean(downloadUrl || pdfLinks.zh || pdfLinks.en || honor.canvaViewUrl || honor.canvaPdfUrl);
+  const hasDownloads = Boolean(
+    honor.docxUrl || honor.pdfZhUrl || honor.pdfEnUrl || honor.canvaViewUrl || honor.canvaPdfUrl,
+  );
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -226,9 +268,9 @@ function HonorModal({
           <X className="h-5 w-5" strokeWidth={2.25} aria-hidden="true" />
         </motion.button>
 
-        <div className="flex items-start gap-4 border-b border-gray-100 px-5 py-4 pr-14 text-left">
+        <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-4 border-b border-gray-100 px-5 py-4 pr-14 text-left">
           <HonorBadge honor={honor} size="modal" />
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <p className="text-sm font-semibold text-blue-700">{honor.code}</p>
               <HonorReviewTag honor={honor} />
@@ -238,66 +280,12 @@ function HonorModal({
               {honor.nameZh}
             </h2>
             {honor.nameEn && <p className="text-sm text-gray-500">{honor.nameEn}</p>}
-            {hasDownloads && (
-              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
-                {honor.canvaViewUrl && (
-                  <a
-                    href={honor.canvaViewUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
-                  >
-                    <Presentation className="h-4 w-4" aria-hidden="true" />
-                    閱讀簡報
-                  </a>
-                )}
-                {honor.canvaPdfUrl && (
-                  <a
-                    href={honor.canvaPdfUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
-                  >
-                    <FaFilePdf className="h-4 w-4" aria-hidden="true" />
-                    下載簡報 PDF
-                  </a>
-                )}
-                {downloadUrl && (
-                  <a
-                    href={downloadUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
-                  >
-                    <FaFileWord className="h-4 w-4" aria-hidden="true" />
-                    中文 Word（HKMC 2023）
-                  </a>
-                )}
-                {pdfLinks.zh && (
-                  <a
-                    href={pdfLinks.zh}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
-                  >
-                    <FaFilePdf className="h-4 w-4" aria-hidden="true" />
-                    中文 PDF（HKMC 2023）
-                  </a>
-                )}
-                {pdfLinks.en && (
-                  <a
-                    href={pdfLinks.en}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
-                  >
-                    <FaFilePdf className="h-4 w-4" aria-hidden="true" />
-                    英文 PDF （GC 2020）
-                  </a>
-                )}
-              </div>
-            )}
           </div>
+          {hasDownloads && (
+            <div className="col-span-2 mt-4 flex flex-col items-start gap-1 sm:col-span-1 sm:col-start-2 sm:mt-3 sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-2">
+              <HonorDownloadLinks honor={honor} />
+            </div>
+          )}
         </div>
 
         <div className="overflow-y-auto px-5 py-6">
@@ -726,24 +714,24 @@ export function AdventurerHonorsClient({
     <div className="honors min-h-screen bg-gradient-to-b from-zinc-100 to-zinc-50 px-4 pb-14 pt-[84px]">
       <section className="mx-auto max-w-6xl">
         <div className="mb-8 rounded-3xl bg-white p-6 shadow-md md:p-10">
-          <p className="mb-3 text-sm font-semibold text-blue-700">Adventurer Honors</p>
+          <p className="pb-3 text-sm font-semibold text-blue-700">Adventurer Honors</p>
           <h1 className="text-3xl font-bold text-gray-900 md:text-5xl">幼鋒會榮譽證</h1>
-          <p className="mt-4 max-w-3xl text-gray-600">
+          <p className="max-w-3xl pt-4 text-gray-600">
             搜尋幼鋒會榮譽證的中文要求及答案整理。答案取自英文 Award Book 2020 或以 AI
             草擬／翻譯，請導師按需要核對使用。
           </p>
-          <p className="mt-3 text-sm text-gray-600" aria-live="polite">
+          <p className="pt-3 text-sm text-gray-600" aria-live="polite">
             {honorStats.total} 個榮譽 · {honorStats.nonReview} 待核對 · {honorStats.reviewed} 已核對
             {hasActiveFilters && filteredStats.total !== honorStats.total
               ? ` · 目前顯示 ${filteredStats.total} 個`
               : ""}
           </p>
 
-          <div className="mt-6 space-y-5 border-t border-gray-100 pt-6">
+          <div className="mt-8 space-y-6 border-t border-gray-100 pt-6">
             {handbooks.zh || handbooks.en ? (
               <section>
                 <h2 className="text-sm font-semibold text-gray-900">榮譽證手冊</h2>
-                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
                   {handbookLinks.map((handbook) =>
                     handbooks[handbook.slot] ? (
                       <a
@@ -764,23 +752,25 @@ export function AdventurerHonorsClient({
 
             <section>
               <h2 className="text-sm font-semibold text-gray-900">Canva 簡報</h2>
-              {canvaConnected ? (
-                <p className="mt-2 text-sm text-gray-600">
-                  已連接。有設計 ID 的榮譽證可以閱讀簡報或下載 PDF。
-                </p>
-              ) : (
-                <a
-                  href="/api/canva/oauth/start"
-                  className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
-                >
-                  連接 Canva
-                </a>
-              )}
+              <div className="mt-3">
+                {canvaConnected ? (
+                  <p className="text-sm text-gray-600">
+                    已連接。有設計 ID 的榮譽證可以閱讀簡報或下載 PDF。
+                  </p>
+                ) : (
+                  <a
+                    href="/api/canva/oauth/start"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
+                  >
+                    連接 Canva
+                  </a>
+                )}
+              </div>
             </section>
 
             <section>
               <h2 className="text-sm font-semibold text-gray-900">HKMC 榮譽證分類來源</h2>
-              <ul className="mt-2 flex flex-wrap gap-2">
+              <ul className="mt-3 flex flex-wrap gap-2">
                 {visibleCategoryLinks.map((option) => {
                   const colors = getHonorCategoryColors(option.id);
 
@@ -838,7 +828,7 @@ export function AdventurerHonorsClient({
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4 xl:gap-4">
+              <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-3 xl:grid-cols-4 xl:gap-x-4 xl:gap-y-6">
                 {filteredHonors.map((honor) => {
                   const colors = getHonorCategoryColors(honor.category);
 
@@ -847,7 +837,7 @@ export function AdventurerHonorsClient({
                     key={honor.id}
                     type="button"
                     onClick={() => setSelectedHonorId(honor.id)}
-                    className="flex flex-col items-center rounded-2xl p-4 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    className="flex flex-col items-center rounded-2xl px-4 py-6 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-200"
                     style={{ backgroundColor: colors.cardBg }}
                   >
                     <HonorBadge honor={honor} />
