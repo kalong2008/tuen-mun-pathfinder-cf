@@ -1,6 +1,6 @@
 import "../honors.css";
 import { AnimatePresence, motion } from "motion/react";
-import { ChevronDown, Download, ExternalLink, X } from "lucide-react";
+import { ChevronDown, Download, ExternalLink, Presentation, X } from "lucide-react";
 import { FaFilePdf, FaFileWord } from "react-icons/fa";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -139,6 +139,7 @@ function HonorModal({
   const dialogRef = useRef<HTMLDivElement>(null);
   const downloadUrl = honor.docxUrl;
   const pdfLinks = { zh: honor.pdfZhUrl, en: honor.pdfEnUrl };
+  const hasDownloads = Boolean(downloadUrl || pdfLinks.zh || pdfLinks.en || honor.canvaViewUrl || honor.canvaPdfUrl);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -237,8 +238,30 @@ function HonorModal({
               {honor.nameZh}
             </h2>
             {honor.nameEn && <p className="text-sm text-gray-500">{honor.nameEn}</p>}
-            {(downloadUrl || pdfLinks.zh || pdfLinks.en) && (
+            {hasDownloads && (
               <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+                {honor.canvaViewUrl && (
+                  <a
+                    href={honor.canvaViewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
+                  >
+                    <Presentation className="h-4 w-4" aria-hidden="true" />
+                    閱讀簡報
+                  </a>
+                )}
+                {honor.canvaPdfUrl && (
+                  <a
+                    href={honor.canvaPdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
+                  >
+                    <FaFilePdf className="h-4 w-4" aria-hidden="true" />
+                    下載簡報 PDF
+                  </a>
+                )}
                 {downloadUrl && (
                   <a
                     href={downloadUrl}
@@ -634,9 +657,11 @@ const handbookLinks = [
 export function AdventurerHonorsClient({
   honors,
   handbooks,
+  canvaConnected,
 }: {
   honors: HonorPageRecord[];
   handbooks: HonorHandbooks;
+  canvaConnected: boolean;
 }) {
   const [query, setQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<HonorCategory[]>([]);
@@ -736,6 +761,22 @@ export function AdventurerHonorsClient({
                 </div>
               </section>
             ) : null}
+
+            <section>
+              <h2 className="text-sm font-semibold text-gray-900">Canva 簡報</h2>
+              {canvaConnected ? (
+                <p className="mt-2 text-sm text-gray-600">
+                  已連接。有設計 ID 的榮譽證可以閱讀簡報或下載 PDF。
+                </p>
+              ) : (
+                <a
+                  href="/api/canva/oauth/start"
+                  className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
+                >
+                  連接 Canva
+                </a>
+              )}
+            </section>
 
             <section>
               <h2 className="text-sm font-semibold text-gray-900">HKMC 榮譽證分類來源</h2>

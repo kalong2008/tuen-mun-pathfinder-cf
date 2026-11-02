@@ -8,4 +8,5 @@ export default defineEnv({
   RESEND_API_KEY: string(),
   CONTACT_EMAIL_FROM: email(),
   CONTACT_EMAIL_BCC: email(),
+  CANVA_CLIENT_SECRET: string().optional(),
 });

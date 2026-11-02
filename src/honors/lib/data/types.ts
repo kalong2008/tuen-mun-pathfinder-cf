@@ -60,6 +60,8 @@ export interface HonorPageRecord {
   docxUrl?: string;
   pdfZhUrl?: string;
   pdfEnUrl?: string;
+  canvaViewUrl?: string;
+  canvaPdfUrl?: string;
 }
 
 export interface AdventurerHonor {

@@ -2,6 +2,8 @@ import { adventurerHonors } from "@schema";
 import { db } from "void/db";
 import { env } from "void/env";
 import { storage } from "void/storage";
+import { canvaDesignIdFromText } from "../honors/lib/canva-id";
+import { listWorksheetControls } from "./nocoly";
 
 export const HONORS_WORKSHEET_ID = "6ae7d211cf693fce891c5256";
 export const HONORS_VIEW_ID = "6ae7d211cf693fce891c525a";
@@ -65,6 +67,7 @@ export type HonorSyncRow = {
   hasDocx: boolean;
   hasZhPdf: boolean;
   hasEnPdf: boolean;
+  canvaDesignId: string;
 };
 
 type BadgeUpload = {
@@ -150,7 +153,22 @@ function badgeSource(url: string): string {
   }
 }
 
-export function parseHonorRows(rows: Record<string, unknown>[]): {
+const CANVA_FIELD_NAMES = new Set(["canva id", "canva 設計 id"]);
+
+export async function honorCanvaFieldId(): Promise<string> {
+  try {
+    const controls = await listWorksheetControls(HONORS_WORKSHEET_ID);
+    const match = controls.find(
+      (control) =>
+        control.alias === "canvaDesignId" || CANVA_FIELD_NAMES.has(control.name.trim().toLowerCase()),
+    );
+    return match?.id ?? "";
+  } catch {
+    return "";
+  }
+}
+
+export function parseHonorRows(rows: Record<string, unknown>[], canvaFieldId = ""): {
   honors: HonorSyncRow[];
   badges: BadgeUpload[];
 } {
@@ -187,6 +205,7 @@ export function parseHonorRows(rows: Record<string, unknown>[]): {
       hasDocx: attachment(row[FIELDS.docx]) !== null,
       hasZhPdf: attachment(row[FIELDS.pdfZh]) !== null,
       hasEnPdf: attachment(row[FIELDS.pdfEn]) !== null,
+      canvaDesignId: canvaFieldId ? canvaDesignIdFromText(textValue(row[canvaFieldId])) : "",
     });
     if (badge && key) {
       badges.push({

@@ -1,0 +1,1 @@
+ALTER TABLE `adventurer_honors` ADD `canva_design_id` text DEFAULT '' NOT NULL;

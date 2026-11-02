@@ -44,6 +44,44 @@ export async function fetchWorksheetRowPage(
   });
 }
 
+export type WorksheetControl = {
+  id: string;
+  name: string;
+  alias: string;
+};
+
+function pushControls(value: unknown, into: WorksheetControl[]) {
+  if (!Array.isArray(value)) return;
+  for (const item of value) {
+    if (!item || typeof item !== "object") continue;
+    const record = item as Record<string, unknown>;
+    const id = record.controlId ?? record.id;
+    const name = record.controlName ?? record.name;
+    if (typeof id !== "string" || typeof name !== "string" || !id || !name.trim()) continue;
+    const alias = record.alias;
+    into.push({
+      id,
+      name: name.trim(),
+      alias: typeof alias === "string" ? alias.trim() : "",
+    });
+  }
+}
+
+function findControls(value: unknown, into: WorksheetControl[], depth: number) {
+  if (depth > 4 || !value || typeof value !== "object" || Array.isArray(value)) return;
+  for (const [key, child] of Object.entries(value)) {
+    if (key === "controls" || key === "fields") pushControls(child, into);
+    else findControls(child, into, depth + 1);
+  }
+}
+
+export async function listWorksheetControls(worksheetId: string): Promise<WorksheetControl[]> {
+  const payload = await nocolyRequest(`/app/worksheets/${worksheetId}`);
+  const controls: WorksheetControl[] = [];
+  findControls(payload.data, controls, 0);
+  return controls;
+}
+
 export async function getWorksheetRow(
   worksheetId: string,
   rowId: string,

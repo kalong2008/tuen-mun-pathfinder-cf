@@ -119,6 +119,7 @@ export const adventurerHonors = sqliteTable(
     hasDocx: integer("has_docx", { mode: "boolean" }).notNull().default(false),
     hasZhPdf: integer("has_zh_pdf", { mode: "boolean" }).notNull().default(false),
     hasEnPdf: integer("has_en_pdf", { mode: "boolean" }).notNull().default(false),
+    canvaDesignId: text("canva_design_id").notNull().default(""),
   },
   (table) => [uniqueIndex("adventurer_honors_code").on(table.code)],
 );

@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { AdventurerHonorsClient } from "../honors/components/AdventurerHonorsClient";
 import { sortAdventurerHonors } from "../honors/lib/display/sort";
 import { Shell } from "../components/shell";
+import { isCanvaConnected } from "../server/canva";
 import { loadHonorHandbooks, loadPublishedHonors } from "../server/load-adventurer-honors";
 import { assertSignedIn, requireSignedIn } from "../server/require-user";
 import { isCurrentUserAdmin } from "../server/require-admin";
@@ -10,14 +11,19 @@ import { isCurrentUserAdmin } from "../server/require-admin";
 const getHonorsPage = createServerFn({ method: "GET" }).handler(async () => {
   await assertSignedIn("/adventurer-honors");
   if (!(await isCurrentUserAdmin())) {
-    return { denied: true as const, honors: [], handbooks: { zh: false, en: false } };
+    return { denied: true as const, honors: [], handbooks: { zh: false, en: false }, canvaConnected: false };
   }
 
-  const [honors, handbooks] = await Promise.all([loadPublishedHonors(), loadHonorHandbooks()]);
+  const [honors, handbooks, canvaConnected] = await Promise.all([
+    loadPublishedHonors(),
+    loadHonorHandbooks(),
+    isCanvaConnected().catch(() => false),
+  ]);
   return {
     denied: false as const,
     honors: sortAdventurerHonors(honors),
     handbooks,
+    canvaConnected,
   };
 });
 
@@ -46,7 +52,11 @@ function AdventurerHonorsPage() {
           </p>
         </section>
       ) : (
-        <AdventurerHonorsClient honors={data.honors} handbooks={data.handbooks} />
+        <AdventurerHonorsClient
+          honors={data.honors}
+          handbooks={data.handbooks}
+          canvaConnected={data.canvaConnected}
+        />
       )}
     </Shell>
   );

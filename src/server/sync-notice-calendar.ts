@@ -3,6 +3,7 @@ import { db } from "void/db";
 import {
   HONORS_VIEW_ID,
   HONORS_WORKSHEET_ID,
+  honorCanvaFieldId,
   parseHonorRows,
   removeStaleHonorBadges,
   uploadChangedHonorBadges,
@@ -52,7 +53,7 @@ export async function syncNoticeCalendar(): Promise<SiteSyncResult> {
   const images = homepageSettings(imageRows);
   const videoList = videoRows(activityRows);
   const highlights = highlightRows(activityRows, sections);
-  const honors = parseHonorRows(honorRows);
+  const honors = parseHonorRows(honorRows, await honorCanvaFieldId());
   if (activityRows.length === 0 || links.length === 0 || sections.length === 0 || images.length === 0) {
     throw new Error("Nocoly returned an incomplete site snapshot. Kept the existing database.");
   }

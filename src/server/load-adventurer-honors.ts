@@ -108,6 +108,8 @@ export async function loadPublishedHonors(): Promise<HonorPageRecord[]> {
       docxUrl: row.hasDocx ? `/api/adventurer-honors/${row.id}/file/docx` : undefined,
       pdfZhUrl: row.hasZhPdf ? `/api/adventurer-honors/${row.id}/file/zh` : undefined,
       pdfEnUrl: row.hasEnPdf ? `/api/adventurer-honors/${row.id}/file/en` : undefined,
+      canvaViewUrl: row.canvaDesignId ? `/api/adventurer-honors/${row.id}/canva/view` : undefined,
+      canvaPdfUrl: row.canvaDesignId ? `/api/adventurer-honors/${row.id}/canva/pdf` : undefined,
     });
   }
 
