@@ -79,7 +79,7 @@ button, summary { font: inherit; }
 .logo { display: flex; }
 
 .logo img,
-.footer-brand img { display: block; height: 2rem; width: auto; }
+.footer-brand img { display: block; flex: none; height: 2rem; width: auto; }
 
 .bar-end {
   display: flex;
@@ -621,22 +621,25 @@ button, summary { font: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  width: min(100% - 2rem, 80%);
+  width: 100%;
   margin: 0 auto;
-  padding: 1rem 0;
+  padding: 1rem;
 }
 
 .footer-brand {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
   color: inherit;
   font-size: 0.75rem;
+  line-height: 1.4;
   text-decoration: none;
-  white-space: nowrap;
 }
 
-.social { display: flex; gap: 0.75rem; }
+.footer-brand span { min-width: 0; }
+
+.social { display: flex; flex: none; gap: 0.75rem; }
 
 .social a { display: flex; color: var(--ink); }
 
@@ -649,6 +652,8 @@ button, summary { font: inherit; }
 
 @media (min-width: 1024px) {
   .bar-inner { justify-content: center; width: 80%; padding: 1rem 0; }
+  .site-footer-inner { width: 80%; padding: 1rem 0; }
+  .footer-brand { white-space: nowrap; }
   .bar-end { display: none; }
   .auth-desktop { display: flex; align-items: center; }
   .menu-toggle { display: none; }
