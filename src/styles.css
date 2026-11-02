@@ -687,9 +687,7 @@ button, summary { font: inherit; }
   .year-menu summary:hover,
   .year-menu[open] summary { background: #f3f4f6; }
   .year-menu { position: relative; }
-  .year-menu:hover::details-content,
-  .year-menu[open]::details-content,
-  .year-menu:focus-within::details-content {
+  .year-menu[open]::details-content {
     display: block;
     content-visibility: visible;
   }
@@ -741,12 +739,8 @@ button, summary { font: inherit; }
   .year-panel.is-wide .year-label,
   .year-panel.is-wide .year-link { padding-right: 0.65rem; padding-left: 0.65rem; text-align: left; white-space: nowrap; }
   .year-panel.is-wide .year-label { margin: 0; padding-top: 0.5rem; padding-bottom: 0.35rem; }
-  .year-menu:hover .year-panel,
-  .year-menu[open] .year-panel,
-  .year-menu:focus-within .year-panel { display: grid; }
-  .year-menu:hover .year-panel.is-wide,
-  .year-menu[open] .year-panel.is-wide,
-  .year-menu:focus-within .year-panel.is-wide { display: flex; }
+  .year-menu[open] .year-panel { display: grid; }
+  .year-menu[open] .year-panel.is-wide { display: flex; }
   .cal { grid-template-columns: 1fr 1fr; align-items: start; }
 }
 

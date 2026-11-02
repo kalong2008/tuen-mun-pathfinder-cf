@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { AuthButtons } from "./auth-buttons";
 
@@ -76,7 +76,7 @@ export function Shell({ children }: { children: ReactNode }) {
                   onMouseEnter={(event) => holdYearMenu(section.id, event.currentTarget, closeTimers.current)}
                   onMouseLeave={(event) => releaseYearMenu(section.id, event.currentTarget, closeTimers.current)}
                 >
-                  <summary>
+                  <summary onClick={closeYearMenuOnPointer}>
                     {section.label}
                     <Chevron />
                   </summary>
@@ -90,7 +90,10 @@ export function Shell({ children }: { children: ReactNode }) {
                             to="/$slug"
                             params={{ slug: link.href.replace(/^\//, "") }}
                             className="year-link"
-                            onClick={() => setMenuOpen(false)}
+                            onClick={(event) => {
+                              setMenuOpen(false);
+                              closeYearMenu(event.currentTarget);
+                            }}
                           >
                             {link.name}
                           </Link>
@@ -141,6 +144,18 @@ export function Shell({ children }: { children: ReactNode }) {
       </footer>
     </div>
   );
+}
+
+function closeYearMenu(target: Element) {
+  const menu = target.closest("details");
+  if (menu instanceof HTMLDetailsElement) menu.open = false;
+}
+
+function closeYearMenuOnPointer(event: MouseEvent<HTMLElement>) {
+  if (!window.matchMedia("(min-width: 1024px)").matches) return;
+  if (event.detail === 0) return;
+  event.preventDefault();
+  closeYearMenu(event.currentTarget);
 }
 
 function holdYearMenu(id: string, menu: HTMLDetailsElement, timers: Map<string, number>) {
