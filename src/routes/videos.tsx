@@ -14,6 +14,9 @@ export const Route = createFileRoute("/videos")({
     v: typeof search.v === "string" && search.v ? search.v : undefined,
   }),
   loader: () => getVideos(),
+  head: () => ({
+    meta: [{ title: "歷屆影片 | 屯門前鋒會 幼鋒會" }],
+  }),
   component: VideosPage,
 });
 

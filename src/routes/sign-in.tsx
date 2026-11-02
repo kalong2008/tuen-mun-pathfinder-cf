@@ -4,6 +4,9 @@ import { AuthScreen } from "../components/auth-screen";
 
 export const Route = createFileRoute("/sign-in")({
   validateSearch: authReturnSearch,
+  head: () => ({
+    meta: [{ title: "登入 | 屯門前鋒會 幼鋒會" }],
+  }),
   component: SignInLayout,
 });
 

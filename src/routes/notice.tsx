@@ -11,6 +11,9 @@ const getNotices = createServerFn({ method: "GET" }).handler(async () => {
 
 export const Route = createFileRoute("/notice")({
   loader: () => getNotices(),
+  head: () => ({
+    meta: [{ title: "活動通告 | 屯門前鋒會 幼鋒會" }],
+  }),
   component: NoticePage,
 });
 
@@ -36,7 +39,7 @@ function NoticePage() {
         {expired.length > 0 ? (
           <details className="notice-archive">
             <summary>
-              <span>過期通告</span>
+              <span>過往通告</span>
               <ArchiveChevron />
             </summary>
             <NoticeGrid rows={expired} today={today} />

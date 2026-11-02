@@ -74,6 +74,9 @@ export const Route = createFileRoute("/$slug")({
     await requireSignedIn(`/${params.slug}`);
   },
   loader: ({ params }) => getAlbum({ data: params.slug }),
+  head: ({ loaderData }) => ({
+    meta: [{ title: `${loaderData?.title ?? "找不到頁面"} | 屯門前鋒會 幼鋒會` }],
+  }),
   component: AlbumPage,
   notFoundComponent: AlbumNotFound,
 });
