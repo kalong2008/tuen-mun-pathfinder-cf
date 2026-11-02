@@ -34,5 +34,4 @@ jobs:
           CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
           # Public client value. Production builds ignore .env and read this from the shell.
           VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
-          CANVA_CLIENT_ID: ${{ vars.CANVA_CLIENT_ID }}
         run: pnpm exec void deploy --platform cloudflare

@@ -4,7 +4,6 @@ import { env } from "void/env";
 import { publishedHonorFile } from "./load-adventurer-honors";
 import { isCurrentUserAdmin } from "./require-admin";
 
-const CANVA_CLIENT_ID = "AAHOGHEBovo";
 const CANVA_REDIRECT_URI = "https://tuenmunpathfinder.com/api/canva/oauth/callback";
 const CANVA_SCOPES = "design:meta:read design:content:read";
 const CANVA_AUTHORIZE = "https://www.canva.com/api/oauth/authorize";
@@ -119,7 +118,7 @@ async function codeChallenge(verifier: string): Promise<string> {
 }
 
 function basicAuth(secret: string): string {
-  const bytes = new TextEncoder().encode(`${CANVA_CLIENT_ID}:${secret}`);
+  const bytes = new TextEncoder().encode(`${env.CANVA_CLIENT_ID}:${secret}`);
   let binary = "";
   for (const byte of bytes) binary += String.fromCharCode(byte);
   return btoa(binary);
@@ -253,7 +252,7 @@ async function refreshAccessToken(): Promise<string> {
     new URLSearchParams({
       grant_type: "refresh_token",
       refresh_token: refreshToken,
-      client_id: CANVA_CLIENT_ID,
+      client_id: env.CANVA_CLIENT_ID,
     }),
     refreshToken,
   );
@@ -385,7 +384,7 @@ export async function startCanvaOAuth(request: Request): Promise<Response> {
   url.searchParams.set("code_challenge", await codeChallenge(verifier));
   url.searchParams.set("code_challenge_method", "S256");
   url.searchParams.set("response_type", "code");
-  url.searchParams.set("client_id", CANVA_CLIENT_ID);
+  url.searchParams.set("client_id", env.CANVA_CLIENT_ID);
   url.searchParams.set("redirect_uri", CANVA_REDIRECT_URI);
   url.searchParams.set("scope", CANVA_SCOPES);
   url.searchParams.set("state", state);
@@ -423,7 +422,7 @@ export async function finishCanvaOAuth(request: Request): Promise<Response> {
         code,
         code_verifier: pending.verifier,
         redirect_uri: CANVA_REDIRECT_URI,
-        client_id: CANVA_CLIENT_ID,
+        client_id: env.CANVA_CLIENT_ID,
       }),
     );
   } catch (error) {
