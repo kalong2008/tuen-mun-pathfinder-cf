@@ -837,7 +837,7 @@ export function AdventurerHonorsClient({
                     key={honor.id}
                     type="button"
                     onClick={() => setSelectedHonorId(honor.id)}
-                    className="flex flex-col items-center rounded-2xl px-4 py-6 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    className="honor-card flex flex-col items-center rounded-2xl text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-200"
                     style={{ backgroundColor: colors.cardBg }}
                   >
                     <HonorBadge honor={honor} />
