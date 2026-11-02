@@ -1081,6 +1081,8 @@ button, summary { font: inherit; }
 
 .contact-error { margin: 0.5rem 0 0; color: #dc2626; font-size: 0.875rem; }
 
+.contact-turnstile { margin-top: 1rem; }
+
 .contact-submit {
   width: 100%;
   margin-top: 2rem;

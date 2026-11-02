@@ -10,4 +10,6 @@ export default defineEnv({
   CONTACT_EMAIL_FROM: email(),
   CONTACT_EMAIL_BCC: email(),
   CANVA_CLIENT_SECRET: string().optional(),
+  TURNSTILE_SECRET: string(),
+  TURNSTILE_HOSTNAMES: string(),
 });

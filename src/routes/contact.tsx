@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { Shell } from "../components/shell";
 import { deliverEnquiry } from "../server/contact-mail";
 
+const TURNSTILE_SITEKEY = "0x4AAAAAAFwu5Ht-if_CdPBa";
+const TURNSTILE_SCRIPT = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+
 const sendEnquiry = createServerFn({ method: "POST" })
   .validator((input: EnquiryForm) => input)
-  .handler(async ({ data }) => deliverEnquiry(data));
+  .handler(async ({ data }) => deliverEnquiry(data, clientAddress(getRequest())));
 
-type EnquiryForm = {
+type EnquiryFields = {
   name: string;
   email: string;
   phone: string;
@@ -16,11 +20,29 @@ type EnquiryForm = {
   website: string;
 };
 
+type EnquiryForm = EnquiryFields & {
+  "cf-turnstile-response": string;
+};
+
+type TurnstileWidgetId = string;
+type TurnstileApi = {
+  render: (
+    container: HTMLElement,
+    options: {
+      sitekey: string;
+      action: string;
+      callback: (token: string) => void;
+    },
+  ) => TurnstileWidgetId;
+  reset: (widgetId: TurnstileWidgetId) => void;
+  remove: (widgetId: TurnstileWidgetId) => void;
+};
+
 type FieldName = "name" | "email" | "phone" | "message";
 type FieldErrors = Record<FieldName, string>;
 type Status = "idle" | "loading" | "success" | "error";
 
-const EMPTY_FORM: EnquiryForm = { name: "", email: "", phone: "", message: "", website: "" };
+const EMPTY_FORM: EnquiryFields = { name: "", email: "", phone: "", message: "", website: "" };
 const EMPTY_ERRORS: FieldErrors = { name: "", email: "", phone: "", message: "" };
 
 export const Route = createFileRoute("/contact")({
@@ -33,15 +55,53 @@ export const Route = createFileRoute("/contact")({
 function ContactPage() {
   const send = useServerFn(sendEnquiry);
   const confirmRef = useRef<HTMLButtonElement>(null);
+  const turnstileContainer = useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = useRef<TurnstileWidgetId | null>(null);
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState(EMPTY_ERRORS);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   useEffect(() => {
     if (showModal) confirmRef.current?.focus();
   }, [showModal]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    function renderTurnstile() {
+      const api = turnstileApi();
+      if (cancelled || !turnstileContainer.current || turnstileWidgetId.current !== null || !api) return;
+      turnstileWidgetId.current = api.render(turnstileContainer.current, {
+        sitekey: TURNSTILE_SITEKEY,
+        action: "contact",
+        callback: setTurnstileToken,
+      });
+    }
+
+    if (turnstileApi()) renderTurnstile();
+
+    let script = document.querySelector<HTMLScriptElement>(`script[src="${TURNSTILE_SCRIPT}"]`);
+    if (!script) {
+      script = document.createElement("script");
+      script.src = TURNSTILE_SCRIPT;
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+    script.addEventListener("load", renderTurnstile);
+    return () => {
+      cancelled = true;
+      script.removeEventListener("load", renderTurnstile);
+      const api = turnstileApi();
+      if (turnstileWidgetId.current !== null && api) {
+        api.remove(turnstileWidgetId.current);
+        turnstileWidgetId.current = null;
+      }
+    };
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,7 +111,9 @@ function ContactPage() {
 
     setStatus("loading");
     try {
-      const result = await send({ data: formData });
+      const result = await send({
+        data: { ...formData, "cf-turnstile-response": turnstileToken },
+      });
       if (!result.ok) {
         if (result.field) {
           setErrors({ ...EMPTY_ERRORS, [result.field]: result.message });
@@ -71,6 +133,12 @@ function ContactPage() {
       setStatus("error");
       setMessage("發送訊息時出現錯誤，請稍後再試。");
       setShowModal(true);
+    } finally {
+      const api = turnstileApi();
+      if (turnstileWidgetId.current !== null && api) {
+        api.reset(turnstileWidgetId.current);
+        setTurnstileToken("");
+      }
     }
   };
 
@@ -187,7 +255,8 @@ function ContactPage() {
                 onChange={(event) => updateField(setFormData, setErrors, "message", event.target.value)}
               />
               {errors.message ? <p className="contact-error">{errors.message}</p> : null}
-              <button type="submit" className="contact-submit" disabled={status === "loading"}>
+              <div className="contact-turnstile" ref={turnstileContainer} />
+              <button type="submit" className="contact-submit" disabled={status === "loading" || !turnstileToken}>
                 {status === "loading" ? "發送中..." : "發送訊息"}
               </button>
             </form>
@@ -258,8 +327,20 @@ function Field({
   );
 }
 
+function clientAddress(request: Request) {
+  const connecting = request.headers.get("cf-connecting-ip")?.trim();
+  if (connecting) return connecting;
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (!forwarded) return "";
+  return forwarded.split(",")[0]?.trim() ?? "";
+}
+
+function turnstileApi() {
+  return (window as Window & { turnstile?: TurnstileApi }).turnstile;
+}
+
 function updateField(
-  setFormData: (value: EnquiryForm | ((current: EnquiryForm) => EnquiryForm)) => void,
+  setFormData: (value: EnquiryFields | ((current: EnquiryFields) => EnquiryFields)) => void,
   setErrors: (value: FieldErrors | ((current: FieldErrors) => FieldErrors)) => void,
   field: FieldName,
   value: string,
@@ -268,7 +349,7 @@ function updateField(
   setErrors((current) => (current[field] ? { ...current, [field]: "" } : current));
 }
 
-function validateForm(formData: EnquiryForm): FieldErrors {
+function validateForm(formData: EnquiryFields): FieldErrors {
   const errors = { ...EMPTY_ERRORS };
   if (!formData.name.trim()) errors.name = "請輸入您的姓名";
   if (!formData.email.trim()) errors.email = "請輸入您的電子郵件";

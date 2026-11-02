@@ -17,7 +17,17 @@ type Enquiry = {
   message: string;
 };
 
-export async function deliverEnquiry(input: unknown): Promise<EnquiryResult> {
+const TURNSTILE_ACTION = "contact";
+
+type SiteverifyResult = {
+  success?: boolean;
+  action?: string;
+  hostname?: string;
+};
+
+export async function deliverEnquiry(input: unknown, clientIp: string): Promise<EnquiryResult> {
+  const verified = await verifyTurnstile(input, clientIp);
+  if (!verified.ok) return verified;
   if (isBot(input)) return { ok: true };
   const parsed = parseEnquiry(input);
   if (!parsed.ok) return parsed;
@@ -36,7 +46,7 @@ export async function deliverEnquiry(input: unknown): Promise<EnquiryResult> {
   return { ok: true };
 }
 
-function parseEnquiry(input: unknown): { ok: true; value: Enquiry } | EnquiryResult {
+function parseEnquiry(input: unknown): { ok: true; value: Enquiry } | Extract<EnquiryResult, { ok: false }> {
   const record = isRecord(input) ? input : {};
   const name = text(record.name);
   const email = text(record.email);
@@ -119,6 +129,51 @@ function enquiryHtml(enquiry: Enquiry, submitted: string) {
     </div>
   </body>
 </html>`;
+}
+
+async function verifyTurnstile(input: unknown, clientIp: string): Promise<EnquiryResult> {
+  const token = isRecord(input) ? input["cf-turnstile-response"] : undefined;
+  const expectedHostnames = new Set(
+    env.TURNSTILE_HOSTNAMES.split(",")
+      .map((hostname) => hostname.trim())
+      .filter(Boolean),
+  );
+  if (
+    typeof token !== "string" ||
+    token.length === 0 ||
+    token.length > 2048 ||
+    expectedHostnames.size === 0
+  ) {
+    return { ok: false, message: "無法完成驗證，請再試一次。" };
+  }
+
+  let result: SiteverifyResult;
+  try {
+    const body = new URLSearchParams({
+      secret: env.TURNSTILE_SECRET,
+      response: token,
+    });
+    if (clientIp) body.set("remoteip", clientIp);
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      signal: AbortSignal.timeout(10_000),
+      body,
+    });
+    if (!response.ok) throw new Error(`siteverify ${response.status}`);
+    result = (await response.json()) as SiteverifyResult;
+  } catch {
+    return { ok: false, message: "無法完成驗證，請再試一次。" };
+  }
+  if (
+    result.success !== true ||
+    result.action !== TURNSTILE_ACTION ||
+    typeof result.hostname !== "string" ||
+    !expectedHostnames.has(result.hostname)
+  ) {
+    return { ok: false, message: "無法完成驗證，請再試一次。" };
+  }
+  return { ok: true };
 }
 
 function isBot(input: unknown) {
