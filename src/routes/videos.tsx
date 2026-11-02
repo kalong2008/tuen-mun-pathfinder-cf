@@ -49,8 +49,8 @@ function VideosPage() {
           <div className="video-stage">
             <div className="video-frame">
               <iframe
-                key={selected.playbackId}
-                src={playerUrl(selected.playbackId)}
+                key={playerUrl(selected.playbackId, selected.thumbnailTime)}
+                src={playerUrl(selected.playbackId, selected.thumbnailTime)}
                 title={selected.title}
                 allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
                 allowFullScreen
@@ -104,12 +104,15 @@ function VideosPage() {
   );
 }
 
-function playerUrl(playbackId: string) {
-  return `https://player.mux.com/${encodeURIComponent(playbackId)}`;
+function playerUrl(playbackId: string, thumbnailTime: number | null) {
+  const params = new URLSearchParams();
+  if (thumbnailTime !== null) params.set("thumbnail-time", String(thumbnailTime));
+  params.set("poster", thumbnailUrl(playbackId, thumbnailTime, 1280));
+  return `https://player.mux.com/${encodeURIComponent(playbackId)}?${params.toString()}`;
 }
 
-function thumbnailUrl(playbackId: string, thumbnailTime: number | null) {
-  const params = new URLSearchParams({ width: "320" });
+function thumbnailUrl(playbackId: string, thumbnailTime: number | null, width = 320) {
+  const params = new URLSearchParams({ width: String(width) });
   if (thumbnailTime !== null) params.set("time", String(thumbnailTime));
   return `https://image.mux.com/${encodeURIComponent(playbackId)}/thumbnail.webp?${params.toString()}`;
 }
