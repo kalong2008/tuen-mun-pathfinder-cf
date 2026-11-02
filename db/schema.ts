@@ -97,6 +97,32 @@ export const notices = sqliteTable(
   ],
 );
 
+export const adventurerHonors = sqliteTable(
+  "adventurer_honors",
+  {
+    id: text("id").primaryKey(),
+    code: text("code").notNull(),
+    nameZh: text("name_zh").notNull(),
+    nameEn: text("name_en").notNull().default(""),
+    aliases: text("aliases").notNull().default(""),
+    category: text("category").notNull().default(""),
+    status: text("status").notNull().default(""),
+    answerSource: text("answer_source").notNull().default(""),
+    answerSourceNote: text("answer_source_note").notNull().default(""),
+    published: integer("published", { mode: "boolean" }).notNull().default(true),
+    requirementsMd: text("requirements_md").notNull().default(""),
+    answersMd: text("answers_md").notNull().default(""),
+    requirementsHtml: text("requirements_html").notNull().default(""),
+    answersHtml: text("answers_html").notNull().default(""),
+    badgeKey: text("badge_key").notNull().default(""),
+    badgeSource: text("badge_source").notNull().default(""),
+    hasDocx: integer("has_docx", { mode: "boolean" }).notNull().default(false),
+    hasZhPdf: integer("has_zh_pdf", { mode: "boolean" }).notNull().default(false),
+    hasEnPdf: integer("has_en_pdf", { mode: "boolean" }).notNull().default(false),
+  },
+  (table) => [uniqueIndex("adventurer_honors_code").on(table.code)],
+);
+
 export const verseOfDay = sqliteTable("verseOfDay", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   date: text("date").notNull(),

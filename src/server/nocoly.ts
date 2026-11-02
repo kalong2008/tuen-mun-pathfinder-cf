@@ -44,7 +44,10 @@ export async function fetchWorksheetRowPage(
   });
 }
 
-export async function listWorksheetRows(worksheetId: string): Promise<Record<string, unknown>[]> {
+export async function listWorksheetRows(
+  worksheetId: string,
+  options?: { viewId?: string },
+): Promise<Record<string, unknown>[]> {
   const rows: Record<string, unknown>[] = [];
   let pageIndex = 1;
 
@@ -55,6 +58,7 @@ export async function listWorksheetRows(worksheetId: string): Promise<Record<str
         pageSize: 200,
         pageIndex,
         includeTotalCount: true,
+        ...(options?.viewId ? { viewId: options.viewId } : {}),
       }),
     });
     const data = payload.data;
