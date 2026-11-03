@@ -12,7 +12,7 @@
 }
 
 .honors .honor-card {
-  padding: 2rem 1rem;
+  padding: 1rem;
 }
 
 .honors :where(h1, h2, h3, h4, p) {
