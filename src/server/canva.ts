@@ -234,9 +234,14 @@ function canvaErrorCode(value: unknown): string {
   return "unknown";
 }
 
-function designViewUrl(designId: string): string | null {
-  if (!/^DA[A-Za-z0-9_-]{8,}$/.test(designId)) return null;
-  return allowedCanvaUrl(`https://www.canva.com/design/${designId}/view`);
+function redirectTo(url: string): Response {
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: url,
+      "cache-control": "no-store",
+    },
+  });
 }
 
 async function requestToken(body: URLSearchParams, previousRefresh = ""): Promise<CanvaToken> {
@@ -333,6 +338,16 @@ async function canvaFetch(path: string, init?: RequestInit, retry = true): Promi
   return response;
 }
 
+function viewUrlFrom(value: unknown): string | null {
+  if (!value || typeof value !== "object") return null;
+  const design = (value as { design?: unknown }).design;
+  if (!design || typeof design !== "object") return null;
+  const urls = (design as { urls?: unknown }).urls;
+  if (!urls || typeof urls !== "object") return null;
+  const viewUrl = (urls as { view_url?: unknown }).view_url;
+  return typeof viewUrl === "string" ? allowedCanvaUrl(viewUrl) : null;
+}
+
 function jobFrom(value: unknown): ExportJob | null {
   if (!value || typeof value !== "object") return null;
   const job = (value as { job?: unknown }).job;
@@ -377,7 +392,7 @@ async function exportPdf(designId: string): Promise<string[]> {
 
 function pdfResponse(urls: string[]): Response {
   const first = urls[0];
-  if (urls.length === 1 && first) return Response.redirect(first, 302);
+  if (urls.length === 1 && first) return redirectTo(first);
   const links = urls
     .map((url, index) => `<p><a href="${escapeHtml(url)}">下載 PDF ${index + 1}</a></p>`)
     .join("");
@@ -480,9 +495,16 @@ export async function openCanvaView(id: string, access: "admin" | "app" = "admin
     return Response.json({ error: "Not found" }, { status: 404 });
   }
   const designId = await publishedDesignId(id);
-  const view = designId ? designViewUrl(designId) : null;
-  if (!view) return Response.json({ error: "Not found" }, { status: 404 });
-  return Response.redirect(view, 302);
+  if (!designId) return Response.json({ error: "Not found" }, { status: 404 });
+
+  try {
+    const response = await canvaFetch(`/designs/${encodeURIComponent(designId)}`);
+    const viewUrl = viewUrlFrom(await response.json().catch(() => null));
+    if (!response.ok || !viewUrl) throw new CanvaRequestError("無法開啟 Canva 簡報。");
+    return redirectTo(viewUrl);
+  } catch (error) {
+    return canvaErrorResponse(error);
+  }
 }
 
 export async function downloadCanvaPdf(id: string, access: "admin" | "app" = "admin"): Promise<Response> {
@@ -495,15 +517,6 @@ export async function downloadCanvaPdf(id: string, access: "admin" | "app" = "ad
   try {
     return pdfResponse(await exportPdf(designId));
   } catch (error) {
-    const view = designViewUrl(designId);
-    if (
-      view &&
-      (error instanceof CanvaRequestError ||
-        error instanceof CanvaNotConnectedError ||
-        error instanceof CanvaNotConfiguredError)
-    ) {
-      return Response.redirect(view, 302);
-    }
     return canvaErrorResponse(error);
   }
 }
