@@ -204,18 +204,39 @@ function pendingFrom(value: string): PendingOAuth | null {
   }
 }
 
+function positiveNumber(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value) && value > 0) return value;
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  }
+  return null;
+}
+
 function tokenFrom(value: unknown): CanvaToken | null {
   if (!value || typeof value !== "object") return null;
   const record = value as Record<string, unknown>;
   if (typeof record.access_token !== "string" || !record.access_token) return null;
-  if (typeof record.expires_in !== "number" || !Number.isFinite(record.expires_in) || record.expires_in <= 0) {
-    return null;
-  }
+  const expiresIn = positiveNumber(record.expires_in);
+  if (!expiresIn) return null;
   return {
     accessToken: record.access_token,
     refreshToken: typeof record.refresh_token === "string" ? record.refresh_token : "",
-    expiresIn: record.expires_in,
+    expiresIn,
   };
+}
+
+function canvaErrorCode(value: unknown): string {
+  if (!value || typeof value !== "object") return "unknown";
+  const record = value as Record<string, unknown>;
+  if (typeof record.code === "string" && record.code) return record.code;
+  if (typeof record.error === "string" && record.error) return record.error;
+  return "unknown";
+}
+
+function designViewUrl(designId: string): string | null {
+  if (!/^DA[A-Za-z0-9_-]{8,}$/.test(designId)) return null;
+  return allowedCanvaUrl(`https://www.canva.com/design/${designId}/view`);
 }
 
 async function requestToken(body: URLSearchParams, previousRefresh = ""): Promise<CanvaToken> {
@@ -236,7 +257,10 @@ async function requestToken(body: URLSearchParams, previousRefresh = ""): Promis
   }
   const payload = await response.json().catch(() => null);
   const token = tokenFrom(payload);
-  if (!response.ok || !token) throw new CanvaRequestError("Canva 授權失敗，請再連接一次。");
+  if (!response.ok || !token) {
+    console.error(`Canva token exchange failed: ${response.status} ${canvaErrorCode(payload)}`);
+    throw new CanvaRequestError("Canva 授權失敗，請再連接一次。");
+  }
   const refreshToken = token.refreshToken || previousRefresh;
   if (!refreshToken) throw new CanvaRequestError("Canva 授權失敗，請再連接一次。");
   await writeSetting(REFRESH_KEY, refreshToken);
@@ -245,25 +269,48 @@ async function requestToken(body: URLSearchParams, previousRefresh = ""): Promis
   return { ...token, refreshToken };
 }
 
+let refreshInFlight: Promise<string> | null = null;
+
 async function refreshAccessToken(): Promise<string> {
+  if (!refreshInFlight) {
+    refreshInFlight = refreshAccessTokenOnce().finally(() => {
+      refreshInFlight = null;
+    });
+  }
+  return refreshInFlight;
+}
+
+async function refreshAccessTokenOnce(): Promise<string> {
   const refreshToken = await readSetting(REFRESH_KEY);
   if (!refreshToken) throw new CanvaNotConnectedError();
-  const token = await requestToken(
-    new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: refreshToken,
-      client_id: env.CANVA_CLIENT_ID,
-    }),
-    refreshToken,
-  );
-  return token.accessToken;
+  try {
+    const token = await requestToken(
+      new URLSearchParams({
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+      }),
+      refreshToken,
+    );
+    return token.accessToken;
+  } catch (error) {
+    const [currentRefresh, access, expires] = await Promise.all([
+      readSetting(REFRESH_KEY),
+      readSetting(ACCESS_KEY),
+      readSetting(EXPIRES_KEY),
+    ]);
+    const expiry = Number(expires);
+    if (currentRefresh && currentRefresh !== refreshToken && access && expiry > Date.now() + 60_000) {
+      return access;
+    }
+    throw error;
+  }
 }
 
 async function accessToken(forceRefresh = false): Promise<string> {
   if (!forceRefresh) {
     const [access, expires] = await Promise.all([readSetting(ACCESS_KEY), readSetting(EXPIRES_KEY)]);
     const expiry = Number(expires);
-    if (access && Number.isFinite(expiry) && expiry > Date.now() + 60_000) return access;
+    if (access && (!expires || !Number.isFinite(expiry) || expiry > Date.now() + 60_000)) return access;
   }
   return refreshAccessToken();
 }
@@ -284,16 +331,6 @@ async function canvaFetch(path: string, init?: RequestInit, retry = true): Promi
     return canvaFetch(path, init, false);
   }
   return response;
-}
-
-function viewUrlFrom(value: unknown): string | null {
-  if (!value || typeof value !== "object") return null;
-  const design = (value as { design?: unknown }).design;
-  if (!design || typeof design !== "object") return null;
-  const urls = (design as { urls?: unknown }).urls;
-  if (!urls || typeof urls !== "object") return null;
-  const viewUrl = (urls as { view_url?: unknown }).view_url;
-  return typeof viewUrl === "string" ? allowedCanvaUrl(viewUrl) : null;
 }
 
 function jobFrom(value: unknown): ExportJob | null {
@@ -443,16 +480,9 @@ export async function openCanvaView(id: string, access: "admin" | "app" = "admin
     return Response.json({ error: "Not found" }, { status: 404 });
   }
   const designId = await publishedDesignId(id);
-  if (!designId) return Response.json({ error: "Not found" }, { status: 404 });
-
-  try {
-    const response = await canvaFetch(`/designs/${encodeURIComponent(designId)}`);
-    const viewUrl = viewUrlFrom(await response.json().catch(() => null));
-    if (!response.ok || !viewUrl) throw new CanvaRequestError("無法開啟 Canva 簡報。");
-    return Response.redirect(viewUrl, 302);
-  } catch (error) {
-    return canvaErrorResponse(error);
-  }
+  const view = designId ? designViewUrl(designId) : null;
+  if (!view) return Response.json({ error: "Not found" }, { status: 404 });
+  return Response.redirect(view, 302);
 }
 
 export async function downloadCanvaPdf(id: string, access: "admin" | "app" = "admin"): Promise<Response> {
@@ -465,6 +495,15 @@ export async function downloadCanvaPdf(id: string, access: "admin" | "app" = "ad
   try {
     return pdfResponse(await exportPdf(designId));
   } catch (error) {
+    const view = designViewUrl(designId);
+    if (
+      view &&
+      (error instanceof CanvaRequestError ||
+        error instanceof CanvaNotConnectedError ||
+        error instanceof CanvaNotConfiguredError)
+    ) {
+      return Response.redirect(view, 302);
+    }
     return canvaErrorResponse(error);
   }
 }
