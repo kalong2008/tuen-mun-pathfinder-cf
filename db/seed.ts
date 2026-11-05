@@ -11,6 +11,14 @@ type NoticeSeed = {
   endDate?: string;
   activityType: string;
   target: string[];
+  startTime?: string;
+  endTime?: string;
+  gatherLocation?: string;
+  dismissLocation?: string;
+  location?: string;
+  charged?: boolean;
+  fee?: string | number;
+  participants?: string[];
 };
 
 type VideoSeed = {
@@ -81,6 +89,14 @@ export default defineSeed<typeof import("./schema")>(async ({ db, schema }) => {
           return url ? [url] : [];
         }),
         target: notice.target,
+        startTime: notice.startTime ?? "",
+        endTime: notice.endTime ?? "",
+        gatherLocation: notice.gatherLocation ?? "",
+        dismissLocation: notice.dismissLocation ?? "",
+        location: notice.location ?? "",
+        charged: notice.charged === true,
+        fee: notice.fee === undefined || notice.fee === null ? "" : String(notice.fee),
+        participants: notice.participants ?? [],
       })),
     );
   }
@@ -95,7 +111,29 @@ export default defineSeed<typeof import("./schema")>(async ({ db, schema }) => {
   const calendar = JSON.parse(
     readFileSync(new URL("./calendar-seed.json", import.meta.url), "utf8"),
   ) as CalendarSeed[];
-  for (let index = 0; index < calendar.length; index += 40) {
-    await db.insert(schema.calendarEvents).values(calendar.slice(index, index + 40));
+  const noticeById = new Map(notices.map((notice) => [notice.id, notice]));
+  const calendarRows = calendar.map((event) => {
+    const notice = event.campKey
+      ? noticeById.get(event.campKey)
+      : notices.find((item) => item.title === event.title && event.date >= item.date && event.date <= (item.endDate || item.date));
+    const meeting = event.title === "集會";
+    const spansDays = Boolean(notice && notice.endDate && notice.endDate !== notice.date);
+    return {
+      ...event,
+      activityId: notice ? (spansDays ? `${notice.id}:${event.date}` : notice.id) : "",
+      startTime: notice?.startTime || event.time,
+      endTime: notice?.endTime || (meeting ? "16:30:00" : ""),
+      gatherLocation: notice?.gatherLocation ?? "",
+      dismissLocation: notice?.dismissLocation ?? "",
+      fee: notice?.fee === undefined || notice?.fee === null ? "" : String(notice.fee),
+      activityType: notice?.activityType ?? "",
+      participants: notice?.participants ?? [],
+      noticeId: notice?.id ?? null,
+      hasPathfinderPdf: notice?.target.includes("前鋒會") ?? false,
+      hasAdventurerPdf: notice?.target.includes("幼鋒會") ?? false,
+    };
+  });
+  for (let index = 0; index < calendarRows.length; index += 40) {
+    await db.insert(schema.calendarEvents).values(calendarRows.slice(index, index + 40));
   }
 });

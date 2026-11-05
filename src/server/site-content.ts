@@ -212,15 +212,14 @@ export function videoRows(rows: Record<string, unknown>[]): VideoRow[] {
   return assignOrder(videos, (video) => String(video.year));
 }
 
-export function highlightRows(rows: Record<string, unknown>[], sections: PhotoSectionRow[]): HighlightRow[] {
+export function highlightRows(rows: Record<string, unknown>[]): HighlightRow[] {
   const highlights = rows.flatMap((row) => {
     if (optionLabel(row[ACTIVITY_FIELDS.featured]) !== "是") return [];
     const slug = textValue(row[ACTIVITY_FIELDS.slug]).replace(/^\//, "");
     const year = yearNumber(textValue(row[ACTIVITY_FIELDS.year]) || slug.slice(0, 4));
     if (!slug || year === null) return [];
-    const section = sections.find((item) => item.years.includes(year));
     return [{
-      scope: section?.id ?? "featured",
+      scope: "featured",
       year,
       slug,
       sortKey: textValue(row[ACTIVITY_FIELDS.gatherAt]) || `${year}-01-01`,

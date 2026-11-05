@@ -52,7 +52,7 @@ export async function syncNoticeCalendar(): Promise<SiteSyncResult> {
   const { links, pageCount } = albumLinks(activityRows, pageRows);
   const images = homepageSettings(imageRows);
   const videoList = videoRows(activityRows);
-  const highlights = highlightRows(activityRows, sections);
+  const highlights = highlightRows(activityRows);
   const honors = parseHonorRows(honorRows, await honorCanvaFieldId());
   if (activityRows.length === 0 || links.length === 0 || sections.length === 0 || images.length === 0) {
     throw new Error("Nocoly returned an incomplete site snapshot. Kept the existing database.");

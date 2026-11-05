@@ -4,13 +4,19 @@ export const NOTICES_WORKSHEET_ID = "69ca017def0b95ca9b93c7a1";
 const MEETING_FIELDS = {
   date: "69ca070059589a6272c95d19",
   held: "69ca0d8a09548df40ff05f5d",
+  participants: "6ad5f695021d1ae0606c26e2",
 } as const;
 
 const NOTICE_FIELDS = {
   title: "69ca017def0b95ca9b93c7a2",
   gatherAt: "69ca01ab09548df40ff05bbb",
   dismissAt: "6ad5f526cf181d9d8633079b",
+  gatherLocation: "6ad5f644021d1ae0606c26cd",
+  dismissLocation: "6ad5f644021d1ae0606c26ce",
   location: "6ad5f644021d1ae0606c26cf",
+  charged: "69ca01ab09548df40ff05bbc",
+  fee: "6ad5f644021d1ae0606c26d0",
+  participants: "6ad5f644021d1ae0606c26d1",
   activityType: "6ad5f644021d1ae0606c26d2",
   pathfinderPdf: "6ad5f958fe0c0b51fb8d8797",
   adventurerPdf: "6ad5f958fe0c0b51fb8d8798",
@@ -18,7 +24,9 @@ const NOTICE_FIELDS = {
 
 const MEETING_TITLE = "集會";
 const MEETING_START_TIME = "14:30:00";
+const MEETING_END_TIME = "16:30:00";
 const MEETING_LOCATION = "山景綜合青少年服務中心";
+const CLUBS = ["前鋒會", "幼鋒會"] as const;
 
 export type CalendarSyncRow = {
   date: string;
@@ -27,6 +35,17 @@ export type CalendarSyncRow = {
   location: string;
   isCamp: boolean;
   campKey: string | null;
+  activityId: string;
+  startTime: string;
+  endTime: string;
+  gatherLocation: string;
+  dismissLocation: string;
+  fee: string;
+  activityType: string;
+  participants: string[];
+  noticeId: string | null;
+  hasPathfinderPdf: boolean;
+  hasAdventurerPdf: boolean;
 };
 
 export type NoticeSyncRow = {
@@ -37,6 +56,14 @@ export type NoticeSyncRow = {
   activityType: string;
   pdfUrls: string[];
   target: string[];
+  startTime: string;
+  endTime: string;
+  gatherLocation: string;
+  dismissLocation: string;
+  location: string;
+  charged: boolean;
+  fee: string;
+  participants: string[];
 };
 
 function textValue(value: unknown): string {
@@ -52,6 +79,11 @@ function optionLabels(value: unknown): string[] {
     const label = (item as { value?: unknown }).value;
     return typeof label === "string" && label ? [label] : [];
   });
+}
+
+function clubParticipants(value: unknown): string[] {
+  const selected = new Set(optionLabels(value));
+  return CLUBS.filter((name) => selected.has(name));
 }
 
 function standardTime(value: string): string {
@@ -114,8 +146,9 @@ function datesInRange(start: string, end: string): string[] {
 }
 
 function parseMeeting(row: Record<string, unknown>): CalendarSyncRow | null {
+  const id = readRowId(row);
   const date = textValue(row[MEETING_FIELDS.date]).slice(0, 10);
-  if (!readRowId(row) || !date) return null;
+  if (!id || !date) return null;
   if ((optionLabels(row[MEETING_FIELDS.held])[0] ?? "") !== "是") return null;
   return {
     date,
@@ -124,10 +157,21 @@ function parseMeeting(row: Record<string, unknown>): CalendarSyncRow | null {
     location: MEETING_LOCATION,
     isCamp: false,
     campKey: null,
+    activityId: id,
+    startTime: MEETING_START_TIME,
+    endTime: MEETING_END_TIME,
+    gatherLocation: "",
+    dismissLocation: "",
+    fee: "",
+    activityType: "",
+    participants: clubParticipants(row[MEETING_FIELDS.participants]),
+    noticeId: null,
+    hasPathfinderPdf: false,
+    hasAdventurerPdf: false,
   };
 }
 
-type ParsedNotice = NoticeSyncRow & { time: string; location: string };
+type ParsedNotice = NoticeSyncRow;
 
 function parseNotice(row: Record<string, unknown>): ParsedNotice | null {
   const id = readRowId(row);
@@ -135,11 +179,9 @@ function parseNotice(row: Record<string, unknown>): ParsedNotice | null {
   const gather = splitDateTime(row[NOTICE_FIELDS.gatherAt]);
   const dismiss = splitDateTime(row[NOTICE_FIELDS.dismissAt]);
   if (!id || !title || !gather.date) return null;
-  const files = noticeFiles(
-    id,
-    hasAttachment(row[NOTICE_FIELDS.pathfinderPdf]),
-    hasAttachment(row[NOTICE_FIELDS.adventurerPdf]),
-  );
+  const hasPathfinder = hasAttachment(row[NOTICE_FIELDS.pathfinderPdf]);
+  const hasAdventurer = hasAttachment(row[NOTICE_FIELDS.adventurerPdf]);
+  const files = noticeFiles(id, hasPathfinder, hasAdventurer);
   return {
     id,
     title,
@@ -148,8 +190,14 @@ function parseNotice(row: Record<string, unknown>): ParsedNotice | null {
     activityType: optionLabels(row[NOTICE_FIELDS.activityType])[0] ?? "",
     pdfUrls: files.pdfUrls,
     target: files.target,
-    time: gather.time,
+    startTime: gather.time,
+    endTime: dismiss.time,
+    gatherLocation: textValue(row[NOTICE_FIELDS.gatherLocation]),
+    dismissLocation: textValue(row[NOTICE_FIELDS.dismissLocation]),
     location: textValue(row[NOTICE_FIELDS.location]),
+    charged: optionLabels(row[NOTICE_FIELDS.charged])[0] === "是",
+    fee: textValue(row[NOTICE_FIELDS.fee]),
+    participants: clubParticipants(row[NOTICE_FIELDS.participants]),
   };
 }
 
@@ -177,29 +225,31 @@ export function toSyncRows(
     }),
     ...parsedNotices.flatMap((notice) => calendarRowsForNotice(notice)),
   ];
-  return {
-    notices: parsedNotices.map((notice) => ({
-      id: notice.id,
-      title: notice.title,
-      date: notice.date,
-      endDate: notice.endDate,
-      activityType: notice.activityType,
-      pdfUrls: notice.pdfUrls,
-      target: notice.target,
-    })),
-    events,
-  };
+  return { notices: parsedNotices, events };
 }
 
 function calendarRowsForNotice(notice: ParsedNotice): CalendarSyncRow[] {
   const dates = datesInRange(notice.date, notice.endDate);
   const isCamp = dates.length > 1;
+  const hasPathfinderPdf = notice.target.includes("前鋒會");
+  const hasAdventurerPdf = notice.target.includes("幼鋒會");
   return dates.map((date) => ({
     date,
     title: notice.title,
-    time: notice.time,
+    time: notice.startTime,
     location: notice.location,
     isCamp,
     campKey: isCamp ? notice.id : null,
+    activityId: isCamp ? `${notice.id}:${date}` : notice.id,
+    startTime: notice.startTime,
+    endTime: notice.endTime,
+    gatherLocation: notice.gatherLocation,
+    dismissLocation: notice.dismissLocation,
+    fee: notice.fee,
+    activityType: notice.activityType,
+    participants: notice.participants,
+    noticeId: notice.id,
+    hasPathfinderPdf,
+    hasAdventurerPdf,
   }));
 }
