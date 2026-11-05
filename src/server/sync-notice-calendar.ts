@@ -21,7 +21,7 @@ import {
   videoRows,
 } from "./site-content";
 
-const INSERT_CHUNK = 8;
+const D1_MAX_VARIABLES = 100;
 const BATCH_SIZE = 20;
 
 export type SiteSyncResult = {
@@ -74,12 +74,12 @@ export async function syncNoticeCalendar(): Promise<SiteSyncResult> {
     db.delete(videos),
     db.delete(albumHighlights),
     db.delete(adventurerHonors),
-    ...chunks(calendar.notices, INSERT_CHUNK).map((rows) => db.insert(notices).values(rows)),
-    ...chunks(calendar.events, INSERT_CHUNK).map((rows) => db.insert(calendarEvents).values(rows)),
-    ...chunks(links, INSERT_CHUNK).map((rows) => db.insert(hyperlinks).values(rows)),
-    ...chunks(sections, INSERT_CHUNK).map((rows) => db.insert(photoSections).values(rows)),
-    ...chunks(videoList, INSERT_CHUNK).map((rows) => db.insert(videos).values(rows)),
-    ...chunks(highlights, INSERT_CHUNK).map((rows) => db.insert(albumHighlights).values(rows)),
+    ...insertChunks(calendar.notices).map((rows) => db.insert(notices).values(rows)),
+    ...insertChunks(calendar.events).map((rows) => db.insert(calendarEvents).values(rows)),
+    ...insertChunks(links).map((rows) => db.insert(hyperlinks).values(rows)),
+    ...insertChunks(sections).map((rows) => db.insert(photoSections).values(rows)),
+    ...insertChunks(videoList).map((rows) => db.insert(videos).values(rows)),
+    ...insertChunks(highlights).map((rows) => db.insert(albumHighlights).values(rows)),
     ...chunks(honors.honors, 2).map((rows) => db.insert(adventurerHonors).values(rows)),
     ...images.map((image) => db.insert(siteSettings).values(image).onConflictDoUpdate({
       target: siteSettings.key,
@@ -113,6 +113,11 @@ async function runStatements(statements: Parameters<typeof db.batch>[0] extends 
     if (!first) continue;
     await db.batch([first, ...rest]);
   }
+}
+
+function insertChunks<T extends object>(rows: T[]): T[][] {
+  const width = rows.reduce((count, row) => Math.max(count, Object.keys(row).length), 1);
+  return chunks(rows, Math.max(1, Math.floor(D1_MAX_VARIABLES / width)));
 }
 
 function chunks<T>(items: T[], size: number): T[][] {
