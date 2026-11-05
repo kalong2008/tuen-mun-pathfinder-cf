@@ -754,9 +754,17 @@ export function AdventurerHonorsClient({
               <h2 className="text-sm font-semibold text-gray-900">Canva 簡報</h2>
               <div className="mt-3">
                 {canvaConnected ? (
-                  <p className="text-sm text-gray-600">
-                    已連接。有設計 ID 的榮譽證可以閱讀簡報或下載 PDF。
-                  </p>
+                  <div>
+                    <p className="text-sm text-gray-600">
+                      已連接。有設計 ID 的榮譽證可以閱讀簡報或下載 PDF。
+                    </p>
+                    <a
+                      href="/api/canva/oauth/start"
+                      className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline-offset-4 hover:text-blue-900 hover:underline"
+                    >
+                      重新連接
+                    </a>
+                  </div>
                 ) : (
                   <a
                     href="/api/canva/oauth/start"

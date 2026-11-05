@@ -1,5 +1,5 @@
 import { siteSettings } from "@schema";
-import { db, eq } from "void/db";
+import { and, db, eq } from "void/db";
 import { env } from "void/env";
 import { publishedHonorFile } from "./load-adventurer-honors";
 import { isCurrentUserAdmin } from "./require-admin";
@@ -35,9 +35,12 @@ class CanvaNotConnectedError extends Error {
 }
 
 class CanvaRequestError extends Error {
-  constructor(message: string) {
+  readonly code: string;
+
+  constructor(message: string, code = "") {
     super(message);
     this.name = "CanvaRequestError";
+    this.code = code;
   }
 }
 
@@ -97,7 +100,14 @@ function canvaErrorResponse(error: unknown): Response {
   if (error instanceof CanvaNotConnectedError) {
     return htmlPage(error.message, 503, { href: "/api/canva/oauth/start", label: "連接 Canva" });
   }
-  if (error instanceof CanvaRequestError) return htmlPage(error.message, 502);
+  if (error instanceof CanvaRequestError) {
+    const reconnect = error.code === "invalid_grant" || error.code === "invalid_client";
+    return htmlPage(
+      error.message,
+      502,
+      reconnect ? { href: "/api/canva/oauth/start", label: "連接 Canva" } : undefined,
+    );
+  }
   return htmlPage("Canva 請求失敗。", 502);
 }
 
@@ -186,6 +196,10 @@ async function deleteSetting(key: string) {
   await db.delete(siteSettings).where(eq(siteSettings.key, key));
 }
 
+async function deleteSettingIfValue(key: string, value: string) {
+  await db.delete(siteSettings).where(and(eq(siteSettings.key, key), eq(siteSettings.value, value)));
+}
+
 function pendingFrom(value: string): PendingOAuth | null {
   try {
     const parsed = JSON.parse(value) as unknown;
@@ -263,8 +277,9 @@ async function requestToken(body: URLSearchParams, previousRefresh = ""): Promis
   const payload = await response.json().catch(() => null);
   const token = tokenFrom(payload);
   if (!response.ok || !token) {
-    console.error(`Canva token exchange failed: ${response.status} ${canvaErrorCode(payload)}`);
-    throw new CanvaRequestError("Canva 授權失敗，請再連接一次。");
+    const code = canvaErrorCode(payload);
+    console.error(`Canva token exchange failed: ${response.status} ${code}`);
+    throw new CanvaRequestError("Canva 授權失敗，請再連接一次。", code);
   }
   const refreshToken = token.refreshToken || previousRefresh;
   if (!refreshToken) throw new CanvaRequestError("Canva 授權失敗，請再連接一次。");
@@ -306,6 +321,17 @@ async function refreshAccessTokenOnce(): Promise<string> {
     const expiry = Number(expires);
     if (currentRefresh && currentRefresh !== refreshToken && access && expiry > Date.now() + 60_000) {
       return access;
+    }
+    if (
+      error instanceof CanvaRequestError &&
+      (error.code === "invalid_grant" || error.code === "invalid_client") &&
+      currentRefresh === refreshToken
+    ) {
+      await deleteSettingIfValue(REFRESH_KEY, refreshToken);
+      if (!(await readSetting(REFRESH_KEY))) {
+        await deleteSetting(ACCESS_KEY);
+        await deleteSetting(EXPIRES_KEY);
+      }
     }
     throw error;
   }
