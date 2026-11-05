@@ -122,7 +122,7 @@ export async function honorFeed() {
     docxUrl: honor.docxUrl ? appHonorPath(honor.id, "file/docx") : "",
     pdfZhUrl: honor.pdfZhUrl ? appHonorPath(honor.id, "file/zh") : "",
     pdfEnUrl: honor.pdfEnUrl ? appHonorPath(honor.id, "file/en") : "",
-    canvaViewUrl: honor.canvaViewUrl ? appHonorPath(honor.id, "canva/view") : "",
+    canvaViewUrl: "",
     canvaPdfUrl: honor.canvaPdfUrl ? appHonorPath(honor.id, "canva/pdf") : "",
   }));
 }

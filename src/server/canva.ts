@@ -364,16 +364,6 @@ async function canvaFetch(path: string, init?: RequestInit, retry = true): Promi
   return response;
 }
 
-function viewUrlFrom(value: unknown): string | null {
-  if (!value || typeof value !== "object") return null;
-  const design = (value as { design?: unknown }).design;
-  if (!design || typeof design !== "object") return null;
-  const urls = (design as { urls?: unknown }).urls;
-  if (!urls || typeof urls !== "object") return null;
-  const viewUrl = (urls as { view_url?: unknown }).view_url;
-  return typeof viewUrl === "string" ? allowedCanvaUrl(viewUrl) : null;
-}
-
 function jobFrom(value: unknown): ExportJob | null {
   if (!value || typeof value !== "object") return null;
   const job = (value as { job?: unknown }).job;
@@ -514,23 +504,6 @@ export async function finishCanvaOAuth(request: Request): Promise<Response> {
       "cache-control": "no-store",
     },
   });
-}
-
-export async function openCanvaView(id: string, access: "admin" | "app" = "admin"): Promise<Response> {
-  if (access === "admin" && !(await isCurrentUserAdmin())) {
-    return Response.json({ error: "Not found" }, { status: 404 });
-  }
-  const designId = await publishedDesignId(id);
-  if (!designId) return Response.json({ error: "Not found" }, { status: 404 });
-
-  try {
-    const response = await canvaFetch(`/designs/${encodeURIComponent(designId)}`);
-    const viewUrl = viewUrlFrom(await response.json().catch(() => null));
-    if (!response.ok || !viewUrl) throw new CanvaRequestError("無法開啟 Canva 簡報。");
-    return redirectTo(viewUrl);
-  } catch (error) {
-    return canvaErrorResponse(error);
-  }
 }
 
 export async function downloadCanvaPdf(id: string, access: "admin" | "app" = "admin"): Promise<Response> {

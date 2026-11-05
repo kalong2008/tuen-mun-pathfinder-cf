@@ -37,11 +37,9 @@ import { Route as ApiCanvaOauthCallbackRouteImport } from './routes/api/canva/oa
 import { Route as ApiCanvaOauthStartRouteImport } from './routes/api/canva/oauth/start'
 import { Route as ApiVideosIdDownloadRouteImport } from './routes/api/videos/$id/download'
 import { Route as ApiAdventurerHonorsIdCanvaPdfRouteImport } from './routes/api/adventurer-honors/$id/canva/pdf'
-import { Route as ApiAdventurerHonorsIdCanvaViewRouteImport } from './routes/api/adventurer-honors/$id/canva/view'
 import { Route as ApiAdventurerHonorsIdFileSlotRouteImport } from './routes/api/adventurer-honors/$id/file/$slot'
 import { Route as ApiNoticesIdFileSlotRouteImport } from './routes/api/notices/$id/file/$slot'
 import { Route as ApiAppHonorsIdCanvaPdfRouteImport } from './routes/api/app/honors/$id/canva/pdf'
-import { Route as ApiAppHonorsIdCanvaViewRouteImport } from './routes/api/app/honors/$id/canva/view'
 import { Route as ApiAppHonorsIdFileSlotRouteImport } from './routes/api/app/honors/$id/file/$slot'
 
 const IndexRoute = IndexRouteImport.update({
@@ -187,12 +185,6 @@ const ApiAdventurerHonorsIdCanvaPdfRoute =
     path: '/api/adventurer-honors/$id/canva/pdf',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiAdventurerHonorsIdCanvaViewRoute =
-  ApiAdventurerHonorsIdCanvaViewRouteImport.update({
-    id: '/api/adventurer-honors/$id/canva/view',
-    path: '/api/adventurer-honors/$id/canva/view',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ApiAdventurerHonorsIdFileSlotRoute =
   ApiAdventurerHonorsIdFileSlotRouteImport.update({
     id: '/api/adventurer-honors/$id/file/$slot',
@@ -207,11 +199,6 @@ const ApiNoticesIdFileSlotRoute = ApiNoticesIdFileSlotRouteImport.update({
 const ApiAppHonorsIdCanvaPdfRoute = ApiAppHonorsIdCanvaPdfRouteImport.update({
   id: '/$id/canva/pdf',
   path: '/$id/canva/pdf',
-  getParentRoute: () => ApiAppHonorsRoute,
-} as any)
-const ApiAppHonorsIdCanvaViewRoute = ApiAppHonorsIdCanvaViewRouteImport.update({
-  id: '/$id/canva/view',
-  path: '/$id/canva/view',
   getParentRoute: () => ApiAppHonorsRoute,
 } as any)
 const ApiAppHonorsIdFileSlotRoute = ApiAppHonorsIdFileSlotRouteImport.update({
@@ -249,11 +236,9 @@ export interface FileRoutesByFullPath {
   '/api/canva/oauth/start': typeof ApiCanvaOauthStartRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/adventurer-honors/$id/canva/pdf': typeof ApiAdventurerHonorsIdCanvaPdfRoute
-  '/api/adventurer-honors/$id/canva/view': typeof ApiAdventurerHonorsIdCanvaViewRoute
   '/api/adventurer-honors/$id/file/$slot': typeof ApiAdventurerHonorsIdFileSlotRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
   '/api/app/honors/$id/canva/pdf': typeof ApiAppHonorsIdCanvaPdfRoute
-  '/api/app/honors/$id/canva/view': typeof ApiAppHonorsIdCanvaViewRoute
   '/api/app/honors/$id/file/$slot': typeof ApiAppHonorsIdFileSlotRoute
 }
 export interface FileRoutesByTo {
@@ -283,11 +268,9 @@ export interface FileRoutesByTo {
   '/api/canva/oauth/start': typeof ApiCanvaOauthStartRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/adventurer-honors/$id/canva/pdf': typeof ApiAdventurerHonorsIdCanvaPdfRoute
-  '/api/adventurer-honors/$id/canva/view': typeof ApiAdventurerHonorsIdCanvaViewRoute
   '/api/adventurer-honors/$id/file/$slot': typeof ApiAdventurerHonorsIdFileSlotRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
   '/api/app/honors/$id/canva/pdf': typeof ApiAppHonorsIdCanvaPdfRoute
-  '/api/app/honors/$id/canva/view': typeof ApiAppHonorsIdCanvaViewRoute
   '/api/app/honors/$id/file/$slot': typeof ApiAppHonorsIdFileSlotRoute
 }
 export interface FileRoutesById {
@@ -320,11 +303,9 @@ export interface FileRoutesById {
   '/api/canva/oauth/start': typeof ApiCanvaOauthStartRoute
   '/api/videos/$id/download': typeof ApiVideosIdDownloadRoute
   '/api/adventurer-honors/$id/canva/pdf': typeof ApiAdventurerHonorsIdCanvaPdfRoute
-  '/api/adventurer-honors/$id/canva/view': typeof ApiAdventurerHonorsIdCanvaViewRoute
   '/api/adventurer-honors/$id/file/$slot': typeof ApiAdventurerHonorsIdFileSlotRoute
   '/api/notices/$id/file/$slot': typeof ApiNoticesIdFileSlotRoute
   '/api/app/honors/$id/canva/pdf': typeof ApiAppHonorsIdCanvaPdfRoute
-  '/api/app/honors/$id/canva/view': typeof ApiAppHonorsIdCanvaViewRoute
   '/api/app/honors/$id/file/$slot': typeof ApiAppHonorsIdFileSlotRoute
 }
 export interface FileRouteTypes {
@@ -358,11 +339,9 @@ export interface FileRouteTypes {
     | '/api/canva/oauth/start'
     | '/api/videos/$id/download'
     | '/api/adventurer-honors/$id/canva/pdf'
-    | '/api/adventurer-honors/$id/canva/view'
     | '/api/adventurer-honors/$id/file/$slot'
     | '/api/notices/$id/file/$slot'
     | '/api/app/honors/$id/canva/pdf'
-    | '/api/app/honors/$id/canva/view'
     | '/api/app/honors/$id/file/$slot'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -392,11 +371,9 @@ export interface FileRouteTypes {
     | '/api/canva/oauth/start'
     | '/api/videos/$id/download'
     | '/api/adventurer-honors/$id/canva/pdf'
-    | '/api/adventurer-honors/$id/canva/view'
     | '/api/adventurer-honors/$id/file/$slot'
     | '/api/notices/$id/file/$slot'
     | '/api/app/honors/$id/canva/pdf'
-    | '/api/app/honors/$id/canva/view'
     | '/api/app/honors/$id/file/$slot'
   id:
     | '__root__'
@@ -428,11 +405,9 @@ export interface FileRouteTypes {
     | '/api/canva/oauth/start'
     | '/api/videos/$id/download'
     | '/api/adventurer-honors/$id/canva/pdf'
-    | '/api/adventurer-honors/$id/canva/view'
     | '/api/adventurer-honors/$id/file/$slot'
     | '/api/notices/$id/file/$slot'
     | '/api/app/honors/$id/canva/pdf'
-    | '/api/app/honors/$id/canva/view'
     | '/api/app/honors/$id/file/$slot'
   fileRoutesById: FileRoutesById
 }
@@ -461,7 +436,6 @@ export interface RootRouteChildren {
   ApiCanvaOauthStartRoute: typeof ApiCanvaOauthStartRoute
   ApiVideosIdDownloadRoute: typeof ApiVideosIdDownloadRoute
   ApiAdventurerHonorsIdCanvaPdfRoute: typeof ApiAdventurerHonorsIdCanvaPdfRoute
-  ApiAdventurerHonorsIdCanvaViewRoute: typeof ApiAdventurerHonorsIdCanvaViewRoute
   ApiAdventurerHonorsIdFileSlotRoute: typeof ApiAdventurerHonorsIdFileSlotRoute
   ApiNoticesIdFileSlotRoute: typeof ApiNoticesIdFileSlotRoute
 }
@@ -664,13 +638,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdventurerHonorsIdCanvaPdfRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/adventurer-honors/$id/canva/view': {
-      id: '/api/adventurer-honors/$id/canva/view'
-      path: '/api/adventurer-honors/$id/canva/view'
-      fullPath: '/api/adventurer-honors/$id/canva/view'
-      preLoaderRoute: typeof ApiAdventurerHonorsIdCanvaViewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/adventurer-honors/$id/file/$slot': {
       id: '/api/adventurer-honors/$id/file/$slot'
       path: '/api/adventurer-honors/$id/file/$slot'
@@ -690,13 +657,6 @@ declare module '@tanstack/react-router' {
       path: '/$id/canva/pdf'
       fullPath: '/api/app/honors/$id/canva/pdf'
       preLoaderRoute: typeof ApiAppHonorsIdCanvaPdfRouteImport
-      parentRoute: typeof ApiAppHonorsRoute
-    }
-    '/api/app/honors/$id/canva/view': {
-      id: '/api/app/honors/$id/canva/view'
-      path: '/$id/canva/view'
-      fullPath: '/api/app/honors/$id/canva/view'
-      preLoaderRoute: typeof ApiAppHonorsIdCanvaViewRouteImport
       parentRoute: typeof ApiAppHonorsRoute
     }
     '/api/app/honors/$id/file/$slot': {
@@ -737,13 +697,11 @@ const SignUpRouteWithChildren =
 
 interface ApiAppHonorsRouteChildren {
   ApiAppHonorsIdCanvaPdfRoute: typeof ApiAppHonorsIdCanvaPdfRoute
-  ApiAppHonorsIdCanvaViewRoute: typeof ApiAppHonorsIdCanvaViewRoute
   ApiAppHonorsIdFileSlotRoute: typeof ApiAppHonorsIdFileSlotRoute
 }
 
 const ApiAppHonorsRouteChildren: ApiAppHonorsRouteChildren = {
   ApiAppHonorsIdCanvaPdfRoute: ApiAppHonorsIdCanvaPdfRoute,
-  ApiAppHonorsIdCanvaViewRoute: ApiAppHonorsIdCanvaViewRoute,
   ApiAppHonorsIdFileSlotRoute: ApiAppHonorsIdFileSlotRoute,
 }
 
@@ -776,7 +734,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCanvaOauthStartRoute: ApiCanvaOauthStartRoute,
   ApiVideosIdDownloadRoute: ApiVideosIdDownloadRoute,
   ApiAdventurerHonorsIdCanvaPdfRoute: ApiAdventurerHonorsIdCanvaPdfRoute,
-  ApiAdventurerHonorsIdCanvaViewRoute: ApiAdventurerHonorsIdCanvaViewRoute,
   ApiAdventurerHonorsIdFileSlotRoute: ApiAdventurerHonorsIdFileSlotRoute,
   ApiNoticesIdFileSlotRoute: ApiNoticesIdFileSlotRoute,
 }

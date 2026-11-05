@@ -1,6 +1,6 @@
 import "../honors.css";
 import { AnimatePresence, motion } from "motion/react";
-import { ChevronDown, Download, ExternalLink, Presentation, X } from "lucide-react";
+import { ChevronDown, Download, ExternalLink, X } from "lucide-react";
 import { FaFilePdf, FaFileWord } from "react-icons/fa";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -137,12 +137,6 @@ function HonorDownloadLinks({ honor }: { honor: HonorPageRecord }) {
 
   return (
     <>
-      {honor.canvaViewUrl && (
-        <a href={honor.canvaViewUrl} target="_blank" rel="noopener noreferrer" className={linkClassName}>
-          <Presentation className="h-4 w-4 shrink-0" aria-hidden="true" />
-          閱讀簡報
-        </a>
-      )}
       {honor.canvaPdfUrl && (
         <a href={honor.canvaPdfUrl} target="_blank" rel="noopener noreferrer" className={linkClassName}>
           <FaFilePdf className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -180,7 +174,7 @@ function HonorModal({
 }) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const hasDownloads = Boolean(
-    honor.docxUrl || honor.pdfZhUrl || honor.pdfEnUrl || honor.canvaViewUrl || honor.canvaPdfUrl,
+    honor.docxUrl || honor.pdfZhUrl || honor.pdfEnUrl || honor.canvaPdfUrl,
   );
 
   useEffect(() => {
@@ -756,7 +750,7 @@ export function AdventurerHonorsClient({
                 {canvaConnected ? (
                   <div>
                     <p className="text-sm text-gray-600">
-                      已連接。有設計 ID 的榮譽證可以閱讀簡報或下載 PDF。
+                      已連接。有設計 ID 的榮譽證可以下載 PDF。
                     </p>
                     <a
                       href="/api/canva/oauth/start"
