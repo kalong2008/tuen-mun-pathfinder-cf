@@ -48,6 +48,7 @@ export interface HonorPageRecord {
   code: string;
   nameZh: string;
   nameEn?: string;
+  aliases: string[];
   category: HonorCategory;
   status: HonorStatus;
   answerSource: HonorAnswerSourceKind;

@@ -88,6 +88,7 @@ export async function loadPublishedHonors(): Promise<HonorPageRecord[]> {
       code: row.code,
       nameZh: row.nameZh,
       nameEn: nameEn || undefined,
+      aliases: aliasesOf(row.aliases),
       category,
       status: statusId(row.status),
       answerSource: answerSourceId(row.answerSource),

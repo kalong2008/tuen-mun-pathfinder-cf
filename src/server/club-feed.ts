@@ -1,5 +1,7 @@
 import { albumHighlights, calendarEvents, hyperlinks, notices, videos } from "@schema";
 import { asc, db, desc } from "void/db";
+import { sortAdventurerHonors } from "../honors/lib/display/sort";
+import { loadPublishedHonors } from "./load-adventurer-honors";
 
 /** JSON for the iOS app. Website pages read these tables in their own loaders. */
 
@@ -86,6 +88,43 @@ export async function hyperlinkFeed() {
     grouped[row.yearGroup] = current;
   }
   return grouped;
+}
+
+const site = "https://tuenmunpathfinder.com";
+
+function absolute(path: string | undefined): string {
+  if (!path) return "";
+  if (path.startsWith("https://") || path.startsWith("http://")) return path;
+  return `${site}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+function appHonorPath(id: string, suffix: string): string {
+  return absolute(`/api/app/honors/${encodeURIComponent(id)}/${suffix}`);
+}
+
+export async function honorFeed() {
+  const honors = sortAdventurerHonors(await loadPublishedHonors());
+  return honors.map((honor) => ({
+    id: honor.id,
+    code: honor.code,
+    nameZh: honor.nameZh,
+    nameEn: honor.nameEn ?? "",
+    aliases: honor.aliases,
+    category: honor.category,
+    status: honor.status,
+    answerSource: honor.answerSource,
+    answerSourceNote: honor.answerSourceNote ?? "",
+    requirementsHtml: honor.requirementsHtml,
+    answerPrefaceHtml: honor.answerPrefaceHtml,
+    answers: honor.answers,
+    searchText: honor.searchText,
+    badgeUrl: absolute(honor.badgeUrl),
+    docxUrl: honor.docxUrl ? appHonorPath(honor.id, "file/docx") : "",
+    pdfZhUrl: honor.pdfZhUrl ? appHonorPath(honor.id, "file/zh") : "",
+    pdfEnUrl: honor.pdfEnUrl ? appHonorPath(honor.id, "file/en") : "",
+    canvaViewUrl: honor.canvaViewUrl ? appHonorPath(honor.id, "canva/view") : "",
+    canvaPdfUrl: honor.canvaPdfUrl ? appHonorPath(honor.id, "canva/pdf") : "",
+  }));
 }
 
 export async function albumHighlightFeed() {

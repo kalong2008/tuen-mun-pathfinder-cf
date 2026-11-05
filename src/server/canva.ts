@@ -438,8 +438,10 @@ export async function finishCanvaOAuth(request: Request): Promise<Response> {
   });
 }
 
-export async function openCanvaView(id: string): Promise<Response> {
-  if (!(await isCurrentUserAdmin())) return Response.json({ error: "Not found" }, { status: 404 });
+export async function openCanvaView(id: string, access: "admin" | "app" = "admin"): Promise<Response> {
+  if (access === "admin" && !(await isCurrentUserAdmin())) {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
   const designId = await publishedDesignId(id);
   if (!designId) return Response.json({ error: "Not found" }, { status: 404 });
 
@@ -453,8 +455,10 @@ export async function openCanvaView(id: string): Promise<Response> {
   }
 }
 
-export async function downloadCanvaPdf(id: string): Promise<Response> {
-  if (!(await isCurrentUserAdmin())) return Response.json({ error: "Not found" }, { status: 404 });
+export async function downloadCanvaPdf(id: string, access: "admin" | "app" = "admin"): Promise<Response> {
+  if (access === "admin" && !(await isCurrentUserAdmin())) {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
   const designId = await publishedDesignId(id);
   if (!designId) return Response.json({ error: "Not found" }, { status: 404 });
 

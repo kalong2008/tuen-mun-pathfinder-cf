@@ -28,6 +28,10 @@ import { Route as ApiAppCalendarRouteImport } from './routes/api/app/calendar'
 import { Route as ApiAppHyperlinksRouteImport } from './routes/api/app/hyperlinks'
 import { Route as ApiAppNoticesRouteImport } from './routes/api/app/notices'
 import { Route as ApiAppVideosRouteImport } from './routes/api/app/videos'
+import { Route as ApiAppHonorsRouteImport } from './routes/api/app/honors'
+import { Route as ApiAppHonorsIdCanvaPdfRouteImport } from './routes/api/app/honors/$id/canva/pdf'
+import { Route as ApiAppHonorsIdCanvaViewRouteImport } from './routes/api/app/honors/$id/canva/view'
+import { Route as ApiAppHonorsIdFileSlotRouteImport } from './routes/api/app/honors/$id/file/$slot'
 import { Route as ApiBibleCachedRouteImport } from './routes/api/bible/cached'
 import { Route as ApiSyncNoticeCalendarRouteImport } from './routes/api/sync/notice-calendar'
 import { Route as ApiAdventurerHonorsIdBadgeRouteImport } from './routes/api/adventurer-honors/$id/badge'
@@ -135,6 +139,26 @@ const ApiAppVideosRoute = ApiAppVideosRouteImport.update({
   path: '/api/app/videos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAppHonorsRoute = ApiAppHonorsRouteImport.update({
+  id: '/api/app/honors',
+  path: '/api/app/honors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAppHonorsIdCanvaPdfRoute = ApiAppHonorsIdCanvaPdfRouteImport.update({
+  id: '/api/app/honors/$id/canva/pdf',
+  path: '/api/app/honors/$id/canva/pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAppHonorsIdCanvaViewRoute = ApiAppHonorsIdCanvaViewRouteImport.update({
+  id: '/api/app/honors/$id/canva/view',
+  path: '/api/app/honors/$id/canva/view',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAppHonorsIdFileSlotRoute = ApiAppHonorsIdFileSlotRouteImport.update({
+  id: '/api/app/honors/$id/file/$slot',
+  path: '/api/app/honors/$id/file/$slot',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiBibleCachedRoute = ApiBibleCachedRouteImport.update({
   id: '/api/bible/cached',
   path: '/api/bible/cached',
@@ -216,6 +240,10 @@ export interface FileRoutesByFullPath {
   '/api/app/hyperlinks': typeof ApiAppHyperlinksRoute
   '/api/app/notices': typeof ApiAppNoticesRoute
   '/api/app/videos': typeof ApiAppVideosRoute
+  '/api/app/honors': typeof ApiAppHonorsRoute
+  '/api/app/honors/$id/canva/pdf': typeof ApiAppHonorsIdCanvaPdfRoute
+  '/api/app/honors/$id/canva/view': typeof ApiAppHonorsIdCanvaViewRoute
+  '/api/app/honors/$id/file/$slot': typeof ApiAppHonorsIdFileSlotRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
   '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
@@ -246,6 +274,10 @@ export interface FileRoutesByTo {
   '/api/app/hyperlinks': typeof ApiAppHyperlinksRoute
   '/api/app/notices': typeof ApiAppNoticesRoute
   '/api/app/videos': typeof ApiAppVideosRoute
+  '/api/app/honors': typeof ApiAppHonorsRoute
+  '/api/app/honors/$id/canva/pdf': typeof ApiAppHonorsIdCanvaPdfRoute
+  '/api/app/honors/$id/canva/view': typeof ApiAppHonorsIdCanvaViewRoute
+  '/api/app/honors/$id/file/$slot': typeof ApiAppHonorsIdFileSlotRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
   '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
@@ -279,6 +311,10 @@ export interface FileRoutesById {
   '/api/app/hyperlinks': typeof ApiAppHyperlinksRoute
   '/api/app/notices': typeof ApiAppNoticesRoute
   '/api/app/videos': typeof ApiAppVideosRoute
+  '/api/app/honors': typeof ApiAppHonorsRoute
+  '/api/app/honors/$id/canva/pdf': typeof ApiAppHonorsIdCanvaPdfRoute
+  '/api/app/honors/$id/canva/view': typeof ApiAppHonorsIdCanvaViewRoute
+  '/api/app/honors/$id/file/$slot': typeof ApiAppHonorsIdFileSlotRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
   '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
@@ -313,6 +349,10 @@ export interface FileRouteTypes {
     | '/api/app/hyperlinks'
     | '/api/app/notices'
     | '/api/app/videos'
+    | '/api/app/honors'
+    | '/api/app/honors/$id/canva/pdf'
+    | '/api/app/honors/$id/canva/view'
+    | '/api/app/honors/$id/file/$slot'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
     | '/api/adventurer-honors/$id/badge'
@@ -343,6 +383,10 @@ export interface FileRouteTypes {
     | '/api/app/hyperlinks'
     | '/api/app/notices'
     | '/api/app/videos'
+    | '/api/app/honors'
+    | '/api/app/honors/$id/canva/pdf'
+    | '/api/app/honors/$id/canva/view'
+    | '/api/app/honors/$id/file/$slot'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
     | '/api/adventurer-honors/$id/badge'
@@ -375,6 +419,10 @@ export interface FileRouteTypes {
     | '/api/app/hyperlinks'
     | '/api/app/notices'
     | '/api/app/videos'
+    | '/api/app/honors'
+    | '/api/app/honors/$id/canva/pdf'
+    | '/api/app/honors/$id/canva/view'
+    | '/api/app/honors/$id/file/$slot'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
     | '/api/adventurer-honors/$id/badge'
@@ -404,6 +452,10 @@ export interface RootRouteChildren {
   ApiAppHyperlinksRoute: typeof ApiAppHyperlinksRoute
   ApiAppNoticesRoute: typeof ApiAppNoticesRoute
   ApiAppVideosRoute: typeof ApiAppVideosRoute
+  ApiAppHonorsRoute: typeof ApiAppHonorsRoute
+  ApiAppHonorsIdCanvaPdfRoute: typeof ApiAppHonorsIdCanvaPdfRoute
+  ApiAppHonorsIdCanvaViewRoute: typeof ApiAppHonorsIdCanvaViewRoute
+  ApiAppHonorsIdFileSlotRoute: typeof ApiAppHonorsIdFileSlotRoute
   ApiBibleCachedRoute: typeof ApiBibleCachedRoute
   ApiSyncNoticeCalendarRoute: typeof ApiSyncNoticeCalendarRoute
   ApiAdventurerHonorsIdBadgeRoute: typeof ApiAdventurerHonorsIdBadgeRoute
@@ -552,6 +604,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAppVideosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/app/honors': {
+      id: '/api/app/honors'
+      path: '/api/app/honors'
+      fullPath: '/api/app/honors'
+      preLoaderRoute: typeof ApiAppHonorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/app/honors/$id/canva/pdf': {
+      id: '/api/app/honors/$id/canva/pdf'
+      path: '/api/app/honors/$id/canva/pdf'
+      fullPath: '/api/app/honors/$id/canva/pdf'
+      preLoaderRoute: typeof ApiAppHonorsIdCanvaPdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/app/honors/$id/canva/view': {
+      id: '/api/app/honors/$id/canva/view'
+      path: '/api/app/honors/$id/canva/view'
+      fullPath: '/api/app/honors/$id/canva/view'
+      preLoaderRoute: typeof ApiAppHonorsIdCanvaViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/app/honors/$id/file/$slot': {
+      id: '/api/app/honors/$id/file/$slot'
+      path: '/api/app/honors/$id/file/$slot'
+      fullPath: '/api/app/honors/$id/file/$slot'
+      preLoaderRoute: typeof ApiAppHonorsIdFileSlotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/bible/cached': {
       id: '/api/bible/cached'
       path: '/api/bible/cached'
@@ -674,6 +754,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAppHyperlinksRoute: ApiAppHyperlinksRoute,
   ApiAppNoticesRoute: ApiAppNoticesRoute,
   ApiAppVideosRoute: ApiAppVideosRoute,
+  ApiAppHonorsRoute: ApiAppHonorsRoute,
+  ApiAppHonorsIdCanvaPdfRoute: ApiAppHonorsIdCanvaPdfRoute,
+  ApiAppHonorsIdCanvaViewRoute: ApiAppHonorsIdCanvaViewRoute,
+  ApiAppHonorsIdFileSlotRoute: ApiAppHonorsIdFileSlotRoute,
   ApiBibleCachedRoute: ApiBibleCachedRoute,
   ApiSyncNoticeCalendarRoute: ApiSyncNoticeCalendarRoute,
   ApiAdventurerHonorsIdBadgeRoute: ApiAdventurerHonorsIdBadgeRoute,

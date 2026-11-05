@@ -139,9 +139,17 @@ function contentTypeForBadge(filename: string): string {
   }
 }
 
-export async function fetchHonorFile(id: string, slot: HonorFileSlot): Promise<Response> {
-  const denied = await denyUnlessAdmin();
-  if (denied) return denied;
+export type HonorFileAccess = "admin" | "app";
+
+export async function fetchHonorFile(
+  id: string,
+  slot: HonorFileSlot,
+  access: HonorFileAccess = "admin",
+): Promise<Response> {
+  if (access === "admin") {
+    const denied = await denyUnlessAdmin();
+    if (denied) return denied;
+  }
 
   const row = await publishedHonorFile(id);
   if (!row) return Response.json({ error: "Not found" }, { status: 404 });
