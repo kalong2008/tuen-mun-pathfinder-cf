@@ -7,6 +7,7 @@ type VerseData = {
   version: string;
   width: number | null;
   height: number | null;
+  attribution?: string | null;
 };
 
 export function VersePopup() {
@@ -79,6 +80,7 @@ export function VersePopup() {
                 height={verse.height ?? 640}
               />
             ) : null}
+            {verse.attribution ? <p className="verse-attribution">{verse.attribution}</p> : null}
             <p className="verse-cite">{verse.citation}</p>
             <p className="verse-passage">{verse.passage}</p>
             <p className="verse-version">{verse.version}</p>

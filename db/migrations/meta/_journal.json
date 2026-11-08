@@ -43,6 +43,13 @@
       "when": 1793849384088,
       "tag": "20261105032944_first_deadpool",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1794143425044,
+      "tag": "20261108131025_goofy_thanos",
+      "breakpoints": true
     }
   ]
 }

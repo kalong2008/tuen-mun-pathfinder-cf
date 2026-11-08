@@ -152,4 +152,5 @@ export const verseOfDay = sqliteTable("verseOfDay", {
   image: text("image"),
   width: integer("width"),
   height: integer("height"),
+  attribution: text("attribution"),
 });

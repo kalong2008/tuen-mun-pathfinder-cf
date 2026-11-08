@@ -911,6 +911,13 @@ button, summary { font: inherit; }
   border-radius: 0.5rem;
 }
 
+.verse-attribution {
+  margin: -0.5rem 0 1rem;
+  color: #6b7280;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
 .verse-cite,
 .verse-passage,
 .verse-version,

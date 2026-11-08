@@ -12,4 +12,5 @@ export default defineEnv({
   CANVA_CLIENT_SECRET: string().optional(),
   TURNSTILE_SECRET: string(),
   TURNSTILE_HOSTNAMES: string(),
+  YVP_APP_KEY: string().optional(),
 });

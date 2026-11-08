@@ -1,0 +1,1 @@
+ALTER TABLE `verseOfDay` ADD `attribution` text;
