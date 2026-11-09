@@ -13,4 +13,6 @@ export default defineEnv({
   TURNSTILE_SECRET: string(),
   TURNSTILE_HOSTNAMES: string(),
   YVP_APP_KEY: string().optional(),
+  SOUNDCLOUD_CLIENT_ID: string().optional(),
+  SOUNDCLOUD_CLIENT_SECRET: string().optional(),
 });

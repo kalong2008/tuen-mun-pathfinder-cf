@@ -29,6 +29,7 @@ import { Route as ApiAppHonorsRouteImport } from './routes/api/app/honors'
 import { Route as ApiAppHyperlinksRouteImport } from './routes/api/app/hyperlinks'
 import { Route as ApiAppNoticesRouteImport } from './routes/api/app/notices'
 import { Route as ApiAppVideosRouteImport } from './routes/api/app/videos'
+import { Route as ApiAppDevotionAudioRouteImport } from './routes/api/app/devotion-audio'
 import { Route as ApiBibleCachedRouteImport } from './routes/api/bible/cached'
 import { Route as ApiSyncNoticeCalendarRouteImport } from './routes/api/sync/notice-calendar'
 import { Route as ApiAdventurerHonorsIdBadgeRouteImport } from './routes/api/adventurer-honors/$id/badge'
@@ -142,6 +143,11 @@ const ApiAppVideosRoute = ApiAppVideosRouteImport.update({
   path: '/api/app/videos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAppDevotionAudioRoute = ApiAppDevotionAudioRouteImport.update({
+  id: '/api/app/devotion-audio',
+  path: '/api/app/devotion-audio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiBibleCachedRoute = ApiBibleCachedRouteImport.update({
   id: '/api/bible/cached',
   path: '/api/bible/cached',
@@ -228,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/api/app/hyperlinks': typeof ApiAppHyperlinksRoute
   '/api/app/notices': typeof ApiAppNoticesRoute
   '/api/app/videos': typeof ApiAppVideosRoute
+  '/api/app/devotion-audio': typeof ApiAppDevotionAudioRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
   '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
@@ -260,6 +267,7 @@ export interface FileRoutesByTo {
   '/api/app/hyperlinks': typeof ApiAppHyperlinksRoute
   '/api/app/notices': typeof ApiAppNoticesRoute
   '/api/app/videos': typeof ApiAppVideosRoute
+  '/api/app/devotion-audio': typeof ApiAppDevotionAudioRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
   '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/api/app/hyperlinks': typeof ApiAppHyperlinksRoute
   '/api/app/notices': typeof ApiAppNoticesRoute
   '/api/app/videos': typeof ApiAppVideosRoute
+  '/api/app/devotion-audio': typeof ApiAppDevotionAudioRoute
   '/api/bible/cached': typeof ApiBibleCachedRoute
   '/api/sync/notice-calendar': typeof ApiSyncNoticeCalendarRoute
   '/api/adventurer-honors/$id/badge': typeof ApiAdventurerHonorsIdBadgeRoute
@@ -331,6 +340,7 @@ export interface FileRouteTypes {
     | '/api/app/hyperlinks'
     | '/api/app/notices'
     | '/api/app/videos'
+    | '/api/app/devotion-audio'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
     | '/api/adventurer-honors/$id/badge'
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
     | '/api/app/hyperlinks'
     | '/api/app/notices'
     | '/api/app/videos'
+    | '/api/app/devotion-audio'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
     | '/api/adventurer-honors/$id/badge'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/api/app/hyperlinks'
     | '/api/app/notices'
     | '/api/app/videos'
+    | '/api/app/devotion-audio'
     | '/api/bible/cached'
     | '/api/sync/notice-calendar'
     | '/api/adventurer-honors/$id/badge'
@@ -428,6 +440,7 @@ export interface RootRouteChildren {
   ApiAppHyperlinksRoute: typeof ApiAppHyperlinksRoute
   ApiAppNoticesRoute: typeof ApiAppNoticesRoute
   ApiAppVideosRoute: typeof ApiAppVideosRoute
+  ApiAppDevotionAudioRoute: typeof ApiAppDevotionAudioRoute
   ApiBibleCachedRoute: typeof ApiBibleCachedRoute
   ApiSyncNoticeCalendarRoute: typeof ApiSyncNoticeCalendarRoute
   ApiAdventurerHonorsIdBadgeRoute: typeof ApiAdventurerHonorsIdBadgeRoute
@@ -582,6 +595,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAppVideosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/app/devotion-audio': {
+      id: '/api/app/devotion-audio'
+      path: '/api/app/devotion-audio'
+      fullPath: '/api/app/devotion-audio'
+      preLoaderRoute: typeof ApiAppDevotionAudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/bible/cached': {
       id: '/api/bible/cached'
       path: '/api/bible/cached'
@@ -726,6 +746,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAppHyperlinksRoute: ApiAppHyperlinksRoute,
   ApiAppNoticesRoute: ApiAppNoticesRoute,
   ApiAppVideosRoute: ApiAppVideosRoute,
+  ApiAppDevotionAudioRoute: ApiAppDevotionAudioRoute,
   ApiBibleCachedRoute: ApiBibleCachedRoute,
   ApiSyncNoticeCalendarRoute: ApiSyncNoticeCalendarRoute,
   ApiAdventurerHonorsIdBadgeRoute: ApiAdventurerHonorsIdBadgeRoute,
