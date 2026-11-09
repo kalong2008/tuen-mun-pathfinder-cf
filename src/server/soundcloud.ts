@@ -7,12 +7,7 @@ const API = "https://api.soundcloud.com";
 const TOKEN_KEY = "soundcloud.token";
 const TOKEN_SKEW_MS = 60_000;
 
-const STREAM_KEYS = [
-  "hls_aac_160_url",
-  "hls_aac_96_url",
-  "http_mp3_128_url",
-  "hls_mp3_128_url",
-] as const;
+const STREAM_KEYS = ["hls_aac_160_url", "hls_mp3_128_url", "http_mp3_128_url", "hls_aac_96_url"] as const;
 
 export class SoundCloudNotConfiguredError extends Error {
   constructor() {
@@ -233,20 +228,20 @@ export function directMediaURL(value: string): string | null {
 }
 
 export function preferredStreamURL(body: unknown): string | null {
+  const candidate = streamCandidate(body);
+  return candidate ? directMediaURL(candidate) : null;
+}
+
+function streamCandidate(body: unknown): string | null {
   const payload = record(body);
   if (!payload) return null;
   for (const key of STREAM_KEYS) {
     const value = payload[key];
-    if (typeof value !== "string") continue;
-    const media = directMediaURL(value);
-    if (media) return media;
+    if (typeof value === "string" && value.startsWith("https://")) return value;
   }
   const nested = payload.url;
-  if (typeof nested === "string") {
-    const media = directMediaURL(nested);
-    if (media) return media;
-  }
-  return null;
+  if (typeof nested === "string" && nested.startsWith("https://")) return nested;
+  return preferredTranscodingURL(body);
 }
 
 function transcodingList(body: unknown): Transcoding[] {
@@ -296,35 +291,57 @@ function credit(body: unknown): { author: string; permalink: string } {
   return { author, permalink };
 }
 
-async function resolveMedia(candidate: string, token: string): Promise<string | null> {
+function trackURL(trackID: string, suffix = ""): string {
+  return `${API}/tracks/soundcloud:tracks:${trackID}${suffix}`;
+}
+
+async function openStream(candidate: string, token: string, hops = 0): Promise<string> {
   const direct = directMediaURL(candidate);
   if (direct) return direct;
+  if (hops > 3) throw new SoundCloudRequestError(502);
   let url: URL;
   try {
     url = new URL(candidate);
   } catch {
-    return null;
+    throw new SoundCloudRequestError(502);
   }
-  if (url.protocol !== "https:") return null;
-  if (url.hostname !== "api.soundcloud.com" && url.hostname !== "api-v2.soundcloud.com") return null;
-  const resolved = await soundCloudJSON(url.toString(), token);
-  return preferredStreamURL(resolved);
+  if (url.protocol !== "https:") throw new SoundCloudRequestError(502);
+  const response = await fetch(url, {
+    headers: {
+      accept: "*/*",
+      authorization: `OAuth ${token}`,
+    },
+    redirect: "manual",
+  });
+  if (response.status >= 300 && response.status < 400) {
+    const location = response.headers.get("location");
+    if (!location) throw new SoundCloudRequestError(502);
+    return openStream(new URL(location, url).toString(), token, hops + 1);
+  }
+  if (response.status === 401) {
+    forgetToken();
+    throw new SoundCloudRequestError(401);
+  }
+  if (!response.ok) throw new SoundCloudRequestError(response.status);
+  const type = response.headers.get("content-type") ?? "";
+  if (type.includes("json")) {
+    const nested = streamCandidate(await response.json());
+    if (!nested || nested === candidate) throw new SoundCloudRequestError(502);
+    return openStream(nested, token, hops + 1);
+  }
+  const finalURL = directMediaURL(response.url);
+  if (finalURL) return finalURL;
+  throw new SoundCloudRequestError(502);
 }
 
 async function mediaForTrack(trackID: string, token: string): Promise<DevotionAudio> {
-  const trackURL = `${API}/tracks/${trackID}`;
-  const streamsURL = `${API}/tracks/${trackID}/streams`;
   const [track, streams] = await Promise.all([
-    soundCloudJSON(trackURL, token),
-    soundCloudJSON(streamsURL, token),
+    soundCloudJSON(trackURL(trackID), token),
+    soundCloudJSON(trackURL(trackID, "/streams"), token),
   ]);
-  const named = preferredStreamURL(streams) ?? preferredStreamURL(track);
-  if (named) return { url: named, ...credit(track) };
-  const transcoding = preferredTranscodingURL(streams) ?? preferredTranscodingURL(track);
-  if (!transcoding) throw new SoundCloudRequestError(404);
-  const media = await resolveMedia(transcoding, token);
-  if (!media) throw new SoundCloudRequestError(404);
-  return { url: media, ...credit(track) };
+  const candidate = streamCandidate(streams) ?? streamCandidate(track);
+  if (!candidate) throw new SoundCloudRequestError(404);
+  return { url: await openStream(candidate, token), ...credit(track) };
 }
 
 export async function soundCloudAudio(trackID: string): Promise<DevotionAudio> {
