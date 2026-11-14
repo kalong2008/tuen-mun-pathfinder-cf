@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "@clerk/tanstack-react-start";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { videos } from "@schema";
@@ -57,7 +58,7 @@ function VideosPage() {
               />
             </div>
             <h2>{selected.title}</h2>
-            <DownloadButton videoId={selected.id} />
+            <DownloadButton key={selected.id} videoId={selected.id} />
           </div>
           <aside className="video-list">
             <div className="video-list-head">
@@ -118,8 +119,14 @@ function thumbnailUrl(playbackId: string, thumbnailTime: number | null, width = 
 }
 
 function DownloadButton({ videoId }: { videoId: string }) {
+  const { isLoaded, isSignedIn } = useAuth();
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  if (!isLoaded) return null;
+  if (!isSignedIn) {
+    return <p className="download-note">未登入，不能下載，請先登入</p>;
+  }
 
   return (
     <div>

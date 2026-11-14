@@ -1,11 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { videos } from "@schema";
 import { db, eq } from "void/db";
+import { readIsSignedIn } from "../../../../server/require-user";
 
 export const Route = createFileRoute("/api/videos/$id/download")({
   server: {
     handlers: {
       GET: async ({ params }) => {
+        if (!(await readIsSignedIn())) {
+          return Response.json({ error: "未登入，不能下載，請先登入" }, { status: 401 });
+        }
         const [video] = await db.select().from(videos).where(eq(videos.id, params.id));
         if (!video) {
           return Response.json({ error: "Not found" }, { status: 404 });
