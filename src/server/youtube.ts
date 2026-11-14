@@ -1,9 +1,15 @@
 import { env } from "void/env";
 
-const PLAYLIST_ID = "PLHUHHJ0Srno6pUmDNeb5HVzT_NfDJk5u0";
+const PLAYLISTS = {
+  minute: "PLHUHHJ0Srno6pUmDNeb5HVzT_NfDJk5u0",
+  gleaning: "PLHUHHJ0Srno7GI1lhWv5QxkGDibPLvAwn",
+  storm: "PLHUHHJ0Srno6YuU5ajSCZdMI1UUuUfwn3",
+} as const;
+
+export type YouTubeDevotionKey = keyof typeof PLAYLISTS;
+
 const PAGE_LIMIT = 40;
 const CACHE_SECONDS = 60 * 60;
-const CACHE_URL = "https://tuenmunpathfinder.com/internal/youtube-minute-latest";
 
 export class YouTubeNotConfiguredError extends Error {
   constructor() {
@@ -86,13 +92,13 @@ export function latestPlaylistVideo(items: PlaylistItem[], now = Date.now()): De
   return latest?.video ?? null;
 }
 
-async function fetchPlaylist(key: string): Promise<PlaylistItem[]> {
+async function fetchPlaylist(playlistId: string, key: string): Promise<PlaylistItem[]> {
   const items: PlaylistItem[] = [];
   let pageToken = "";
   for (let page = 0; page < PAGE_LIMIT; page += 1) {
     const url = new URL("https://www.googleapis.com/youtube/v3/playlistItems");
     url.searchParams.set("part", "snippet,contentDetails");
-    url.searchParams.set("playlistId", PLAYLIST_ID);
+    url.searchParams.set("playlistId", playlistId);
     url.searchParams.set("maxResults", "50");
     url.searchParams.set("key", key);
     url.searchParams.set(
@@ -115,9 +121,13 @@ function cacheStore(): Cache | null {
   return cachesGlobal?.default ?? null;
 }
 
-async function readCache(): Promise<DevotionMinute | null> {
+function cacheURL(playlistId: string): string {
+  return `https://tuenmunpathfinder.com/internal/youtube-latest/${playlistId}`;
+}
+
+async function readCache(playlistId: string): Promise<DevotionMinute | null> {
   try {
-    const response = await cacheStore()?.match(CACHE_URL);
+    const response = await cacheStore()?.match(cacheURL(playlistId));
     if (!response) return null;
     const body = (await response.json()) as Partial<DevotionMinute>;
     if (!body.videoId || !body.title || !body.publishedAt || !body.thumbnailUrl || !body.url) return null;
@@ -133,10 +143,10 @@ async function readCache(): Promise<DevotionMinute | null> {
   }
 }
 
-async function writeCache(video: DevotionMinute) {
+async function writeCache(playlistId: string, video: DevotionMinute) {
   try {
     await cacheStore()?.put(
-      CACHE_URL,
+      cacheURL(playlistId),
       Response.json(video, {
         headers: { "cache-control": `public, max-age=${CACHE_SECONDS}` },
       }),
@@ -146,11 +156,34 @@ async function writeCache(video: DevotionMinute) {
   }
 }
 
-export async function latestMinuteDevotion(): Promise<DevotionMinute> {
-  const cached = await readCache();
+export async function latestYouTubeDevotion(series: YouTubeDevotionKey): Promise<DevotionMinute> {
+  const playlistId = PLAYLISTS[series];
+  const cached = await readCache(playlistId);
   if (cached) return cached;
-  const video = latestPlaylistVideo(await fetchPlaylist(apiKey()));
+  const video = latestPlaylistVideo(await fetchPlaylist(playlistId, apiKey()));
   if (!video) throw new YouTubeRequestError(404);
-  await writeCache(video);
+  await writeCache(playlistId, video);
   return video;
+}
+
+export async function latestMinuteDevotion(): Promise<DevotionMinute> {
+  return latestYouTubeDevotion("minute");
+}
+
+export async function latestYouTubeDevotions(): Promise<Partial<Record<YouTubeDevotionKey, DevotionMinute>>> {
+  const entries = await Promise.all(
+    (Object.keys(PLAYLISTS) as YouTubeDevotionKey[]).map(async (series) => {
+      try {
+        return [series, await latestYouTubeDevotion(series)] as const;
+      } catch (error) {
+        if (error instanceof YouTubeNotConfiguredError) throw error;
+        return [series, null] as const;
+      }
+    }),
+  );
+  const videos: Partial<Record<YouTubeDevotionKey, DevotionMinute>> = {};
+  for (const [series, video] of entries) {
+    if (video) videos[series] = video;
+  }
+  return videos;
 }
