@@ -15,4 +15,5 @@ export default defineEnv({
   YVP_APP_KEY: string().optional(),
   SOUNDCLOUD_CLIENT_ID: string().optional(),
   SOUNDCLOUD_CLIENT_SECRET: string().optional(),
+  YOUTUBE_API_KEY: string().optional(),
 });
