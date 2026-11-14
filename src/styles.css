@@ -614,6 +614,14 @@ button, summary { font: inherit; }
 
 .empty { color: var(--muted); }
 
+.site {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.site > main { flex: 1 0 auto; }
+
 .site-footer { border-top: 1px solid var(--line); background: #fff; }
 
 .site-footer-inner {
