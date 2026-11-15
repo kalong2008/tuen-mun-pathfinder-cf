@@ -82,6 +82,8 @@ function HonorBadge({
       alt={`${honor.nameZh} 榮譽證`}
       width={dimensions.width}
       height={dimensions.height}
+      loading={size === "card" ? "lazy" : "eager"}
+      decoding="async"
       className={`shrink-0 rounded-lg object-contain ${size === "card" ? "mx-auto" : ""}`}
     />
   );

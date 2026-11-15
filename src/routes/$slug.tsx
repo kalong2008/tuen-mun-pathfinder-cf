@@ -12,7 +12,7 @@ import { db, eq } from "void/db";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/counter.css";
 import { Shell } from "../components/shell";
-import { albumManifestUrl, photoDisplayUrl, photoUrl } from "../photos";
+import { albumGridSources, albumManifestUrl, albumViewSources, photoUrl, type PhotoSource } from "../photos";
 import { assertSignedIn, requireSignedIn } from "../server/require-user";
 
 type ManifestPhoto = {
@@ -23,7 +23,10 @@ type ManifestPhoto = {
 
 type AlbumImage = {
   src: string;
+  srcSet: PhotoSource[];
   original: string;
+  view: string;
+  viewSrcSet: PhotoSource[];
   width: number;
   height: number;
   alt: string;
@@ -66,11 +69,18 @@ const getAlbum = createServerFn({ method: "GET" })
       photos: list.flatMap((photo) => {
         if (!photo.url) return [];
         const original = photoUrl(photo.url);
+        const width = photo.width ?? 3;
+        const height = photo.height ?? 2;
+        const grid = albumGridSources(original, width, height);
+        const view = albumViewSources(original, width, height);
         return [{
-          src: photoDisplayUrl(original, 1200),
+          src: grid.src,
+          srcSet: grid.srcSet,
           original,
-          width: photo.width ?? 3,
-          height: photo.height ?? 2,
+          view: view.src,
+          viewSrcSet: view.srcSet,
+          width,
+          height,
           alt: link.name,
         }];
       }),
@@ -91,7 +101,7 @@ export const Route = createFileRoute("/$slug")({
   notFoundComponent: AlbumNotFound,
 });
 
-function AlbumPhoto({ photo, imageProps, wrapperStyle }: RenderPhotoProps<AlbumImage>) {
+function AlbumPhoto({ photo, imageProps, wrapperStyle, layout }: RenderPhotoProps<AlbumImage>) {
   const { style: _style, alt, ...rest } = imageProps;
   return (
     <div className="album-photo" style={{ ...wrapperStyle, borderRadius: "10px", overflow: "hidden" }}>
@@ -99,11 +109,15 @@ function AlbumPhoto({ photo, imageProps, wrapperStyle }: RenderPhotoProps<AlbumI
         {...rest}
         alt={alt}
         style={{ display: "block", width: "100%", height: "100%" }}
+        loading={layout.index < 4 ? "eager" : "lazy"}
+        decoding="async"
         referrerPolicy="no-referrer"
         onError={(event) => {
           const image = event.currentTarget;
           if (image.dataset.fallback === "1") return;
           image.dataset.fallback = "1";
+          image.srcset = "";
+          image.sizes = "";
           image.src = photo.original;
         }}
       />
@@ -139,11 +153,18 @@ function AlbumPage() {
               layout="rows"
               renderPhoto={AlbumPhoto}
               defaultContainerWidth={1200}
-              sizes={{ size: "calc(100vw - 240px)" }}
+              sizes={{ size: "80vw" }}
               onClick={({ index: photoIndex }) => setIndex(photoIndex)}
             />
             <Lightbox
-              slides={album.photos.map(({ original, width, height, alt }) => ({ src: original, width, height, alt }))}
+              slides={album.photos.map(({ view, viewSrcSet, original, width, height, alt }) => ({
+                src: view,
+                srcSet: viewSrcSet,
+                download: original,
+                width,
+                height,
+                alt,
+              }))}
               open={index >= 0}
               index={index}
               close={() => setIndex(-1)}
