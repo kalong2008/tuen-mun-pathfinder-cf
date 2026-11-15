@@ -5,6 +5,7 @@ import { asc, db } from "void/db";
 import { ClubCalendar } from "../components/club-calendar";
 import { VersePopup } from "../components/verse-popup";
 import { noticeFiles } from "../notice-files";
+import { HomePending } from "../components/route-pending";
 import { Shell } from "../components/shell";
 import { photoDisplayUrl, photoUrl } from "../photos";
 
@@ -27,6 +28,7 @@ const getHome = createServerFn({ method: "GET" }).handler(async () => {
 
 export const Route = createFileRoute("/")({
   loader: () => getHome(),
+  pendingComponent: HomePending,
   component: HomePage,
 });
 

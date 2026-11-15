@@ -1,6 +1,7 @@
 import type { ComponentProps, ComponentType, ReactNode } from "react";
 import { ClerkProvider } from "@clerk/tanstack-react-start";
 import { HeadContent, Outlet, Scripts, createRootRoute, useNavigate } from "@tanstack/react-router";
+import { NavigationProgress } from "../components/navigation-progress";
 import { createServerFn } from "@tanstack/react-start";
 import { hyperlinks, photoSections } from "@schema";
 import { asc, db } from "void/db";
@@ -79,6 +80,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
+        <NavigationProgress />
         <ClerkWithRouter
           publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
           routerPush={(to) => clerkNavigate(to, false)}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, getRouteApi, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import PhotoAlbum, { type RenderPhotoProps } from "react-photo-album";
 import Lightbox from "yet-another-react-lightbox";
@@ -11,9 +11,16 @@ import { hyperlinks } from "@schema";
 import { db, eq } from "void/db";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/counter.css";
+import { AlbumGridSkeleton } from "../components/route-pending";
 import { Shell } from "../components/shell";
+import { settle, useDeferred, type Settled } from "../deferred";
 import { albumGridSources, albumManifestUrl, albumViewSources, photoUrl, type PhotoSource } from "../photos";
 import { assertSignedIn, requireSignedIn } from "../server/require-user";
+
+const rootRoute = getRouteApi("__root__");
+const emptyPhotos: AlbumImage[] = [];
+const albumPhotoCacheMs = 60_000;
+const clientAlbumPhotos = new Map<string, { pending: Settled<AlbumImage[]>; at: number }>();
 
 type ManifestPhoto = {
   url?: string;
@@ -87,19 +94,53 @@ const getAlbum = createServerFn({ method: "GET" })
     };
   });
 
+function loadAlbumPhotos(slug: string) {
+  if (import.meta.env.SSR) return getAlbum({ data: slug }).then((album) => album.photos);
+  const cached = clientAlbumPhotos.get(slug);
+  if (cached && !cached.pending.failed && Date.now() - cached.at < albumPhotoCacheMs) return cached.pending;
+  const pending = settle(getAlbum({ data: slug }).then((album) => album.photos));
+  clientAlbumPhotos.set(slug, { pending, at: Date.now() });
+  return pending;
+}
+
 export const Route = createFileRoute("/$slug")({
   beforeLoad: async ({ params }) => {
-    await getAlbumLink({ data: params.slug });
-    if (!params.slug.startsWith("20")) return;
-    await requireSignedIn(`/${params.slug}`);
+    if (!import.meta.env.SSR) loadAlbumPhotos(params.slug);
+    const linkPromise = getAlbumLink({ data: params.slug });
+    if (!params.slug.startsWith("20")) {
+      const link = await linkPromise;
+      return { title: link.name };
+    }
+    const [link] = await Promise.all([linkPromise, requireSignedIn(`/${params.slug}`)]);
+    return { title: link.name };
   },
-  loader: ({ params }) => getAlbum({ data: params.slug }),
+  loader: ({ params, context }) => {
+    const photos = loadAlbumPhotos(params.slug);
+    if (import.meta.env.SSR) return photos.then((loaded) => ({ title: context.title, photos: loaded }));
+    return { title: context.title, photos };
+  },
+  pendingComponent: AlbumPending,
   head: ({ loaderData }) => ({
     meta: [{ title: `${loaderData?.title ?? "找不到頁面"} | 屯門前鋒會 幼鋒會` }],
   }),
   component: AlbumPage,
   notFoundComponent: AlbumNotFound,
 });
+
+function AlbumPending() {
+  const { slug } = Route.useParams();
+  const { links } = rootRoute.useLoaderData();
+  const title = links.find((link) => link.href === `/${slug}`)?.name ?? "相簿";
+  return (
+    <Shell>
+      <section className="page page-wide">
+        <h1 className="page-title">{title}</h1>
+        <p className="sr">頁面載入中</p>
+        <AlbumGridSkeleton />
+      </section>
+    </Shell>
+  );
+}
 
 function AlbumPhoto({ photo, imageProps, wrapperStyle, layout }: RenderPhotoProps<AlbumImage>) {
   const { style: _style, alt, ...rest } = imageProps;
@@ -138,18 +179,24 @@ function AlbumNotFound() {
 
 function AlbumPage() {
   const album = Route.useLoaderData();
+  const photos = useDeferred(album.photos, emptyPhotos);
   const [index, setIndex] = useState(-1);
 
   return (
     <Shell>
       <section className="page page-wide">
         <h1 className="page-title">{album.title}</h1>
-        {album.photos.length === 0 ? (
+        {photos === undefined ? (
+          <>
+            <p className="sr">相片載入中</p>
+            <AlbumGridSkeleton />
+          </>
+        ) : photos.length === 0 ? (
           <p className="empty">這本相簿暫時沒有相片。</p>
         ) : (
           <>
             <PhotoAlbum
-              photos={album.photos}
+              photos={photos}
               layout="rows"
               renderPhoto={AlbumPhoto}
               defaultContainerWidth={1200}
@@ -157,7 +204,7 @@ function AlbumPage() {
               onClick={({ index: photoIndex }) => setIndex(photoIndex)}
             />
             <Lightbox
-              slides={album.photos.map(({ view, viewSrcSet, original, width, height, alt }) => ({
+              slides={photos.map(({ view, viewSrcSet, original, width, height, alt }) => ({
                 src: view,
                 srcSet: viewSrcSet,
                 download: original,

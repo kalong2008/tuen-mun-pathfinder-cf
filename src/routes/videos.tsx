@@ -4,6 +4,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { videos } from "@schema";
 import { asc, db, desc } from "void/db";
+import { VideosPending } from "../components/route-pending";
 import { Shell } from "../components/shell";
 
 const getVideos = createServerFn({ method: "GET" }).handler(async () => {
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/videos")({
     v: typeof search.v === "string" && search.v ? search.v : undefined,
   }),
   loader: () => getVideos(),
+  pendingComponent: VideosPending,
   head: () => ({
     meta: [{ title: "歷屆影片 | 屯門前鋒會 幼鋒會" }],
   }),

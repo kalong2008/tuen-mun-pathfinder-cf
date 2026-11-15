@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { HonorsPending } from "../components/route-pending";
+import { settle, useDeferred } from "../deferred";
 import { AdventurerHonorsClient } from "../honors/components/AdventurerHonorsClient";
+import type { HonorHandbooks } from "../honors/lib/data/types";
 import { sortAdventurerHonors } from "../honors/lib/display/sort";
 import { Shell } from "../components/shell";
 import { isCanvaConnected } from "../server/canva";
@@ -8,28 +11,41 @@ import { loadHonorHandbooks, loadPublishedHonors } from "../server/load-adventur
 import { assertSignedIn, requireSignedIn } from "../server/require-user";
 import { isCurrentUserAdmin } from "../server/require-admin";
 
+const emptyHandbooks: HonorHandbooks = { zh: false, en: false };
+
 const getHonorsPage = createServerFn({ method: "GET" }).handler(async () => {
   await assertSignedIn("/adventurer-honors");
   if (!(await isCurrentUserAdmin())) {
-    return { denied: true as const, honors: [], handbooks: { zh: false, en: false }, canvaConnected: false };
+    return { denied: true as const, honors: [], canvaConnected: false };
   }
 
-  const [honors, handbooks, canvaConnected] = await Promise.all([
+  const [honors, canvaConnected] = await Promise.all([
     loadPublishedHonors(),
-    loadHonorHandbooks(),
     isCanvaConnected().catch(() => false),
   ]);
   return {
     denied: false as const,
     honors: sortAdventurerHonors(honors),
-    handbooks,
     canvaConnected,
   };
 });
 
+const getHonorHandbooks = createServerFn({ method: "GET" }).handler(async () => {
+  await assertSignedIn("/adventurer-honors");
+  if (!(await isCurrentUserAdmin())) return emptyHandbooks;
+  return loadHonorHandbooks();
+});
+
 export const Route = createFileRoute("/adventurer-honors")({
   beforeLoad: () => requireSignedIn("/adventurer-honors"),
-  loader: () => getHonorsPage(),
+  loader: async () => {
+    const handbooks = settle(getHonorHandbooks());
+    const page = await getHonorsPage();
+    if (page.denied) return { ...page, handbooks: emptyHandbooks };
+    if (import.meta.env.SSR) return { ...page, handbooks: await handbooks };
+    return { ...page, handbooks };
+  },
+  pendingComponent: HonorsPending,
   head: () => ({
     meta: [
       { title: "幼鋒會榮譽證 | 屯門前鋒會 幼鋒會" },
@@ -41,6 +57,7 @@ export const Route = createFileRoute("/adventurer-honors")({
 
 function AdventurerHonorsPage() {
   const data = Route.useLoaderData();
+  const handbooks = useDeferred(data.handbooks, emptyHandbooks) ?? emptyHandbooks;
 
   return (
     <Shell>
@@ -54,7 +71,7 @@ function AdventurerHonorsPage() {
       ) : (
         <AdventurerHonorsClient
           honors={data.honors}
-          handbooks={data.handbooks}
+          handbooks={handbooks}
           canvaConnected={data.canvaConnected}
         />
       )}

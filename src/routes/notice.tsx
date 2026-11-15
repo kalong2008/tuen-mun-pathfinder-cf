@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { notices } from "@schema";
 import { db, desc } from "void/db";
+import { NoticePending } from "../components/route-pending";
 import { Shell } from "../components/shell";
 import { noticeFiles } from "../notice-files";
 
@@ -11,6 +12,7 @@ const getNotices = createServerFn({ method: "GET" }).handler(async () => {
 
 export const Route = createFileRoute("/notice")({
   loader: () => getNotices(),
+  pendingComponent: NoticePending,
   head: () => ({
     meta: [{ title: "活動通告 | 屯門前鋒會 幼鋒會" }],
   }),
